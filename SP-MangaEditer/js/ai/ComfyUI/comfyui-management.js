@@ -280,8 +280,6 @@ async function Comfyui_handle_process_queue(layer, spinnerId, Type = 'T2I') {
         throw new Error(result.message);
       } else if (result) {
         // layer.visible = false;
-
-
         if(isPanel(layer)){
           var center = calculateCenter(layer);
           putImageInFrame(result, center.centerX, center.centerY);

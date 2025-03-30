@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>C2PA情報確認ツール</title>
+<title>C2PA Checking Tool</title>
 <style>
 body {
  font-family: 'Helvetica Neue', Arial, sans-serif;
@@ -102,33 +102,33 @@ h1 {
 </head>
 <body>
 <div class="container">
- <h1>C2PA情報確認ツール</h1>
+ <h1>C2PA Information Verification Tool</h1>
  
  <div class="dropzone" id="dropzone">
-  <p>ここに画像ファイルをドラッグ＆ドロップするか、クリックして選択してください</p>
+  <p>Drag and drop an image file here or click to select one</p>
   <input type="file" id="fileInput" accept="image/*" style="display: none;">
-  <button class="btn" id="selectButton">ファイルを選択</button>
+  <button class="btn" id="selectButton">Select File</button>
  </div>
  
  <div class="loading" id="loading">
   <div class="spinner"></div>
-  <p>C2PA情報を解析中...</p>
+  <p>Analyzing C2PA information...</p>
  </div>
  
  <div class="result" id="result">
-  <h2>画像プレビュー</h2>
+  <h2>Image Preview</h2>
   <img id="imagePreview" class="image-preview">
   
-  <h2>C2PA検証結果</h2>
+  <h2>C2PA Verification Result</h2>
   <div id="statusContainer"></div>
   
-  <h2>詳細情報</h2>
+  <h2>Detailed Information</h2>
   <pre class="c2pa-data" id="c2paData"></pre>
  </div>
 </div>
 
 <script type="module">
-// 正しいC2PAライブラリをインポートします
+// Import the correct C2PA library
 import { createC2pa } from 'https://cdn.jsdelivr.net/npm/c2pa@0.28.2/dist/c2pa.esm.min.js';
 
 window.addEventListener('load', async () => {
@@ -141,7 +141,7 @@ window.addEventListener('load', async () => {
  const statusContainer = document.getElementById('statusContainer');
  const loading = document.getElementById('loading');
  
- // C2PAインスタンスを作成
+ // Create C2PA instance
  const c2pa = await createC2pa({
    wasmSrc: 'https://cdn.jsdelivr.net/npm/c2pa@0.28.2/dist/assets/wasm/toolkit_bg.wasm',
    workerSrc: 'https://cdn.jsdelivr.net/npm/c2pa@0.28.2/dist/c2pa.worker.min.js'
@@ -194,7 +194,7 @@ window.addEventListener('load', async () => {
   if (!file) return;
   
   if (!file.type.startsWith('image/')) {
-   alert('画像ファイルを選択してください。');
+   alert('Please select an image file.');
    return;
   }
   
@@ -205,20 +205,20 @@ window.addEventListener('load', async () => {
   imagePreview.src = objectURL;
   
   try {
-   // C2PAライブラリを使用して画像を読み込み
+   // Read image using C2PA library
    const result = await c2pa.read(file);
    
    if (result && result.manifestStore) {
-    statusContainer.innerHTML = '<p class="has-c2pa">✅ この画像にはC2PA情報が含まれています</p>';
+    statusContainer.innerHTML = '<p class="has-c2pa">✅ This image contains C2PA information</p>';
     c2paData.textContent = JSON.stringify(result.manifestStore, null, 2);
    } else {
-    statusContainer.innerHTML = '<p class="no-c2pa">❌ この画像にはC2PA情報が含まれていません</p>';
-    c2paData.textContent = 'C2PA情報なし';
+    statusContainer.innerHTML = '<p class="no-c2pa">❌ This image does not contain C2PA information</p>';
+    c2paData.textContent = 'No C2PA data found';
    }
   } catch (error) {
-   console.error('C2PA読み取りエラー:', error);
-   statusContainer.innerHTML = `<p class="no-c2pa">❌ エラーが発生しました: ${error.message}</p>`;
-   c2paData.textContent = `エラー詳細: ${error.stack || error}`;
+   console.error('C2PA read error:', error);
+   statusContainer.innerHTML = `<p class="no-c2pa">❌ An error occurred: ${error.message}</p>`;
+   c2paData.textContent = `Error details: ${error.stack || error}`;
   }
   
   loading.style.display = 'none';
