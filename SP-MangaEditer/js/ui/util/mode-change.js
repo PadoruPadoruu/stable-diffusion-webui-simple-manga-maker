@@ -132,7 +132,7 @@ function toggleMode() {
   document.body.classList.remove('light-mode');
   document.body.classList.add('dark-mode');
   localStorage.setItem('mode', 'dark-mode');
-  logo.src = '02_images_svg/Logo/black_mode_logo.webp';
+  logo.src = '02_images_svg/Logo/black_mode_logo.png';
 
   // if (isDarkMode) {
   //   document.body.classList.remove('light-mode');
@@ -160,9 +160,9 @@ function initializeMode() {
   const logo = $('navbar-logo');
   if (mode === 'dark-mode') {
     $('mode-toggle').checked = true;
-    logo.src = '02_images_svg/Logo/black_mode_logo.webp';
+    logo.src = '02_images_svg/Logo/black_mode_logo.png';
   } else {
-    logo.src = '02_images_svg/Logo/light_mode_logo.webp';
+    logo.src = '02_images_svg/Logo/light_mode_logo.png';
   }
 }
 
