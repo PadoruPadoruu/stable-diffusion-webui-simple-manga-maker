@@ -121,7 +121,7 @@ class ComfyUIWorkflowTab {
         console.log("Workflow saved successfully");
       })
       .catch((error) => {
-        console.error("Workflowの保存に失敗しました:", error);
+        console.error("Workflow failed to save", error);
       });
   }
 
@@ -217,7 +217,7 @@ class ComfyUIWorkflowTab {
             data-preview-target="${nodeId}-${inputName}-preview">
         </label>
         <div class="comfui-image-preview hidden" data-preview-id="${nodeId}-${inputName}-preview">
-          <img src="" alt="プレビュー" class="comfui-preview-image">
+          <img src="" alt="preview" class="comfui-preview-image">
         </div>
       </div>
     </div>`;
@@ -334,7 +334,7 @@ class ComfyUIWorkflowTab {
                 };
               }
             } catch (error) {
-              console.error("画像プレビューの読み込みエラー:", error);
+              console.error("Error when loading image preview", error);
             }
           }
         }
@@ -508,7 +508,7 @@ class ComfyUIWorkflowTab {
               }
             }
           } catch (error) {
-            console.error("アップロードエラー:", error);
+            console.error("upload error", error);
           }
    
           const reader = new FileReader();
@@ -548,4 +548,4 @@ class ComfyUIWorkflowTab {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   }
-}
+} //tbd

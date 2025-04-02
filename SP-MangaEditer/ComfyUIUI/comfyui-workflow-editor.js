@@ -26,7 +26,7 @@ class ComfyUIWorkflowEditor {
     try {
       const response = await fetch(comfyUIUrls.objectInfoOnly);
       if (!response.ok) {
-        throw new Error(`ObjectInfo取得失敗: ステータス ${response.status}`);
+        throw new Error(`ObjectInfo failed to get, status: ${response.status}`);
       }
 
       this.nodeTypes = await response.json();
@@ -36,7 +36,7 @@ class ComfyUIWorkflowEditor {
         tab.renderNodes();
       });
     } catch (error) {
-      console.error("ObjectInfoとWorkflowの更新中にエラー:", error);
+      console.error("ObjectInfo and workflows update failed", error);
     }
   }
 
@@ -76,7 +76,7 @@ class ComfyUIWorkflowEditor {
           firstTabId = id;
         }
       } catch (error) {
-        console.error(`ワークフロー "${name}" の読み込みに失敗しました:`, error);
+        console.error(`workflow "${name}" failed to load`, error);
       }
     }
 

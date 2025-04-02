@@ -125,7 +125,7 @@ async function Comfyui_apiHeartbeat() {
 async function Comfyui_queue_prompt(prompt) {
   console.log("Sending prompt to ComfyUI:", prompt);
 
-  const p = { prompt: prompt, client_id: comfyUIuuid };
+  const p = { prompt: prompt, client_id: comfyUIuuid }; //127.0.0.1:8188/prompt
   const response = await fetch(comfyUIUrls.prompt, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -215,10 +215,9 @@ async function Comfyui_track_prompt_progress(prompt_id) {
   return new Promise((resolve, reject) => {
     socket.onmessage = (event) => {
       if (event.data instanceof Blob) {
-        //akip
+        //skip
       } else {
         const message = JSON.parse(event.data);
-        // console.log('WebSocketメッセージ:', message);
         if (
           message.type === "executing" &&
           message.data.node === null &&
@@ -239,7 +238,7 @@ async function Comfyui_track_prompt_progress(prompt_id) {
 
 async function Comfyui_handle_process_queue(layer, spinnerId, Type = 'T2I') {
   if (!socket) Comfyui_connect();
-  var requestData = baseRequestData(layer);
+  var requestData = requestData(layer);
   if (basePrompt.text2img_model != ""){
     requestData["model"] = basePrompt.text2img_model;
   }
