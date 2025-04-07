@@ -61,7 +61,9 @@ class ComfyUIWorkflowBuilder {
                             const originalValue = typeof node.inputs[inputKey];
                             const newValue = typeof validInputs[inputKey];
                             
-                            if (typeof originalValue === typeof newValue || 
+
+                            if ( originalValue === newValue || 
+
                                 (isNumericType(originalValue) && isNumericType(newValue))) {
                                 node.inputs[inputKey] = validInputs[inputKey];
                             }
