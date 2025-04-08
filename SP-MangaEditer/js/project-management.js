@@ -1,19 +1,7 @@
-// Available api models
-const apis = {
-  A1111: "A1111",
-  COMFYUI: "comfyui"
-};
-
-
 const getDataByName = (files, fileName) => {
   const file = files.find(file => file.name === fileName);
   return file ? file.data : null;
- };
-
-
-
-// Variable to keep track of selected api model to use
-var API_mode = apis.A1111;
+};
 
 document.addEventListener("DOMContentLoaded", function () {
   var settingsSave = $("settingsSave");
@@ -43,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
      var url = window.URL.createObjectURL(mergeLz4Blob);
      var a = document.createElement("a");
      a.href = url;
-     a.download = "DESU-Project.lz4";
+     a.download = "Project.lz4";
      
      document.body.appendChild(a);
      a.click();
@@ -182,7 +170,6 @@ function loadSettingsLocalStrage() {
     $('gridSizeInput').value                  = localSettings.canvasGridLineSize || "10";
     $('marginFromPanel').value                = localSettings.canvasMarginFromPanel || 20;
 
-    $('sdWebUIPageUrl').value                = localSettings.sdWebUIPageUrl || 'http://127.0.0.1:7860';
     $('comfyUIPageUrl').value                = localSettings.comfyUIPageUrl || 'http://127.0.0.1:8188';
 
     $('apiHeartbeatCheckbox').checked         = localSettings.apiHeartbeatCheckbox;

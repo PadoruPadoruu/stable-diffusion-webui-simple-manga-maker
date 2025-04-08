@@ -1,7 +1,7 @@
 {
-  "name": "Manga Editor Desu! Pro Edition",
-  "short_name": "Manga Editor",
-  "description": "The Premier Standalone Manga Editing Platform for SD WebUI, Forge, ComfyUI",
+  "name": "",
+  "short_name": "",
+  "description": "",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

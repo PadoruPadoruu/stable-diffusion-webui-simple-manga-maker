@@ -4,17 +4,18 @@ function openPromptChangeFloatingWindow() {
   floatingWindow.style.cursor = "move"; 
 
   floatingWindow.innerHTML = `
-      <h4>Prompt Replace</h4>
+      <h4>Prompt Clipboard</h4>
       ${createPromptPair("Old Prompt1", "New Prompt1")}
       ${createPromptPair("Old Prompt2", "New Prompt2")}
       ${createPromptPair("Old Prompt3", "New Prompt3")}
       ${createPromptPair("Old Negative Prompt1", "New Negative Prompt1")}
       ${createPromptPair("Old Negative Prompt2", "New Negative Prompt2")}
       ${createPromptPair("Old Negative Prompt3", "New Negative Prompt3")}
-      <button onclick="applyChanges()">All Change</button>
-      <button onclick="closePromptChangeFloatingWindow()">Close</button>
+      <div style="display: flex; justify-content: center; gap: 8px;">
+          <button onclick="applyChanges()">Save</button>
+          <button onclick="closePromptChangeFloatingWindow()">Close</button>
+      </div>
   `;
-
   document.body.appendChild(floatingWindow);
   makeDraggable(floatingWindow);
 }

@@ -1,32 +1,37 @@
-const sdQueue = new TaskQueue(1);
-const comfyuiQueue = new TaskQueue(1);
-
-var firstSDConnection = true;
 var firstComfyConnection = true;
 
-$('sdWebUIPageUrlDefaultUrl').addEventListener('click', (event) => {
-  event.stopPropagation();
-  const defaultUrl = 'http://127.0.0.1:7860';
-  $('sdWebUIPageUrl').value = defaultUrl; 
+// Wait for DOM to be fully loaded before setting up event listeners
+document.addEventListener('DOMContentLoaded', function() {
+  // Setup default URL button for ComfyUI
+  const comfyDefaultUrlBtn = $('comfyUIPageUrlDefaultUrl');
+  const basePromptModel = $('basePrompt_model');
+  const clipDropdown = $('clipDropdownId');
+
+  if (comfyDefaultUrlBtn) {
+    comfyDefaultUrlBtn.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const defaultUrl = 'http://127.0.0.1:8188';
+      const urlInput = $('comfyUIPageUrl');
+      if (urlInput) {
+        urlInput.value = defaultUrl;
+      }
+    });
+  }
+
+  if (basePromptModel) {
+    basePromptModel.addEventListener('change', function(event) {
+      sendModelToComfyUI();
+    });
+  }
+
+  if (clipDropdown) {
+    clipDropdown.addEventListener('change', function(event) {
+      sendClipToComfyUI();
+    });
+  }
 });
-
-$('comfyUIPageUrlDefaultUrl').addEventListener('click', (event) => {
-  event.stopPropagation();
-  const defaultUrl = 'http://127.0.0.1:8188';
-  $('comfyUIPageUrl').value = defaultUrl;
-});
-
-// let API_mode = localStorage.getItem('API_mode') || apis.COMFYUI;
-
-// if (!localStorage.getItem('API_mode')) {
-//     localStorage.setItem('API_mode', apis.COMFYUI);
-// }
 
 function existsWaitQueue() {
-  const sdQueueStatus = sdQueue.getStatus();
-  if( sdQueueStatus.total > 0 ){
-    return true;
-  }
 
   const comfyuiQueueStatus = sdQueue.getStatus();
   if( comfyuiQueueStatus.total > 0 ){
@@ -36,40 +41,25 @@ function existsWaitQueue() {
 
 
 async function T2I( layer, spinner ){
-  if (API_mode == apis.A1111) {
-    sdwebui_T2IProcessQueue(layer, spinner.id);
-  }else if (API_mode == apis.COMFYUI){
+ if (API_mode == apis.COMFYUI){
     return Comfyui_handle_process_queue(layer, spinner.id);
   }
 }
 function I2I( layer, spinner ){
-  if (API_mode == apis.A1111) {
-    sdwebui_I2IProcessQueue(layer, spinner.id);
-  }else if (API_mode == apis.COMFYUI){
+  if (API_mode == apis.COMFYUI){
     Comfyui_handle_process_queue(layer, spinner.id, 'I2I');
   }
 }
 
 async function ai_rembg( layer, spinner ){
-  if (API_mode == apis.A1111) {
-    sdWebUI_RembgProcessQueue(layer, spinner.id);
-  }else if (API_mode == apis.COMFYUI){
+  if (API_mode == apis.COMFYUI){
     return Comfyui_handle_process_queue(layer, spinner.id, 'Rembg');
   }
 }
 
 
 function getDiffusionInfomation() {
-  if (API_mode == apis.A1111) {
-    fetchSDOptions().then(() => {
-      fetchSD_Models();
-      fetchSD_Sampler();
-      fetchSD_Upscaler();
-      fetchSD_ADModels();
-      fetchSD_Modules();  
-    });
-    
-  }else if( API_mode == apis.COMFYUI ){
+if( API_mode == apis.COMFYUI ){
     Comfyui_FetchModels();
     Comfyui_FetchSampler();
     Comfyui_FetchUpscaler();
@@ -90,9 +80,7 @@ console.log("apiHeartbeat");
     return;
   }
 
-  if (API_mode == apis.A1111) {
-    sdwebui_apiHeartbeat();
-  } else if(API_mode == apis.COMFYUI) {
+if(API_mode == apis.COMFYUI) {
     Comfyui_apiHeartbeat();
   }
 
@@ -152,8 +140,6 @@ function updateModelDropdown(models) {
 }
 
 function updateVaeDropdown(models) {
-  // console.log("updateVaeDropdown", JSON.stringify(models))
-
   const dropdown = $('vaeDropdownId');
   dropdown.innerHTML = '';
   models.forEach(model => {
@@ -165,25 +151,88 @@ function updateVaeDropdown(models) {
   });
 }
 
-
-//Before:ABC.safetensors [23e4fa2b6f]
-//After :ABC.safetensors
 function removeHashStr(str) {
   return str.replace(/\s*\[[^\]]+\]\s*$/, '');
 }
 
-$('basePrompt_model').addEventListener('change', function(event){
-  if (API_mode == apis.A1111) {
-    sendModelToServer();
-  }else if( API_mode == apis.COMFYUI ){
-    //TODO
-  }
-});
+// ComfyUI model change handler
+async function sendModelToComfyUI() {
+  const modelValue = basePrompt.text2img_model;
+  const workflowType = getSelectedValueByGroup("generateWorkflow");
+  
+  try {
+    const templateConfig = getTemplateConfig(workflowType);
+    if (!templateConfig) {
+      console.warn("Unknown workflow type:", workflowType);
+      return;
+    }
 
-$('clipDropdownId').addEventListener('change', function(event){
-  if (API_mode == apis.A1111) {
-    sendClipToServer();
-  }else if( API_mode == apis.COMFYUI ){
-    //TODO
+    // Get the workflow template
+    const workflow = templateConfig.getTemplate();
+
+    // Update the model in the workflow if a model node is specified
+    if (templateConfig.modelNode) {
+      workflow[templateConfig.modelNode].inputs.ckpt_name = modelValue;
+    }
+
+    // Send the updated workflow to ComfyUI
+    await Comfyui_UpdateWorkflow(workflow);
+    createToast("Model Updated", `Successfully updated model to ${modelValue}`);
+  } catch (error) {
+    console.error("Failed to update model:", error);
+    createToastError("Model Update Failed", error.message);
   }
-});
+}
+
+// ComfyUI clip model change handler
+async function sendClipToComfyUI() {
+  const clipValue = getSelectedTagifyValues("clipDropdownId");
+  const workflowType = getSelectedValueByGroup("generateWorkflow");
+  
+  try {
+    const templateConfig = getTemplateConfig(workflowType);
+    if (!templateConfig) {
+      console.warn("Unknown workflow type:", workflowType);
+      return;
+    }
+
+    // Get the workflow template
+    const workflow = templateConfig.getTemplate();
+
+    // Update the clip model in the workflow if needed
+    if (templateConfig.usesSeparateClip && templateConfig.clipNode) {
+      workflow[templateConfig.clipNode].inputs.clip_name1 = clipValue[0];
+      workflow[templateConfig.clipNode].inputs.clip_name2 = clipValue[1] || clipValue[0];
+    } else {
+      console.log(`${workflowType} uses clip models from checkpoint`);
+    }
+
+    await Comfyui_UpdateWorkflow(workflow);
+    createToast("Clip Model Updated", `Successfully updated clip model to ${clipValue.join(", ")}`);
+  } catch (error) {
+    console.error("Failed to update clip model:", error);
+    createToastError("Clip Model Update Failed", error.message);
+  }
+}
+
+// Example of how to register a new template
+function registerCustomTemplate() {
+  // Example template registration
+  registerWorkflowTemplate("CUSTOM_TEMPLATE", {
+    getTemplate: function() {
+      return {
+        // Your custom workflow template here
+      };
+    },
+    modelNode: "2", // Node ID for model updates
+    clipNode: "3",  // Node ID for clip updates
+    usesSeparateClip: true
+  });
+}
+
+// registerWorkflowTemplate("YOUR_TEMPLATE_NAME", {
+//   getTemplate: yourTemplateFunction,
+//   modelNode: "node_id_for_model",
+//   clipNode: "node_id_for_clip",
+//   usesSeparateClip: true/false
+// });

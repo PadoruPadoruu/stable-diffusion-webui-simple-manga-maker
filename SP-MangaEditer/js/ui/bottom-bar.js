@@ -1,8 +1,8 @@
 //{guid, { imageLink, blob }} blob is lz4
 const btmProjectsMap = new Map();
 
-const btmDrawer = $("btm-drawer");
-const btmDrawerHandle = $("btm-drawer-handle");
+const btmDrawer = $("page-viewer");
+const btmDrawerHandle = $("page-viewer-handle");
 const btmImageContainer = $("btm-image-container");
 const btmScrollLeftBtn = $("btm-scroll-left");
 const btmScrollRightBtn = $("btm-scroll-right");
@@ -193,7 +193,7 @@ function reorderImages(targetIndex, newGuid) {
 
 function btmUpdateScrollButtons() {
   const containerWidth = btmDrawer.querySelector(
-    ".btm-drawer-content"
+    ".page-viewer-content"
   ).offsetWidth;
   const scrollWidth = btmImageContainer.scrollWidth;
   btmScrollLeftBtn.style.display = btmScrollPosition > 0 ? "block" : "none";
@@ -206,7 +206,7 @@ function btmUpdateScrollButtons() {
 
 function btmScroll(direction) {
   const containerWidth = btmDrawer.querySelector(
-    ".btm-drawer-content"
+    ".page-viewer-content"
   ).offsetWidth;
   btmScrollPosition += direction * containerWidth;
   btmScrollPosition = Math.max(
@@ -258,7 +258,7 @@ document.addEventListener("DOMContentLoaded", function () {
       document.removeEventListener("mousemove", btmDrag);
       document.removeEventListener("mouseup", btmStopDrag);
       const containerWidth = btmDrawer.querySelector(
-        ".btm-drawer-content"
+        ".page-viewer-content"
       ).offsetWidth;
       btmScrollPosition = Math.max(
         0,

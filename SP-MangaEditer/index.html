@@ -1,48 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <title>FYP tbd</title>
-
+    <title>Comic Editor</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#121111">
     <link rel="apple-touch-icon" href="03_images/icon/icon_full_192_192.png">
     <link rel="icon" href="03_images/icon/icon_full_192_192.png">
     <link rel="shortcut icon" href="03_images/icon/icon_full_192_192.png">
 
-    <meta property="og:title" content="Pedro's FYP" />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="" />
-    <meta property="og:image" content="https://raw.githubusercontent.com/new-sankaku/SP-MangaEditer/main/03_images/PagePreview/Git/Preview.png" />
-    <meta property="og:description" content="Manga Editor : SD WebUI, Forge, ComfyUI" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@hypersankaku2" />
-    <meta property="og:site_name" content="Manga Editor" />
-    <meta property="og:locale" content="en_US" />
-    <meta property="og:locale" content="debug" />
-    <meta property="og:locale:alternate" content="ja_JP" />
-    <meta property="og:locale:alternate" content="ko_KR" />
-    <meta property="og:locale:alternate" content="fr_FR" />
-    <meta property="og:locale:alternate" content="zh_CN" />
-    <meta property="og:locale:alternate" content="tw_TW" />
-    <meta property="og:locale:alternate" content="ru_RU" />
-    <meta property="og:locale:alternate" content="es_ES" />
-    <meta property="og:locale:alternate" content="pt_BR" />
-    <meta property="og:locale:alternate" content="th_TH" />
-    <meta property="og:locale:alternate" content="de_DE" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Manga Editor Preview Image" />
-    <meta charset="UTF-8">
-    <meta name="description"
-        content="Discover Manga Editor Desu! Pro Edition, your ultimate online manga editing tool. Customize and enhance your manga with user-friendly panels, speech bubbles, and dynamic text effects. Perfect for both beginners and professional artists.">
-    <meta name="keywords"
-        content="manga editing, manga editor online, manga creation tool, comic editing software, digital manga editor, Stable diffusion web ui, Stable diffusion Forge, stable-diffusion-webui-simple-manga-maker">
-    <script async src="third/GoogleAnalytics/googleAnalytics.js"></script>
 
+    <!--preload fonts-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Klee+One&family=M+PLUS+1p&family=Noto+Sans+JP:wght@100..900&family=Zen+Maru+Gothic&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=East+Sea+Dokdo&family=IBM+Plex+Sans+KR&family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Bangers&family=Bungee+Shade&family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Creepster&family=Permanent+Marker&family=Rubik+Mono+One&display=swap" rel="stylesheet">
@@ -55,12 +24,11 @@
 
 const $ = (id) => document.getElementById(id);
 const $on = (element, event, callback) => element.addEventListener(event, callback);
-// function addEL(a, b, c, d = !1) { a.addEventListener(b, c, d) }
 
         const e = $("a"), f = [
-"Initializing core system...","Sun network connection: Failed","Moon network connection: Successful","Authentication process: All green","CO2 emission reduction system: Started",
-"Layer launch: Completed","Canvas launch: Completed","Fabric.js launch: Completed","Effect function initialization: Completed",
-"Font download: Completed","Coordinate measurement: Normal","CSS launch: Normal","Script launch: Normal"
+"Initializing...","Local Connection: Successful",
+"Layer initialization: Complete","Canvas loading: Complete","Fabric.js launch: Completed","Effect function initialization: Completed",
+"Font pre-loading: Completed","Coordinate measurement: Normal","CSS launch: Normal","Fingers Crossed :)"
         ];
         function g() {
             const a = document.createElement("div");
@@ -89,11 +57,18 @@ const b = `<svg viewBox="0 0 100 100" width="100%" height="100%" style="position
             const p = document.createElementNS("http://www.w3.org/2000/svg", "svg");
             p.setAttribute("width", "100"), p.setAttribute("height", "100"), p.style.cssText = "position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);";
 
-            const q = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-            q.setAttribute("points", "50,10 90,30 90,70 50,90 10,70 10,30"), q.setAttribute("stroke", "#fff"), q.setAttribute("stroke-width", "2"), q.setAttribute("fill", "none");
 
-            const r = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-            return r.setAttribute("points", "50,25 75,75 25,75"), r.setAttribute("stroke", "#fff"), r.setAttribute("stroke-width", "2"), r.setAttribute("fill", "none"), r.style.transformOrigin = "center", r.style.animation = "n 1s linear infinite", p.appendChild(q), p.appendChild(r), a.appendChild(p), document.body.appendChild(a), { page: a, hexagon: q, triangle: r }
+            //sphere creation may used
+            const q = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            q.setAttribute("cx", "50"), q.setAttribute("cy", "50"), q.setAttribute("r", "40");
+            q.setAttribute("stroke", "#fff"), q.setAttribute("stroke-width", "2"), q.setAttribute("fill", "none");
+
+            const r = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            return r.setAttribute("cx", "50"), r.setAttribute("cy", "50"), r.setAttribute("r", "20"),
+            r.setAttribute("stroke", "#fff"), r.setAttribute("stroke-width", "2"), r.setAttribute("fill", "none"),
+            r.style.transformOrigin = "center", r.style.animation = "n 1s linear infinite",
+            p.appendChild(q), p.appendChild(r), a.appendChild(p), document.body.appendChild(a),
+            { page: a, hexagon: q, triangle: r }
         }
         function h(a, b) {
             let c = 0;
@@ -108,7 +83,7 @@ const b = `<svg viewBox="0 0 100 100" width="100%" height="100%" style="position
             const o = Date.now();
 
             window.addEventListener('load', function () {
-                const p = Date.now(), q = Math.max(0, 500 - (p - o));
+                const p = Date.now(), q = Math.max(0, 300 - (p - o));
                 setTimeout(() => {
                     i(b, c);
                     a.remove();
@@ -117,9 +92,9 @@ const b = `<svg viewBox="0 0 100 100" width="100%" height="100%" style="position
             });
         }
         function l() {
-            $('desu-nav').style.display = 'flex',
-            $('head-id').style.display = 'flex',
-            $('btm-drawer').style.display = 'block'
+            $('main-nav').style.display = 'flex',
+            $('headLoader').style.display = 'flex',
+            $('page-viewer').style.display = 'block'
             $('a').style.display = 'none'
             initResizeCanvas();
         }
@@ -132,18 +107,7 @@ const b = `<svg viewBox="0 0 100 100" width="100%" height="100%" style="position
 
 
         window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-        gtag('config', 'G-YWPRKY7WKV');
 
-        function trackCustomEvent(eventCategory, eventAction, eventLabel, eventValue, additionalParams) {
-            gtag('event', eventAction, {
-                'event_category': eventCategory,
-                'event_label': eventLabel,
-                'value': eventValue,
-                ...additionalParams
-            });
-        }
 
 document.addEventListener('click', function (event) {
     var element = event.target;
@@ -156,18 +120,6 @@ document.addEventListener('click', function (event) {
     var pageUrl = window.location.href;
     var parentTag = element.parentElement ? element.parentElement.tagName.toLowerCase() : 'no-parent';
 
-    trackCustomEvent(
-        'click_' + tagName,
-        elementId + ' | ' + elementClasses,
-        textContent,
-        1,
-        {
-            'click_x': clickX,
-            'click_y': clickY,
-            'page_url': pageUrl,
-            'parent_tag': parentTag
-        }
-    );
 });
 
 function getElementClasses(element) {
@@ -178,71 +130,52 @@ function getElementClasses(element) {
     }
     return 'no-class';
 }
-        window.addEventListener('scroll', function () {
-            var scrollDepth = Math.max(document.documentElement.scrollTop, document.body.scrollTop);
-            trackCustomEvent('scroll', 'page_scroll', 'Scroll Depth', scrollDepth, {});
-        });
 
-        window.addEventListener('load', function () {
-            trackCustomEvent('page_load', 'page_load', 'Page Load', 1, {});
-        });
-
-        window.addEventListener('beforeunload', function () {
-            trackCustomEvent('page_unload', 'page_unload', 'Page Unload', 1, {});
-        });
     </script>
-
-<link rel="stylesheet" href="css/core/main-component.css?v=7.2">
-<link rel="stylesheet" href="css/css2.css?v=7.2">
-<link rel="stylesheet" href="css/icon.css?v=7.2">
-<link rel="stylesheet" href="css/form.css?v=7.2">
-<link rel="stylesheet" href="css/controls-mini.css?v=7.2">
-<link rel="stylesheet" href="css/common.css?v=7.2">
-<link rel="stylesheet" href="css/components.css?v=7.2">
-<link rel="stylesheet" href="css/layout.css?v=7.2">
-<link rel="stylesheet" href="css/image-controle-manager.css?v=7.2">
-<!-- <link rel="stylesheet" href="css/anime.css?v=7.2"> -->
-<link rel="stylesheet" href="css/layout-layer.css?v=7.2">
-<link rel="stylesheet" href="css/toast.css?v=7.2">
-<link rel="stylesheet" href="css/ui/mode-change.css?v=7.2">
-<link rel="stylesheet" href="css/ui/object-menu.css?v=7.2">
-<link rel="stylesheet" href="css/ui/share.css?v=7.2">
-<link rel="stylesheet" href="css/ui/flowting-window.css?v=7.2">
-<link rel="stylesheet" href="css/ui/image-prompt-helper.css?v=7.2">
-<link rel="stylesheet" href="css/ui/overlay-progress.css?v=7.2">
+<!--tbd-->
+<link rel="stylesheet" href="css/core/main-component.css">
+<link rel="stylesheet" href="css/css2.css">
+<link rel="stylesheet" href="css/icon.css">
+<link rel="stylesheet" href="css/form.css">
+<link rel="stylesheet" href="css/controls-mini.css">
+<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/image-controle-manager.css">
+<link rel="stylesheet" href="css/layout-layer.css">
+<link rel="stylesheet" href="css/toast.css">
+<link rel="stylesheet" href="css/ui/mode-change.css">
+<link rel="stylesheet" href="css/ui/object-menu.css">
+<link rel="stylesheet" href="css/ui/share.css">
+<link rel="stylesheet" href="css/ui/flowting-window.css">
+<link rel="stylesheet" href="css/ui/image-prompt-helper.css">
+<link rel="stylesheet" href="css/ui/overlay-progress.css">
 
 <link rel="stylesheet" href="third/tippy/tippy.css">
 <link rel="stylesheet" href="third/Bootstrup/bootstrap.min.css">
-<link rel="stylesheet" href="css/all.min.css?v=7.2">
+<link rel="stylesheet" href="css/all.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/4.1.3/css/flag-icons.min.css">
-<link rel="stylesheet" href="css/ui/blend.css?v=7.2">
-<link rel="stylesheet" href="css/ui/bottom-bar.css?v=7.2">
-<link rel="stylesheet" href="css/ui/custom-html-components.css?v=7.2">
-<link rel="stylesheet" href="css/tagify.css?v=7.2">
+<link rel="stylesheet" href="css/ui/blend.css">
+<link rel="stylesheet" href="css/ui/bottom-bar.css">
+<link rel="stylesheet" href="css/ui/custom-html-components.css">
+<link rel="stylesheet" href="css/tagify.css">
 
-<link rel="stylesheet" href="css/ui/font-manager.css?v=7.2">
+<link rel="stylesheet" href="css/ui/font-manager.css">
 
 <script src="https://cdn.jsdelivr.net/npm/stacktrace-js/dist/stacktrace.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.31.3/tagify.min.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.31.3/tagify.min.css" rel="stylesheet" type="text/css" />
 <script src="https://unpkg.com/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"></script>
 
-<link rel="stylesheet" href="css/comfyui-workflow-editor.css?v=7.2">
+<link rel="stylesheet" href="css/comfyui-workflow-editor.css">
 
 </head>
 
 <body>
-
-    <div itemscope itemtype="http://schema.org/SoftwareApplication">
-        <meta itemprop="name" content="">
-        <meta itemprop="description"
-            content="My Final year project, forked from manga-maker Desu!, which also a half way through on ControlNet settings">
-        <meta itemprop="applicationCategory" content="Multimedia">
-
-
 <!-- Category:Menu -->
-        <nav id="desu-nav" class="navbar navbar-expand custom-navbar" style="display: none;">
+        <nav id="main-nav" class="navbar navbar-expand custom-navbar" style="display: none;">
             <a class="navbar-brand" href="#">
+                <!--tbd img-->
                 <img src="02_images_svg/Logo/icon_full_192_192.png" alt=""
                     class="navbar-logo" id="navbar-logo">
             </a>
@@ -308,8 +241,8 @@ function getElementClasses(element) {
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="#" onclick="allRemove()">
-                                    <i class="material-icons">delete</i> <span data-i18n="allRemove">All Remove</span>
+                                <a class="dropdown-item" href="#" onclick="deleteAll()">
+                                    <i class="material-icons">delete</i> <span data-i18n="deleteAll">DeleteAll</span>
                                 </a>
                             </li>
                         </ul>
@@ -329,7 +262,7 @@ function getElementClasses(element) {
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item" onclick="createImagePromptHelperFlotingWindow()">
+                                <a class="dropdown-item" onclick="createImagePromptHelperFloatingWindow()">
                                     <i class="material-icons">medical_information</i> <span
                                         data-i18n="PromptHelper">Prompt Helper</span>
                                 </a>
@@ -341,11 +274,10 @@ function getElementClasses(element) {
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
-                            <span id="intro_sdWebUI" data-i18n="externalServices"></span>
+                            <span id="Api_config_page" data-i18n="externalServices"></span>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             <!--ComfyUI-->
-                            
                             <div class="Comfyui_api_content">
                                 <li>
                                     <label>
@@ -371,33 +303,7 @@ function getElementClasses(element) {
                                         <span data-i18n="DEFAULT">DEFAULT</span>
                                     </button>
                                 </li>
-
                         </div><hr>
-                            <!--A1111-->
-                            <div class="A1111_api_content">
-                                <li>
-                                    <label>
-                                        <h5 data-i18n="">WebUI(A1111/Forge)</h5>
-                                    </label>
-                                    <label for="sdWebUIPageUrl">
-                                        <span data-i18n="apiUrl">API Page URL:</span>
-                                        <input type="text" id="sdWebUIPageUrl" value="http://127.0.0.1:7860">
-                                    </label>
-                                </li>
-                                <li>
-                                    <a href="html/API_Help/sd-api-guide.html" target="_blank">
-                                        <i class="material-icons">help_outline</i>
-                                        <span data-i18n="help_api_connect_settings">
-                                        </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <button id="sdWebUIPageUrlDefaultUrl">
-                                        <span data-i18n="DEFAULT">DEFAULT</span>
-                                    </button>
-                                </li>
-                            </div>
-
                         </ul>
                     </li>
                 </ul>
@@ -415,8 +321,8 @@ function getElementClasses(element) {
                             </a>
 
                             <a class="dropdown-item">
-                                <i class="material-icons">photo_size_select_large</i> <span
-                                    data-i18n="downloadDpi">Download Dpi</span>
+                                <i class="material-icons">perm_media</i> <span
+                                    data-i18n="ImageDpi">Image Dpi</span>
                                 <input type="number" id="outputDpi" class="dropdown-item-mini-text" value="300" min="96"
                                     step="1">
                             </a>
@@ -447,6 +353,7 @@ function getElementClasses(element) {
                             data-bs-toggle="dropdown" aria-expanded="false">
                             <span data-i18n="help">Help</span>
                         </a>
+                        <!--tbd changing these nuts-->
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             <a class="dropdown-item" href="html/Shortcut/shortcut.html" target="_blank">
                                 <i class="material-icons">switch_access_shortcut</i>
@@ -482,14 +389,16 @@ function getElementClasses(element) {
                             <span id="language" data-i18n="language" data-step="1" data-intro="">Language</span>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <!-- tbd will be deleted-->
                             <a id="Intro_Tutorial" class="dropdown-item" href="#" target="_blank">
+
                                 <i class="material-icons">volunteer_activism</i>
                                 <span data-i18n="Tutorial">Tutorial</span>
                             </a>
 
 
                             <a class="dropdown-item" href="#" target="_blank" onclick="changeLanguage('debug', event)">
-                                <span class="flag-icon flag-icon-css"></span> <span data-i18n="debug">DEBUG tbd</span>
+                                <span class="flag-icon flag-icon-css"></span> <span data-i18n="debug">DEBUG</span>
                             </a>
 
                             <a class="dropdown-item" href="#" target="_blank" onclick="changeLanguage('en', event)">
@@ -539,6 +448,7 @@ function getElementClasses(element) {
                             data-bs-toggle="dropdown" aria-expanded="false">
                             <span id="intro_links" data-i18n="links">Links</span>
                         </a>
+                        <!--tbd gotta use your own links-->
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             <a class="dropdown-item" href="https://new-sankaku.github.io/SP-MangaEditer/"
                                 target="_blank">
@@ -551,42 +461,15 @@ function getElementClasses(element) {
                                 <i class="material-icons">emoji_people</i>
                                 <span>Danbooru Tag Check</span>
                             </a>
-
                             <a class="dropdown-item" href="https://new-sankaku.github.io/desu-lz4-viewer/"
                             target="_blank">
                             <i class="material-icons">emoji_people</i>
                             <span>Project File Viewer</span>
-                            </a>
-
-                            <a class="dropdown-item" href="html/PrivacyPolicy/i18n-privacy-dark-complete.html" target="_blank">
-                                <i class="material-icons">verified_user</i>
-                                <span>Privacy Policy</span>
-                            </a>
-
-                            
-                            <a class="dropdown-item" href="html/TermsOfService/terms-of-service.html" target="_blank">
-                                <i class="material-icons">verified_user</i>
-                                <span data-i18n="terms_of_service">Terms of Service</span>
-                            </a>
-
-                            
+                            </a>                            
                         </ul>
                     </li>
                 </ul>
-                <ul class="navbar-nav">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <span id="intro_links" data-i18n="Share">Share</span>
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <a class="dropdown-item" target="_blank" onclick="snsTweet()">
-                                <i class="fab fa-twitter"></i>
-                                <span>Twitter</span>
-                            </a>
-                        </ul>
-                    </li>
-                </ul>
+
 
 
 
@@ -610,91 +493,81 @@ function getElementClasses(element) {
         </nav>
 
         <!-- Link html-loader.js -->
-        <div id="head-id" style="display: none; flex-grow: 1;">
+        <div id="headLoader" style="display: none; flex-grow: 1;">
             <div id="sidebar">
                 <div class="icon-wrapper">
                  <i class="material-icons" id="intro_svg-container-vertical" onclick="toggleVisibility('svg-container-vertical')">crop_portrait</i>
-                 <span class="icon-label" data-i18n="side-label-template-vertical" onclick="toggleVisibility('svg-container-vertical')">ひな形 縦</span>
+                 <span class="icon-label" data-i18n="side-label-template-vertical" onclick="toggleVisibility('svg-container-vertical')">Template Vertical</span>
                 </div>
                 <hr>
                 <div class="icon-wrapper">
                  <i class="material-icons" id="intro_svg-container-landscape" onclick="toggleVisibility('svg-container-landscape')">crop_16_9</i>
-                 <span class="icon-label" data-i18n="side-label-template-landscape" onclick="toggleVisibility('svg-container-landscape')">ひな形 横</span>
+                 <span class="icon-label" data-i18n="side-label-template-landscape" onclick="toggleVisibility('svg-container-landscape')">Template Landscape</span>
                 </div>
                 <hr>
                 <div class="icon-wrapper">
                  <i class="material-icons" id="intro_page-manager-area" onclick="toggleVisibility('panel-manager-area')">dashboard</i>
-                 <span class="icon-label" data-i18n="side-label-page-manager" onclick="toggleVisibility('panel-manager-area')">ページ管理</span>
+                 <span class="icon-label" data-i18n="side-label-page-manager" onclick="toggleVisibility('panel-manager-area')">Page Manager</span>
                 </div>
                 <hr>
                 <div class="icon-wrapper">
                  <i class="material-icons" id="intro_custom-panel-manager-area" onclick="toggleVisibility('custom-panel-manager-area')">dashboard_customize</i>
-                 <span class="icon-label" data-i18n="side-label-panel-manager" onclick="toggleVisibility('custom-panel-manager-area')">コマ管理</span>
+                 <span class="icon-label" data-i18n="side-label-panel-manager" onclick="toggleVisibility('custom-panel-manager-area')">Panel Manager</span>
                 </div>
                 <hr>
                 <div class="icon-wrapper">
                  <i class="material-icons" id="intro_auto-generate-area" onclick="toggleVisibility('auto-generate-area')">smart_toy</i>
-                 <span class="icon-label" data-i18n="auto_generate" onclick="toggleVisibility('auto-generate-area')">自動生成</span>
+                 <span class="icon-label" data-i18n="auto_generate" onclick="toggleVisibility('auto-generate-area')">Auto Generate</span>
                 </div>
                 <hr>
-
-                <div class="icon-wrapper">
-                 <i class="material-icons" id="intro_prompt-manager-area" onclick="toggleVisibility('prompt-manager-area')">assignment</i>
-                 <span class="icon-label" data-i18n="prompt" onclick="toggleVisibility('prompt-manager-area')">プロンプト</span>
-                 </div>
-                <hr>
-  
                 <div class="icon-wrapper">
                  <i class="material-icons" id="intro_speech-bubble-area1" onclick="toggleVisibility('speech-bubble-area1')">chat_bubble</i>
-                 <span class="icon-label" data-i18n="side-label-template-bubble" onclick="toggleVisibility('speech-bubble-area1')">ひな形💭</span>
+                 <span class="icon-label" data-i18n="side-label-template-bubble" onclick="toggleVisibility('speech-bubble-area1')">Template Bubble</span>
                 </div>
                 <hr>
                 <div class="icon-wrapper">
                  <i class="material-icons" id="intro_speech-bubble-area2" onclick="toggleVisibility('speech-bubble-area2')">reviews</i>
-                 <span class="icon-label" data-i18n="side-label-free-bubble" onclick="toggleVisibility('speech-bubble-area2')">自由💭</span>
+                 <span class="icon-label" data-i18n="side-label-free-bubble" onclick="toggleVisibility('speech-bubble-area2')">Free Bubble</span>
                 </div>
                 <hr>
                 <div class="icon-wrapper">
                  <i class="material-icons" id="intro_text-area" onclick="toggleVisibility('text-area')">text_format</i>
-                 <span class="icon-label" data-i18n="side-label-text" onclick="toggleVisibility('text-area')">テキスト</span>
+                 <span class="icon-label" data-i18n="side-label-text" onclick="toggleVisibility('text-area')">Text</span>
                 </div>
                 <hr>
                 <div class="icon-wrapper">
                  <i class="material-icons" id="intro_text-area2" onclick="toggleVisibility('text-area2')">text_increase</i>
-                 <span class="icon-label" data-i18n="side-label-image-text" onclick="toggleVisibility('text-area2')">画像テキスト</span>
+                 <span class="icon-label" data-i18n="side-label-image-text" onclick="toggleVisibility('text-area2')">Image Text</span>
                 </div>
                 <hr>
                 <div class="icon-wrapper">
                  <i class="material-icons" id="intro_tool-area" onclick="toggleVisibility('tool-area')">brush</i>
-                 <span class="icon-label" data-i18n="side-label-pen" onclick="toggleVisibility('tool-area')">ペン</span>
+                 <span class="icon-label" data-i18n="side-label-pen" onclick="toggleVisibility('tool-area')">Pen</span>
                 </div>
                 <hr>
                 <div class="icon-wrapper">
                  <i class="material-icons" id="intro_manga-tone-area" onclick="toggleVisibility('manga-tone-area')">blur_linear</i>
-                 <span class="icon-label" data-i18n="side-label-tone" onclick="toggleVisibility('manga-tone-area')">トーン</span>
+                 <span class="icon-label" data-i18n="side-label-tone" onclick="toggleVisibility('manga-tone-area')">Tone</span>
                 </div>
                 <hr>
                 <div class="icon-wrapper">
                  <i class="material-icons" id="intro_manga-effect-area" onclick="toggleVisibility('manga-effect-area')">filter_b_and_w</i>
-                 <span class="icon-label" data-i18n="side-label-effect" onclick="toggleVisibility('manga-effect-area')">効果</span>
+                 <span class="icon-label" data-i18n="side-label-effect" onclick="toggleVisibility('manga-effect-area')">Effect</span>
                 </div>
                 <hr>
                 <div class="icon-wrapper">
                  <i class="material-icons" id="intro_rough-manager-area" onclick="toggleVisibility('rough-manager-area')">stairs</i>
-                 <span class="icon-label" data-i18n="side_label_rough" onclick="toggleVisibility('rough-manager-area')">ラフ</span>
+                 <span class="icon-label" data-i18n="side_label_rough" onclick="toggleVisibility('rough-manager-area')">Rough</span>
                 </div>
                 <hr>
-
-
-                
                 <div class="icon-wrapper">
                  <i class="material-icons" id="intro_controle-area" onclick="toggleVisibility('controle-area')">videogame_asset</i>
-                 <span class="icon-label" data-i18n="side-label-control" onclick="toggleVisibility('controle-area')">操作</span>
+                 <span class="icon-label" data-i18n="side-label-control" onclick="toggleVisibility('controle-area')">Control</span>
                 </div>
                 <hr>
                 <div class="icon-wrapper">
                  <i class="material-icons" id="intro_shape-area" onclick="toggleVisibility('shape-area')">interests</i>
-                 <span class="icon-label" data-i18n="side-label-shape" onclick="toggleVisibility('shape-area')">図形</span>
+                 <span class="icon-label" data-i18n="side-label-shape" onclick="toggleVisibility('shape-area')">Shape</span>
                 </div>
                </div>
 
@@ -716,7 +589,7 @@ function getElementClasses(element) {
                 <div id="panel-manager-items">
                     <div class="input-group">
                         <button id="knifeModeButton">
-                            <span data-i18n="knifeMode">Knife Mode: OFF</span>
+                            <span data-i18n="knifeMode"></span>
                         </button>
                     </div>
                     <div class="input-container-leftSpace" data-i18n-label="spaceSizeLabel">
@@ -927,15 +800,6 @@ function getElementClasses(element) {
 
 
 
-
-
-
-
-
-
-
-
-
 <!-- Category:PromptManager -->
             <div class="left_area" id="auto-generate-area" style="display: none;">
                 <div class="area-header" data-i18n="auto_generate">Auto Generate</div>
@@ -993,6 +857,7 @@ function getElementClasses(element) {
                         <select id="ScenarioPromptSelecter"></select>
                     </div>
 
+                    <!--tbd this shit needs to be investigated-->
                     <button id="" onclick="autoMultiPromptSet()">
                         <i class="material-icons">generating_tokens</i>
                         <span data-i18n="promptMultiAutoGenerate">Multi Prompt Generate</span>
@@ -1010,40 +875,6 @@ function getElementClasses(element) {
                     <hr>
                 </div>
             </div>
-
-
-
-<!-- Category:PromptManager -->
-<div class="left_area" id="prompt-manager-area" style="display: none;">
-    <div class="area-header" data-i18n="prompt"></div>
-    <div id="prompt-manager-items">
-     <div class="input-group">
-      <button onclick="createImagePromptHelperFlotingWindow()">
-       <span data-i18n="prompt_gallery">Prompt Gallery</span>
-      </button>
-     </div>
-    </div>
-   </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- Category:SpeechBubble -->
             <div class="left_area" id="speech-bubble-area1" style="display: none;">
                 <div class="area-header" data-i18n="bubble">Bubble</div>
@@ -1090,17 +921,13 @@ function getElementClasses(element) {
 
 <!-- Category:CustomSpeechBubble -->
             <div class="left_area" id="speech-bubble-area2" style="display: none;">
-                <div class="area-header">
-                    <a href="html/Minual/custom-speechBubble.html" target="_blank" data-i18n="custom_bubble">
-                        Custom Bubble (Help)
-                    </a>
-                </div>
                 <div id="speech-bubble-svg-preview-area1">
                     <div class="input-group">
                         <button id="sbSelectButton" data-i18n="sbSelectmode">Select Mode</button>
                         <button id="sbPointButton" data-i18n="sbPointMode">Point Mode</button>
                         <button id="sbFreehandButton" data-i18n="sbFreehandMode">Free Hand</button>
                         <button id="sbMoveButton" data-i18n="sbMoveMode">Move Point</button>
+                    <!--removing this function-->
                         <button id="sbDeleteButton" data-i18n="sbDeleteMode">Delete Point</button>
                     </div>
                     <hr>
@@ -1247,23 +1074,11 @@ function getElementClasses(element) {
 
 
             <div class="left_area" id="text-area2" style="display: none;">
-                <div class="area-header" data-i18n="image_text">
-                    <a href="html/Minual/custom-text.html" target="_blank">
-                        Custom Text(Help)
-                    </a>
-                </div>
-
                 <div id="tool-buttons">
                     <div id="text-preview-area2">
                         <button id="shadowButton" onclick="switchText2('shadow')">
                             <span data-i18n="shadow">Shadow</span>
                             <img src="03_images/preset/text/t2_shadow.webp" style="width: 100%;">
-                        </button>
-                    </div>
-                    <div id="text-preview-area2">
-                        <button id="wildButton" onclick="switchText2('wild')">
-                            <span data-i18n="wild">wild</span>
-                            <img src="03_images/preset/text/t2_wild.webp" style="width: 100%;">
                         </button>
                     </div>
                     <div id="text-preview-area2">
@@ -1291,6 +1106,12 @@ function getElementClasses(element) {
                         </button>
                     </div>
                     <div id="text-preview-area2">
+                        <button id="wildButton" onclick="switchText2('wild')">
+                            <span data-i18n="wild">wild</span>
+                            <img src="03_images/preset/text/t2_wild.webp" style="width: 100%;">
+                        </button>
+                    </div>
+                    <div id="text-preview-area2">
                         <button id="meshButton" onclick="switchText2('mesh')">
                             <span data-i18n="mesh">mesh</span>
                             <img src="03_images/preset/text/t2_mesh.webp" style="width: 100%;">
@@ -1313,9 +1134,6 @@ function getElementClasses(element) {
                 <hr>
                 <div id="text-area2-settings"></div>
             </div>
-
-
-
 
 
             <div class="left_area" id="manga-effect-area">
@@ -1380,7 +1198,7 @@ function getElementClasses(element) {
     <div class="area-header" data-i18n="Rough"></div>
     <div id="prompt-manager-items">
 
-        <button id="toggle-rough" data-i18n="rough_on">ラフ化ON/OFF</button>
+        <button id="toggle-rough" data-i18n="rough_on"></button>
 
         <div class="param-group" style="border-left:3px solid #594a8a;">
             <div style="font-weight:bold;margin-bottom:5px;color:#594a8a;font-size:12px;" data-i18n="fill_style"></div>
@@ -1504,10 +1322,6 @@ function getElementClasses(element) {
                         <span data-i18n="Pencil">Pencil</span>
                         <img src="03_images/preset/brush/Pencil.webp" alt="Pencil Icon" style="width: 100%;">
                     </button>
-                    <!-- <button id="OutlinePenButton" onclick="switchPencilType('OutlinePen')">
-                        <span data-i18n="OutlinePen">OutlinePen</span>
-                        <img src="03_images/preset/brush/OutlinePen.webp" alt="OutlinePen Icon" style="width: 100%;">
-                    </button> -->
                     <button id="CircleButton" onclick="switchPencilType('Circle')">
                         <span data-i18n="Circle">Circle</span>
                         <img src="03_images/preset/brush/Circle.webp" alt="Circle Icon" style="width: 100%;">
@@ -1798,7 +1612,7 @@ function getElementClasses(element) {
                             <input type="checkbox" id="apiHeartbeatCheckbox" checked>
                             AI Check
                         </label>
-                        <label id="ExternalService_Heartbeat_Label">SD WebUI Check…</label>
+                        <label id="ExternalService_Heartbeat_Label">Port Check…</label>
 
                     </div>
 
@@ -1966,18 +1780,18 @@ function getElementClasses(element) {
                     <div class="area-header" data-i18n="otherControls" onclick='changeHiddenById("other-controls-mini", "otherControls", "otherControlsByClose")'>
                     </div>
                     <div id="other-controls-mini" class="controls-mini">
-                        <label>Panel or Image Prpmpt…</label>
+                        <label>Panel or Image Prompt</label>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="btm-drawer" class="btm-drawer btm-closed" style="display: none;">
-        <div id="btm-drawer-handle" class="btm-drawer-handle neon-text">
+    <div id="page-viewer" class="page-viewer btm-closed" style="display: none;">
+        <div id="page-viewer-handle" class="page-viewer-handle neon-text">
             OPEN
         </div>
-        <div class="btm-drawer-content">
+        <div class="page-viewer-content">
             <div id="btm-image-container" class="btm-image-container"></div>
             <button id="btm-scroll-left" class="btm-scroll-btn btm-scroll-left" style="display: none;">&lt;</button>
             <button id="btm-scroll-right" class="btm-scroll-btn btm-scroll-right" style="display: none;">&gt;</button>
@@ -1989,7 +1803,7 @@ function getElementClasses(element) {
 
     <link rel="stylesheet" href="third/intro/introjs.min.css">
     <link rel="stylesheet" href="css/ui/intro.css?">
-    <link rel="stylesheet" href="css/styles-css.css?v=7.2">
+    <link rel="stylesheet" href="css/styles-css.css">
 
     <script src="third/lz4/wasm.js"></script>
     <script src="third/lz4/lz4asm.js"></script>
@@ -2014,147 +1828,146 @@ function getElementClasses(element) {
     <script src="third/Bootstrup/bootstrap.bundle.min.js"></script>
     <script src="third/font-awesome/all.min.js"></script>
     <script src="third/localforage/localforage.min.js"></script>
-
-    <script src="js/sidebar/pen/fabric/dist/fabric-brush.min.js?v=7.2"></script>
-    <script src="js/sidebar/pen/fabric/brushes/crayon_brush.js?v=7.2"></script>
-    <script src="js/sidebar/pen/fabric/brushes/ink_brush.js?v=7.2"></script>
-    <script src="js/sidebar/pen/fabric/brushes/marker_brush.js?v=7.2"></script>
-    <script src="js/sidebar/pen/fabric/brushes/spray_brush.js?v=7.2"></script>
-    <script src="js/sidebar/pen/fabric/brushes/drip.js?v=7.2"></script>
-    <script src="js/sidebar/pen/fabric/brushes/stroke.js?v=7.2"></script>
-    <script src="js/core/settings.js?v=7.2" defer></script>
-    <script src="js/core/logger.js?v=7.2" defer></script>
+    <script src="js/sidebar/pen/fabric/brushes/fabric-brush.min.js"></script>
+    <script src="js/sidebar/pen/fabric/brushes/crayon_brush.js"></script>
+    <script src="js/sidebar/pen/fabric/brushes/ink_brush.js"></script>
+    <script src="js/sidebar/pen/fabric/brushes/marker_brush.js"></script>
+    <script src="js/sidebar/pen/fabric/brushes/spray_brush.js"></script>
+    <script src="js/sidebar/pen/fabric/brushes/drip.js"></script>
+    <script src="js/sidebar/pen/fabric/brushes/stroke.js"></script>
+    <script src="js/core/settings.js" defer></script>
+    <script src="js/core/logger.js" defer></script>
     
-    <script src="js/ui/glfx-ui.js?v=7.2" defer></script>
-    <script src="js/ui/canvas-object-menu.js?v=7.2" defer></script>
-    <script src="js/ui/third/intro.js?v=7.2" defer></script>
-    <script src="js/ui/toast.js?v=7.2" defer></script>
-    <script src="js/ui/util/ui-util.js?v=7.2" defer></script>
-    <script src="js/ui/third/tippy.js?v=7.2" defer></script>
+    <script src="js/ui/glfx-ui.js" defer></script>
+    <script src="js/ui/canvas-object-menu.js" defer></script>
+    <script src="js/ui/third/intro.js" defer></script>
+    <script src="js/ui/toast.js" defer></script>
+    <script src="js/ui/util/ui-util.js" defer></script>
+    <script src="js/ui/third/tippy.js" defer></script>
 
-    <script src="js/ui/third/base-translation/base-de.js?v=7.2" defer></script>
-    <script src="js/ui/third/base-translation/base-en.js?v=7.2" defer></script>
-    <script src="js/ui/third/base-translation/base-es.js?v=7.2" defer></script>
-    <script src="js/ui/third/base-translation/base-fr.js?v=7.2" defer></script>
-    <script src="js/ui/third/base-translation/base-ja.js?v=7.2" defer></script>
-    <script src="js/ui/third/base-translation/base-ko.js?v=7.2" defer></script>
-    <script src="js/ui/third/base-translation/base-pt.js?v=7.2" defer></script>
-    <script src="js/ui/third/base-translation/base-ru.js?v=7.2" defer></script>
-    <script src="js/ui/third/base-translation/base-th.js?v=7.2" defer></script>
-    <script src="js/ui/third/base-translation/base-zh.js?v=7.2" defer></script>
-    <script src="js/ui/third/base-translation/base-tw.js?v=7.2" defer></script>
-    <script src="js/ui/third/i18next.js?v=7.2" defer></script>
+    <script src="js/ui/third/base-translation/base-de.js" defer></script>
+    <script src="js/ui/third/base-translation/base-en.js" defer></script>
+    <script src="js/ui/third/base-translation/base-es.js" defer></script>
+    <script src="js/ui/third/base-translation/base-fr.js" defer></script>
+    <script src="js/ui/third/base-translation/base-ja.js" defer></script>
+    <script src="js/ui/third/base-translation/base-ko.js" defer></script>
+    <script src="js/ui/third/base-translation/base-pt.js" defer></script>
+    <script src="js/ui/third/base-translation/base-ru.js" defer></script>
+    <script src="js/ui/third/base-translation/base-th.js" defer></script>
+    <script src="js/ui/third/base-translation/base-zh.js" defer></script>
+    <script src="js/ui/third/base-translation/base-tw.js" defer></script>
+    <script src="js/ui/third/i18next.js" defer></script>
 
-    <script src="js/ui/util/mode-change.js?v=7.2" defer></script>
-    <script src="js/ui/util/tagify-util.js?v=7.2" defer></script>
-    <script src="js/ui/imagePromptHelper/prompt-helper.js?v=7.2" defer></script>
-    <script src="js/ui/imagePromptHelper/hc-image-prompt-helper.js?v=7.2" defer></script>
-    <script src="js/ui/imagePromptHelper/image-prompt-helper.js?v=7.2" defer></script>
-    <script src="js/ui/ai/auto-prompt-ui.js?v=7.2" defer></script>
-    <script src="js/ui/overlay-progress.js?v=7.2" defer></script>
-    <script src="js/ui/custom-html-component.js?v=7.2" defer></script>
+    <script src="js/ui/util/mode-change.js" defer></script>
+    <script src="js/ui/util/tagify-util.js" defer></script>
+    <script src="js/ui/imagePromptHelper/prompt-helper.js" defer></script>
+    <script src="js/ui/imagePromptHelper/hc-image-prompt-helper.js" defer></script>
+    <script src="js/ui/imagePromptHelper/image-prompt-helper.js" defer></script>
+    <script src="js/ui/ai/auto-prompt-ui.js" defer></script>
+    <script src="js/ui/overlay-progress.js" defer></script>
+    <script src="js/ui/custom-html-component.js" defer></script>
 
-    <script src="js/core/util/load-util.js?v=7.2" defer></script>
-    <script src="js/core/util/js-util.js?v=7.2" defer></script>
-    <script src="js/core/util/fabric-util.js?v=7.2" defer></script>
-    <script src="js/core/util/image-util.js?v=7.2" defer></script>
-    <script src="js/core/util/anime-util.js?v=7.2" defer></script>
-    <script src="js/core/util/share-util.js?v=7.2" defer></script>
-    <script src="js/core/util/log-util.js?v=7.2" defer></script>
-    <script src="js/core/util/image-analyzer-util.js?v=7.2" defer></script>
-    <script src="js/canvas-manager.js?v=7.2" defer></script>
-    <script src="js/project-management.js?v=7.2" defer></script>
-    <script src="js/shortcut.js?v=7.2" defer></script>
-    <script src="js/panel/grid.js?v=7.2" defer></script>
-    <script src="js/panel/randam-cut.js?v=7.2" defer></script>
-    <script src="js/sidebar/panel/panel-manager.js?v=7.2" defer></script>
-    <script src="js/sidebar/panel/panel-template.js?v=7.2" defer></script>
-    <script src="js/ui/prompt-manager.js?v=7.2" defer></script>
-    <script src="js/ai/role/ai-roles.js?v=7.2" defer></script>
-    <script src="js/ai/queue/spinner.js?v=7.2" defer></script>
-    <script src="js/ai/queue/task-queue.js?v=7.2" defer></script>
-    <script src="js/ai/sdwebui/sdwebui-settings.js?v=7.2" defer></script>
-    <script src="js/ai/sdwebui/sdwebui-multi-call-api.js?v=7.2" defer></script>
-    <script src="js/ai/sdwebui/sdwebui-single-call-api.js?v=7.2" defer></script>
-    <script src="js/ai/comfyui/util/comfyui-util.js?v=7.2" defer></script>
-    <script src="js/ai/comfyui/util/comfyui-workflow-builder.js?v=7.2" defer></script>
-    <script src="js/ai/comfyui/comfyui-management.js?v=7.2" defer></script>
-    <script src="js/ai/ai-settings.js?v=7.2" defer></script>
-    <script src="js/ai/ai-management.js?v=7.2" defer></script>
-    <script src="js/ai/ui/ai-ui-util.js?v=7.2" defer></script>
-    <script src="js/ai/prompt/base-event-listener.js?v=7.2" defer></script>
-    <script src="js/layer/floating-window-management.js?v=7.2" defer></script>
-    <script src="js/layer/layer-button.js?v=7.2" defer></script>
-    <script src="js/layer/layer-management.js?v=7.2" defer></script>
-    <script src="js/layer/image-history-management.js?v=7.2" defer></script>
-    <script src="js/layer/blend/blend.js?v=7.2" defer></script>
+    <script src="js/core/util/load-util.js" defer></script>
+    <script src="js/core/util/js-util.js" defer></script>
+    <script src="js/core/util/fabric-util.js" defer></script>
+    <script src="js/core/util/image-util.js" defer></script>
+    <script src="js/core/util/anime-util.js" defer></script>
+    <script src="js/core/util/share-util.js" defer></script>
+    <script src="js/core/util/log-util.js" defer></script>
+    <script src="js/core/util/image-analyzer-util.js" defer></script>
+    <script src="js/canvas-manager.js" defer></script>
+    <script src="js/shared-config.js" defer></script>
+    <script src="js/project-management.js" defer></script>
+    <script src="js/shortcut.js" defer></script>
+    <script src="js/panel/grid.js" defer></script>
+    <script src="js/panel/randam-cut.js" defer></script>
+    <script src="js/sidebar/panel/panel-manager.js" defer></script>
+    <script src="js/sidebar/panel/panel-template.js" defer></script>
+    <script src="js/ui/prompt-manager.js" defer></script>
+    <script src="js/ai/role/ai-roles.js" defer></script>
+    <script src="js/ai/queue/spinner.js" defer></script>
+    <script src="js/ai/queue/task-queue.js" defer></script>
+    <script src="js/ai/comfyui/util/comfyui-util.js" defer></script>
+    <script src="js/ai/comfyui/util/comfyui-workflow-builder.js" defer></script>
+    <script src="js/ai/comfyui/comfyui-management.js" defer></script>
+    <script src="js/ai/ai-settings.js" defer></script>
+    <script src="js/ai/ai-management.js" defer></script>
+    <script src="js/ai/ui/ai-ui-util.js" defer></script>
+    <script src="js/ai/prompt/base-event-listener.js" defer></script>
+    <script src="js/layer/floating-window-management.js" defer></script>
+    <script src="js/layer/layer-button.js" defer></script>
+    <script src="js/layer/layer-management.js" defer></script>
+    <script src="js/layer/image-history-management.js" defer></script>
+    <script src="js/layer/blend/blend.js" defer></script>
     
-    <script src="js/sidebar/sidebar-ui.js?v=7.2" defer></script>
-    <script src="js/sidebar/sidebar.js?v=7.2" defer></script>
-    <script src="js/sidebar/text/text-effect.js?v=7.2" defer></script>
-    <script src="js/sidebar/text/vertical-text.js?v=7.2" defer></script>
-    <script src="js/sidebar/text/vertical-textbox.js?v=7.2"></script>
-    <script src="js/sidebar/speechBubble/speech-bubble-effect.js?v=7.2" defer></script>
-    <script src="js/sidebar/speechBubble/speech-bubble-freehand.js?v=7.2" defer></script>
-    <script src="js/sidebar/speechBubble/speech-bubble-text.js?v=7.2" defer></script>    
-    <script src="js/sidebar/pen/original-brush.js?v=7.2" defer></script>
-    <script src="js/sidebar/pen/pen-tools.js?v=7.2" defer></script>
-    <script src="js/sidebar/tone/tone-manager.js?v=7.2" defer></script>
-    <script src="js/sidebar/tone/speedline.js?v=7.2" defer></script>
-    <script src="js/sidebar/tone/focusline.js?v=7.2" defer></script>
-    <script src="js/sidebar/tone/tone.js?v=7.2" defer></script>
-    <script src="js/sidebar/tone/tone-noise.js?v=7.2" defer></script>
-    <script src="js/sidebar/tone/snow-tone.js?v=7.2" defer></script>
-    <script src="js/sidebar/text/text-2-manager.js?v=7.2" defer></script>
+    <script src="js/sidebar/sidebar-ui.js" defer></script>
+    <script src="js/sidebar/sidebar.js" defer></script>
+    <script src="js/sidebar/text/text-effect.js" defer></script>
+    <script src="js/sidebar/text/vertical-text.js" defer></script>
+    <script src="js/sidebar/text/vertical-textbox.js"></script>
+    <script src="js/sidebar/speechBubble/speech-bubble-effect.js" defer></script>
+    <script src="js/sidebar/speechBubble/speech-bubble-freehand.js" defer></script>
+    <script src="js/sidebar/speechBubble/speech-bubble-text.js" defer></script>    
+    <script src="js/sidebar/pen/original-brush.js" defer></script>
+    <script src="js/sidebar/pen/pen-tools.js" defer></script>
+    <script src="js/sidebar/tone/tone-manager.js" defer></script>
+    <script src="js/sidebar/tone/speedline.js" defer></script>
+    <script src="js/sidebar/tone/focusline.js" defer></script>
+    <script src="js/sidebar/tone/tone.js" defer></script>
+    <script src="js/sidebar/tone/tone-noise.js" defer></script>
+    <script src="js/sidebar/tone/snow-tone.js" defer></script>
+    <script src="js/sidebar/text/text-2-manager.js" defer></script>
     <script src="js/sidebar/text/custom/custom-text-util.js?7.0" defer></script>
-    <script src="js/sidebar/text/custom/optimized-aurora-text.js?v=7.2" defer></script>
-    <script src="js/sidebar/text/custom/optimized-broken-text.js?v=7.2" defer></script>
-    <script src="js/sidebar/text/custom/optimized-cloud-text.js?v=7.2" defer></script>
-    <script src="js/sidebar/text/custom/optimized-layered-text.js?v=7.2" defer></script>
-    <script src="js/sidebar/text/custom/optimized-mesh-text.js?v=7.2" defer></script>
-    <script src="js/sidebar/text/custom/optimized-scratch-text.js?v=7.2" defer></script>
-    <script src="js/sidebar/text/custom/optimized-shadow-text.js?v=7.2" defer></script>
-    <script src="js/sidebar/text/custom/optimized-thrill-text.js?v=7.2" defer></script>
-    <script src="js/sidebar/text/custom/optimized-wild-text.js?v=7.2" defer></script>
-    <script src="js/sidebar/text/custom/optimized-zebra-text.js?v=7.2" defer></script>
-    <script src="js/sidebar/effect/effect-manager.js?v=7.2" defer></script>
-    <script src="js/sidebar/effect/c2bw_tone.js?v=7.2" defer></script>
-    <script src="js/sidebar/effect/c2c.js?v=7.2" defer></script>
-    <script src="js/sidebar/panel/knife.js?v=7.2" defer></script>
+    <script src="js/sidebar/text/custom/optimized-aurora-text.js" defer></script>
+    <script src="js/sidebar/text/custom/optimized-broken-text.js" defer></script>
+    <script src="js/sidebar/text/custom/optimized-cloud-text.js" defer></script>
+    <script src="js/sidebar/text/custom/optimized-layered-text.js" defer></script>
+    <script src="js/sidebar/text/custom/optimized-mesh-text.js" defer></script>
+    <script src="js/sidebar/text/custom/optimized-scratch-text.js" defer></script>
+    <script src="js/sidebar/text/custom/optimized-shadow-text.js" defer></script>
+    <script src="js/sidebar/text/custom/optimized-thrill-text.js" defer></script>
+    <script src="js/sidebar/text/custom/optimized-wild-text.js" defer></script>
+    <script src="js/sidebar/text/custom/optimized-zebra-text.js" defer></script>
+    <script src="js/sidebar/effect/effect-manager.js" defer></script>
+    <script src="js/sidebar/effect/c2bw_tone.js" defer></script>
+    <script src="js/sidebar/effect/c2c.js" defer></script>
+    <script src="js/sidebar/panel/knife.js" defer></script>
 
-    <script src="js/ui/controle/common-controle-management.js?v=7.2" defer></script>
-    <script src="js/ui/controle/image-controle-manager.js?v=7.2" defer></script>
-    <script src="js/ui/controle/infomation-controle.js?v=7.2" defer></script>
-    <script src="js/ui/controle/glfx-controle.js?v=7.2" defer></script>
-    <script src="js/fabric/fabric-management.js?v=7.2" defer></script>
-    <script src="js/core/svg/google-icon-names.js?v=7.2"></script>
-    <script src="js/core/svg/google-icon-helper.js?v=7.2"></script>
-    <script src="js/svg/manga-panels-image-landscape.js?v=7.2" defer></script>
-    <script src="js/svg/manga-panels-image-vertical.js?v=7.2" defer></script>
-    <script src="js/svg/speechbubble.js?v=7.2" defer></script>
-    <script src="js/ui/bottom-bar.js?v=7.2" defer></script>
+    <script src="js/ui/controle/common-controle-management.js" defer></script>
+    <script src="js/ui/controle/image-controle-manager.js" defer></script>
+    <script src="js/ui/controle/infomation-controle.js" defer></script>
+    <script src="js/ui/controle/glfx-controle.js" defer></script>
+    <script src="js/fabric/fabric-management.js" defer></script>
+    <script src="js/core/svg/google-icon-names.js"></script>
+    <script src="js/core/svg/google-icon-helper.js"></script>
+    <script src="js/svg/manga-panels-image-landscape.js" defer></script>
+    <script src="js/svg/manga-panels-image-vertical.js" defer></script>
+    <script src="js/svg/speechbubble.js" defer></script>
+    <script src="js/ui/bottom-bar.js" defer></script>
 
-    <script src="js/ai/comfyui/workflow/T2I_Flux.js?v=7.2" defer></script>
-    <script src="js/ai/comfyui/workflow/T2I_SDXL.js?v=7.2" defer></script>
-    <script src="js/ai/prompt/auto/prompt-map.js?v=7.2" defer></script>
-    <script src="js/ai/prompt/auto/story-prompt-map.js?v=7.2" defer></script>
-    <script src="js/ai/prompt/auto/auto-prompt-util.js?v=7.2" defer></script>
-    <script src="js/ai/prompt/auto/auto-generation.js?v=7.2" defer></script>
+    <script src="js/ai/comfyui/workflow/T2I_Flux.js" defer></script>
+    <script src="js/ai/comfyui/workflow/T2I_SDXL.js" defer></script>
+    <script src="js/ai/comfyui/workflow/T2I_SD15.js" defer></script>
+    <script src="js/ai/comfyui/workflow/template-registry.js" defer></script>
+    <script src="js/ai/prompt/auto/prompt-map.js" defer></script>
+    <script src="js/ai/prompt/auto/story-prompt-map.js" defer></script>
+    <script src="js/ai/prompt/auto/auto-prompt-util.js" defer></script>
+    <script src="js/ai/prompt/auto/auto-generation.js" defer></script>
 
-    <script src="js/db/user-font-repository.js?v=7.2" defer></script>
-    <script src="js/ui/font/user-font-manager.js?v=7.2" defer></script>
-    <script src="js/core/font/font-manager-core.js?v=7.2" defer></script>
-    <script src="js/core/font/font-dropdown.js?v=7.2" defer></script>
+    <script src="js/db/user-font-repository.js" defer></script>
+    <script src="js/ui/font/user-font-manager.js" defer></script>
+    <script src="js/core/font/font-manager-core.js" defer></script>
+    <script src="js/core/font/font-dropdown.js" defer></script>
 
-    <script src="service-worker.js?v=7.2" defer></script>
-    <script src="js/core/service/worker-register.js?v=7.2" defer></script>
+    <script src="service-worker.js" defer></script>
+    <script src="js/core/service/worker-register.js" defer></script>
 
-    <script src="js/core/compression/lz4.js?v=7.2"></script>
-    <script src="js/core/util/array-buffer-utils.js?v=7.2"></script>
-    <script src="js/core/compression/project-compression.js?v=7.2"></script>
+    <script src="js/core/compression/lz4.js"></script>
+    <script src="js/core/util/array-buffer-utils.js"></script>
+    <script src="js/core/compression/project-compression.js"></script>
     
 
-    <script src="js/ai/comfyui/v2/comfyui-rembg-default-workflows.js"></script>
+    <!-- <script src="js/ai/comfyui/v2/comfyui-rembg-default-workflows.js"></script>
     <script src="js/ai/comfyui/v2/comfyui-t2i-sd-default-workflows.js"></script>
     <script src="js/ai/comfyui/v2/comfyui-t2i-flux-default-workflows.js"></script>
     <script src="js/ai/comfyui/v2/comfyui-default-workflows.js"></script>
@@ -2164,11 +1977,11 @@ function getElementClasses(element) {
     <script src="js/ai/comfyui/v2/comfyui-util-v2.js"></script>
     <script src="js/ai/comfyui/v2/comfyui-workflow-editor-tab.js"></script>
     <script src="js/ai/comfyui/v2/comfyui-workflow-editor.js"></script>
-    <script src="js/ai/comfyui/v2/comfyui-workflow-interact.js"></script>
+    <script src="js/ai/comfyui/v2/comfyui-workflow-interact.js"></script> -->
 
     <!-- <script src="https://cdn.jsdelivr.net/npm/roughjs@4.5.2/bundled/rough.js"></script> -->
-    <script src="js/sidebar/rough/rough_manager.js?v=7.2"></script>
-    <script src="js/sidebar/rough/rough.js?v=7.2"></script>
+    <script src="js/sidebar/rough/rough_manager.js"></script>
+    <script src="js/sidebar/rough/rough.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jscolor/2.4.5/jscolor.min.js"></script>
     
 <script>

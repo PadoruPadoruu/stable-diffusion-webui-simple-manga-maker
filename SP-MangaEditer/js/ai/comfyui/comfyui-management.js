@@ -86,11 +86,11 @@ async function Comfyui_apiHeartbeat() {
 
     if (response.ok) {
       if (label) {
-        label.innerHTML = "ComufyUI ON";
+        label.innerHTML = "ComfyUI ON";
         label.style.color = "green";
       }
       if (labelfw) {
-        labelfw.innerHTML = "ComufyUI ON";
+        labelfw.innerHTML = "ComfyUI ON";
         labelfw.style.color = "green";
       }
 
@@ -101,21 +101,21 @@ async function Comfyui_apiHeartbeat() {
       return true;
     } else {
       if (label) {
-        label.innerHTML = "ComufyUI OFF";
+        label.innerHTML = "ComfyUI OFF";
         label.style.color = "red";
       }
       if (labelfw) {
-        labelfw.innerHTML = "ComufyUI OFF";
+        labelfw.innerHTML = "ComfyUI OFF";
         labelfw.style.color = "red";
       }
     }
   } catch (error) {
     if (label) {
-      label.innerHTML = "ComufyUI OFF";
+      label.innerHTML = "ComfyUI OFF";
       label.style.color = "red";
     }
     if (labelfw) {
-      labelfw.innerHTML = "ComufyUI OFF";
+      labelfw.innerHTML = "ComfyUI OFF";
       labelfw.style.color = "red";
     }
   }
@@ -238,7 +238,7 @@ async function Comfyui_track_prompt_progress(prompt_id) {
 
 async function Comfyui_handle_process_queue(layer, spinnerId, Type = 'T2I') {
   if (!socket) Comfyui_connect();
-  var requestData = requestData(layer);
+  var requestData = baseRequestData(layer);
   if (basePrompt.text2img_model != ""){
     requestData["model"] = basePrompt.text2img_model;
   }
@@ -298,7 +298,7 @@ async function Comfyui_handle_process_queue(layer, spinnerId, Type = 'T2I') {
         }
       } else {
         throw new Error("Unexpected error: No result returned from Comfyui_put_queue");
-      }
+      }}
     })
     .catch((error) => {
       let help = getText("comfyUI_workflowErrorHelp");

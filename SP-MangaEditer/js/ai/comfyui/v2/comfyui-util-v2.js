@@ -13,11 +13,11 @@ async function comfyui_apiHeartbeat_v2() {
 
     if (response.ok) {
       if (label) {
-        label.innerHTML = "ComufyUI ON";
+        label.innerHTML = "ComfyUI ON";
         label.style.color = "green";
       }
       if (labelfw) {
-        labelfw.innerHTML = "ComufyUI ON";
+        labelfw.innerHTML = "ComfyUI ON";
         labelfw.style.color = "green";
       }
 
@@ -28,21 +28,21 @@ async function comfyui_apiHeartbeat_v2() {
       return true;
     } else {
       if (label) {
-        label.innerHTML = "ComufyUI OFF";
+        label.innerHTML = "ComfyUI OFF";
         label.style.color = "red";
       }
       if (labelfw) {
-        labelfw.innerHTML = "ComufyUI OFF";
+        labelfw.innerHTML = "ComfyUI OFF";
         labelfw.style.color = "red";
       }
     }
   } catch (error) {
     if (label) {
-      label.innerHTML = "ComufyUI OFF";
+      label.innerHTML = "ComfyUI OFF";
       label.style.color = "red";
     }
     if (labelfw) {
-      labelfw.innerHTML = "ComufyUI OFF";
+      labelfw.innerHTML = "ComfyUI OFF";
       labelfw.style.color = "red";
     }
   }

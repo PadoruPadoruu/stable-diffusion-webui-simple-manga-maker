@@ -314,7 +314,7 @@ function getCropAndDownloadLinkByMultiplier(multiplier, format) {
 	}
 
 	var link = document.createElement('a');
-	link.download = 'DESU-' + getFormattedDateTime() + '.' + format;
+	link.download = 'Image_' + getFormattedDateTime() + '.' + format;
 	link.href = cropped;
 	return link;
 }

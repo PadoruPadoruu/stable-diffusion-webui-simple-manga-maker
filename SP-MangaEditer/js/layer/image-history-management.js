@@ -256,7 +256,7 @@ function reSetSpeechBubbleText(){
 }
 
 
-function allRemove() {
+function deleteAll() {
     changeDoNotSaveHistory();
 	canvas.clear();
     var bgColorInput = $("bg-color");
@@ -271,7 +271,7 @@ function allRemove() {
     currentStateIndex = -1;
 }
 function initImageHistory(){
-	allRemove();
+	deleteAll();
     imageMap.clear();
     stateStack = [];
     currentStateIndex = -1;

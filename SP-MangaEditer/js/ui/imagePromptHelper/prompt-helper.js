@@ -1,6 +1,9 @@
 let flowWindowCount = 0;
 
-function createImagePromptHelperFlotingWindow(){
+
+
+//tbd adding a prompt add button
+function createImagePromptHelperFloatingWindow(){
  flowCreateFloatingWindow('Image Prompt Helper', iphHtmlContent, 'rgba(0, 38, 255, 0.7)', 95, 95, 0);
  
  setTimeout(() => {

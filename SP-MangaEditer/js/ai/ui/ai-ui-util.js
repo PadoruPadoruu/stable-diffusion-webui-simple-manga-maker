@@ -4,14 +4,9 @@ function changeExternalAPI(button) {
   const selectedValue = getSelectedValueByGroup("externalApiGroup");
 
   var help = getText("help_api_connect_settings");
-  if ( selectedValue === "sdWebUIButton" ) {
-    API_mode = apis.A1111;
-    createToast("API CHANGE!", "WebUI(A1111/Forge)", 2000 );
-    $('apiSettingsUrlHelpe').innerHTML = `<a href="html/API_Help/sd-api-guide.html" target="_blank">${help}</a>`;
-  } else if ( selectedValue === "comfyUIButton" ) {
+  if ( selectedValue === "comfyUIButton" ) {
     API_mode = apis.COMFYUI;
     createToast("API CHANGE!", "COMFYUI", 2000);
-    // updateAiModelType();
     $('apiSettingsUrlHelpe').innerHTML = `<a href="html/API_Help/comfyui_settings.html" target="_blank">${help}</a>`;
   }
 

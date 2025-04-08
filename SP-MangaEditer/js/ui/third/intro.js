@@ -71,9 +71,9 @@ function generateSteps() {
       title:i18next.t('intro_content_title')
     },
     {
-      element:'#intro_sdWebUI',
-      intro:i18next.t('intro_sdWebUI_body'),
-      title:i18next.t('intro_sdWebUI_title')
+      element:'#Api_config_page',
+      intro:i18next.t('Api_config_page_body'),
+      title:i18next.t('Api_config_page_title')
     }
   ];
 
