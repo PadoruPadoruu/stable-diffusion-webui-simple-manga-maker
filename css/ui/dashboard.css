@@ -283,7 +283,7 @@
 .heatmap-label {
     width: 40px;
     font-size: 10px;
-    color: #a0a0a0;
+    color: var(--slider-accent);
     text-align: right;
     padding-right: 8px;
     flex-shrink: 0;
@@ -293,7 +293,7 @@
     width: 20px;
     height: 16px;
     font-size: 9px;
-    color: #a0a0a0;
+    color: var(--slider-accent);
     text-align: center;
     flex-shrink: 0;
 }
@@ -321,7 +321,7 @@
 /* Small Clear Button */
 .dashboard-clear-btn-small {
     background: #f44336;
-    color: #fff;
+    color: var(--color-text-primary);
     border: none;
     padding: 4px 8px;
     border-radius: var(--fjm-button-border-radius);
@@ -337,7 +337,7 @@
 /* Download Button */
 .dashboard-download-btn {
     background: #00bcd4;
-    color: #1a1a1a;
+    color: var(--color-base);
     border: none;
     padding: 4px 8px;
     border-radius: var(--fjm-button-border-radius);
@@ -353,7 +353,7 @@
 
 /* Wordcloud */
 .wordcloud-container {
-    background: #1a1a1a;
+    background: var(--color-base);
     border-radius: var(--fjm-button-border-radius);
     padding: 8px;
     overflow: visible;
@@ -376,11 +376,11 @@
 .streak-card {
     flex: 1;
     min-width: 80px;
-    background: #1a1a1a;
+    background: var(--color-base);
     border-radius: var(--fjm-border-radius);
     padding: 12px;
     text-align: center;
-    border: 1px solid #333;
+    border: 1px solid var(--color-secondary);
 }
 
 .streak-icon {
@@ -396,7 +396,7 @@
 
 .streak-label {
     font-size: 10px;
-    color: #a0a0a0;
+    color: var(--slider-accent);
     margin-top: 2px;
 }
 

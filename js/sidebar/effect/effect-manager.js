@@ -111,7 +111,7 @@ case MODE_EFFECT_GLOW:
 settingsHTML+=addCheckBox("addGlowEffectCheckBox","outloneGlow",false)
 settingsHTML+=addSlider("glowOutLineSlider","glowOutLineSize",0,250,effectMap.getOrDefault("glowOutLineSlider",20));
 settingsHTML+=addColor("glowOutLineColorPicker","glowOutLineColor",effectMap.getOrDefault("glowOutLineColorPicker",'#FFFFFF'));
-settingsHTML+=addTextArea("glowInfomation","glowInfomation");
+settingsHTML+=addTextArea("glowInformation","glowInformation");
 $('manga-effect-settings').innerHTML=settingsHTML;
 effectCheck=$("addGlowEffectCheckBox");
 effectSize1=$("glowOutLineSlider");
