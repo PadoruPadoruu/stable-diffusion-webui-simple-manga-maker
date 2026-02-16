@@ -14,6 +14,13 @@ apiMode=apis.COMFYUI;
 providerRegistry.syncFromApiMode(apiMode);
 if(showToast)createToast("API CHANGE!","COMFYUI",2000);
 $('apiSettingsUrlHelpe').innerHTML=`<a href="html/API_Help/comfyui_settings.html" target="_blank" class="es-btn-small" title="${helpTitle}">?</a>`;
+} else if (selectedValue==="runpodComfyUIButton") {
+apiMode=apis.RUNPOD_COMFYUI;
+providerRegistry.syncFromApiMode(apiMode);
+if(showToast)createToast("API CHANGE!","RunPod ComfyUI",2000);
+$('apiSettingsUrlHelpe').innerHTML='';
+firstComfyConnection=true;
+socket=null;
 }
 
 updateWorkflowType();
@@ -38,12 +45,15 @@ function changeWorkflowType(button) {
 changeSelected(button);
 updateWorkflowType();
 }
+function isComfyUIMode(groupValue){
+return groupValue==="comfyUIButton"||groupValue==="runpodComfyUIButton";
+}
 function updateWorkflowType() {
 const externalApiGroup=getSelectedValueByGroup("externalApiGroup");
 const generateModelGroup=getSelectedValueByGroup("generateModelGroup");
 const generateWorkflow=getSelectedValueByGroup("generateWorkflow");
 
-if (externalApiGroup==="comfyUIButton"){
+if (isComfyUIMode(externalApiGroup)){
 showById("comfyUIWorkflowId");
 hideById("manualSelectWorkflowId");
 hideById("manualSelectModelId");
@@ -90,7 +100,7 @@ showById("manualSelectWorkflowId");
 hideById("negativeAreaId");
 }
 
-if (externalApiGroup==="comfyUIButton"){
+if (isComfyUIMode(externalApiGroup)){
 showById("manualSelectModelId");
 if(generateModelGroup==="Flux"&&generateWorkflow==="Diffution"){
 showById("clipDropdownControl");

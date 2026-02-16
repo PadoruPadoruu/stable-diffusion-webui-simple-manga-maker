@@ -1,7 +1,8 @@
 // Available api models
 const apis={
 A1111: "A1111",
-COMFYUI: "comfyui"
+COMFYUI: "comfyui",
+RUNPOD_COMFYUI: "runpodComfyUI"
 };
 
 
@@ -200,6 +201,8 @@ canvasGridLineSize:{id:'gridSizeInput',default:'10'},
 canvasMarginFromPanel:{id:'marginFromPanel',default:20},
 sdWebUIPageUrl:{id:'sdWebUIPageUrl',default:'http://127.0.0.1:7860'},
 comfyUIPageUrl:{id:'comfyUIPageUrl',default:'http://127.0.0.1:8188'},
+runpodComfyUIUrl:{id:'runpodComfyUIUrl',default:''},
+runpodApiKey:{id:'runpodApiKey',default:''},
 apiHeartbeatCheckbox:{id:'apiHeartbeatCheckbox',default:true,type:'checkbox'},
 autoSaveEnabled:{id:'autoSaveCheckbox',default:true,type:'checkbox'},
 autoSaveInterval:{id:'autoSaveInterval',default:'60'},
@@ -308,6 +311,7 @@ if(v!==-1)this.value=Math.round(v/8)*8;
 });
 var mode=data.externalAI||apis.COMFYUI;
 if(mode===apis.A1111)changeExternalAPI($('sdWebUIButton'));
+else if(mode===apis.RUNPOD_COMFYUI)changeExternalAPI($('runpodComfyUIButton'));
 else changeExternalAPI($('comfyUIButton'));
 }
 

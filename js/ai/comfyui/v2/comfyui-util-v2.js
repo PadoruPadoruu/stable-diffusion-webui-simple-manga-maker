@@ -1,9 +1,10 @@
 async function comfyui_apiHeartbeat_v2() {
 const label=$("ExternalService_Heartbeat_Label");
 const labelfw=$("ExternalService_Heartbeat_Label_fw");
+var pName=providerRegistry.getActive()?providerRegistry.getActive().name:'ComfyUI';
 
 try {
-const response=await fetch(comfyUIUrls.settings,{
+const response=await comfyuiFetch(comfyUIUrls.settings,{
 method: "GET",
 headers: {
 "Content-Type": "application/json",
@@ -13,11 +14,11 @@ accept: "application/json",
 
 if (response.ok) {
 if (label) {
-label.innerHTML="ComufyUI ON";
+label.innerHTML=pName+" ON";
 label.style.color="green";
 }
 if (labelfw) {
-labelfw.innerHTML="ComufyUI ON";
+labelfw.innerHTML=pName+" ON";
 labelfw.style.color="green";
 }
 
@@ -28,21 +29,21 @@ firstComfyConnection=false;
 return true;
 } else {
 if (label) {
-label.innerHTML="ComufyUI OFF";
+label.innerHTML=pName+" OFF";
 label.style.color="red";
 }
 if (labelfw) {
-labelfw.innerHTML="ComufyUI OFF";
+labelfw.innerHTML=pName+" OFF";
 labelfw.style.color="red";
 }
 }
 } catch (error) {
 if (label) {
-label.innerHTML="ComufyUI OFF";
+label.innerHTML=pName+" OFF";
 label.style.color="red";
 }
 if (labelfw) {
-labelfw.innerHTML="ComufyUI OFF";
+labelfw.innerHTML=pName+" OFF";
 labelfw.style.color="red";
 }
 }
@@ -97,7 +98,7 @@ const formData=new FormData();
 formData.append("image",file,fileName);
 formData.append("overwrite",overwrite.toString());
 
-const response=await fetch(comfyUIUrls.uploadImage,{
+const response=await comfyuiFetch(comfyUIUrls.uploadImage,{
 method: "POST",
 body: formData,
 });
@@ -154,13 +155,13 @@ comfyuiLogger.error("ファイルアップロードエラー:",error);
 //subfolder: <subfolder>
 async function comfyui_view_image_v2(filename,type="input") {
 try {
-const baseUrl=document.getElementById("comfyUIPageUrl").value;
+const baseUrl=getComfyUIServerAddress();
 const params=new URLSearchParams({
 filename: filename,
 type: type,
 });
 
-const response=await fetch(`${baseUrl}/view?${params.toString()}`);
+const response=await comfyuiFetch(`${baseUrl}/view?${params.toString()}`);
 if (!response.ok) {
 throw new Error(`HTTPエラー! ステータス: ${response.status}`);
 }
@@ -257,7 +258,7 @@ filename: imageDataToReceive.filename,
 subfolder: imageDataToReceive.subfolder,
 type: imageDataToReceive.type,
 });
-const response=await fetch(comfyUIUrls.view+"?"+params.toString());
+const response=await comfyuiFetch(comfyUIUrls.view+"?"+params.toString());
 comfyuiLogger.debug("画像データをサーバーから取得しました。",
 imageDataToReceive.filename,
 imageDataToReceive.subfolder,
@@ -320,7 +321,7 @@ return null;
 async function comfyui_queue_prompt_v2(prompt) {
 try {
 const p={prompt: prompt,client_id: comfyUIuuid};
-const response=await fetch(comfyUIUrls.prompt,{
+const response=await comfyuiFetch(comfyUIUrls.prompt,{
 method: "POST",
 headers: {
 "Content-Type": "application/json",
@@ -361,7 +362,7 @@ comfyuiLogger.debug(
 promptId
 );
 try {
-const response=await fetch(comfyUIUrls.history+promptId,{
+const response=await comfyuiFetch(comfyUIUrls.history+promptId,{
 method: "GET",
 headers: {
 accept: "application/json",

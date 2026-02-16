@@ -38,6 +38,14 @@ AI_ROLES.Upscaler,
 AI_ROLES.Image2Image,
 AI_ROLES.Inpaint,
 AI_ROLES.I2I_Angle
+],
+RUNPOD_COMFYUI: [
+AI_ROLES.Text2Image,
+AI_ROLES.RemoveBG,
+AI_ROLES.Upscaler,
+AI_ROLES.Image2Image,
+AI_ROLES.Inpaint,
+AI_ROLES.I2I_Angle
 ]
 };
 
@@ -50,6 +58,8 @@ if (apiMode==apis.A1111) {
 return roles.A1111.includes(role);
 } else if (apiMode==apis.COMFYUI) {
 return roles.COMFYUI.includes(role);
+} else if (apiMode==apis.RUNPOD_COMFYUI) {
+return roles.RUNPOD_COMFYUI.includes(role);
 }
 return false;
 }

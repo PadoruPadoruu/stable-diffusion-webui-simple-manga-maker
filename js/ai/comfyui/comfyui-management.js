@@ -1,6 +1,34 @@
+function getComfyUIServerAddress(){
+var provider=providerRegistry.getActive();
+if(provider&&provider.id==='runpodComfyUI'){
+return $('runpodComfyUIUrl').value;
+}
+return $('comfyUIPageUrl').value;
+}
+
+function getComfyUIAuthHeaders(){
+var provider=providerRegistry.getActive();
+if(provider&&typeof provider.getApiKey==='function'){
+var apiKey=provider.getApiKey();
+if(apiKey){
+return{Authorization:'Bearer '+apiKey};
+}
+}
+return{};
+}
+
+function comfyuiFetch(url,options){
+options=options||{};
+var authHeaders=getComfyUIAuthHeaders();
+if(Object.keys(authHeaders).length>0){
+options.headers=Object.assign({},options.headers||{},authHeaders);
+}
+return fetch(url,options);
+}
+
 class ComfyUIEndpoints {
 #getUrlParts() {
-const serverAddress=$('comfyUIPageUrl').value;
+const serverAddress=getComfyUIServerAddress();
 const url=new URL(serverAddress);
 return {
 protocol: url.protocol.replace(':',''),
@@ -57,7 +85,12 @@ var workflowFileLoad="";
 
 function comfyuiConnect() {
 try {
-socket=new WebSocket(comfyUIUrls.ws+'?clientId='+comfyUIuuid);
+var wsUrl=comfyUIUrls.ws+'?clientId='+comfyUIuuid;
+var authHeaders=getComfyUIAuthHeaders();
+if(authHeaders.Authorization){
+wsUrl+='&token='+encodeURIComponent(authHeaders.Authorization.replace('Bearer ',''));
+}
+socket=new WebSocket(wsUrl);
 socket.addEventListener("open",(event)=>{
 comfyuiLogger.info("ComfyUIへの接続に成功しました。");
 });
@@ -75,11 +108,11 @@ socket=null;
 
 async function comfyuiCancelPrompt(promptId){
 try{
-await fetch(comfyUIUrls.interrupt,{
+await comfyuiFetch(comfyUIUrls.interrupt,{
 method:"POST",
 headers:{"Content-Type":"application/json"}
 });
-await fetch(comfyUIUrls.queue,{
+await comfyuiFetch(comfyUIUrls.queue,{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({delete:[promptId]})
@@ -95,7 +128,8 @@ const label=$("ExternalService_Heartbeat_Label");
 const labelfw=$("ExternalService_Heartbeat_Label_fw");
 
 try {
-const response=await fetch(comfyUIUrls.settings,{
+var providerName=providerRegistry.getActive()?providerRegistry.getActive().name:'ComfyUI';
+const response=await comfyuiFetch(comfyUIUrls.settings,{
 method: "GET",
 headers: {
 "Content-Type": "application/json",
@@ -105,11 +139,11 @@ accept: "application/json",
 
 if (response.ok) {
 if (label) {
-label.innerHTML="ComufyUI ON";
+label.innerHTML=providerName+" ON";
 label.style.color="green";
 }
 if (labelfw) {
-labelfw.innerHTML="ComufyUI ON";
+labelfw.innerHTML=providerName+" ON";
 labelfw.style.color="green";
 }
 
@@ -120,21 +154,21 @@ firstComfyConnection=false;
 return true;
 } else {
 if (label) {
-label.innerHTML="ComufyUI OFF";
+label.innerHTML=providerName+" OFF";
 label.style.color="red";
 }
 if (labelfw) {
-labelfw.innerHTML="ComufyUI OFF";
+labelfw.innerHTML=providerName+" OFF";
 labelfw.style.color="red";
 }
 }
 } catch (error) {
 if (label) {
-label.innerHTML="ComufyUI OFF";
+label.innerHTML=providerName+" OFF";
 label.style.color="red";
 }
 if (labelfw) {
-labelfw.innerHTML="ComufyUI OFF";
+labelfw.innerHTML=providerName+" OFF";
 labelfw.style.color="red";
 }
 }
@@ -288,7 +322,7 @@ formData.append("image",blob,fileName);
 formData.append("overwrite",overwrite.toString());
 
 try {
-const response=await fetch(comfyUIUrls.uploadImage,{
+const response=await comfyuiFetch(comfyUIUrls.uploadImage,{
 method: "POST",
 body: formData,
 });
@@ -322,7 +356,7 @@ const formData=new FormData();
 formData.append("image",blob,fileName);
 formData.append("overwrite",overwrite.toString());
 try {
-const response=await fetch(comfyUIUrls.uploadImage,{
+const response=await comfyuiFetch(comfyUIUrls.uploadImage,{
 method:"POST",
 body:formData,
 });
@@ -416,7 +450,7 @@ comfyuiLogger.error("comfyuiVaeLoader: Fetch error",error);
 
 async function comfyuiFetchObjectInfo(nodeName) {
 try {
-const response=await fetch(comfyUIUrls.objectInfo+nodeName);
+const response=await comfyuiFetch(comfyUIUrls.objectInfo+nodeName);
 if (!response.ok) {
 throw new Error(`HTTP error! status: ${response.status}`);
 }
@@ -431,7 +465,7 @@ comfyuiLogger.error("Comfyui_Fetch: Fetch error",nodeName);
 var comfyObjectInfoList;
 async function comfyuiFetchObjectInfoOnly() {
 try {
-const response=await fetch(comfyUIUrls.objectInfoOnly);
+const response=await comfyuiFetch(comfyUIUrls.objectInfoOnly);
 if (!response.ok) {
 throw new Error(`HTTP error! status: ${response.status}`);
 }

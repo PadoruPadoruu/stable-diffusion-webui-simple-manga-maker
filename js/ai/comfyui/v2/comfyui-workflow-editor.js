@@ -7,7 +7,7 @@ this.activeTabId=null;
 
 async updateObjectInfoAndWorkflows() {
 try {
-const response=await fetch(comfyUIUrls.objectInfoOnly);
+const response=await comfyuiFetch(comfyUIUrls.objectInfoOnly);
 if (!response.ok) {
 throw new Error(`ObjectInfo取得失敗: ステータス ${response.status}`);
 }

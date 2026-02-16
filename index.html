@@ -362,6 +362,17 @@ function getElementClasses(element) {
                                     <a href="html/API_Help/comfyui_settings.html" target="_blank" class="es-btn-small" title="Help">?</a>
                                 </li>
                             </div>
+                            <div class="RunPod_api_content">
+                                <li class="es-section-title">RunPod ComfyUI</li>
+                                <li class="es-url-row">
+                                    <input type="text" id="runpodComfyUIUrl" value="" placeholder="https://{pod-id}-8188.proxy.runpod.net">
+                                    <button id="runpodComfyUIUrlClear" class="es-btn-small" title="Clear">↺</button>
+                                </li>
+                                <li class="es-url-row">
+                                    <input type="password" id="runpodApiKey" value="" placeholder="API Key" autocomplete="off">
+                                    <button id="runpodApiKeyToggle" class="es-btn-small" title="Show/Hide">👁</button>
+                                </li>
+                            </div>
                         </ul>
                     </li>
                 </ul>
@@ -1587,6 +1598,9 @@ function getElementClasses(element) {
                             <button id="sdWebUIButton" data-value="sdWebUIButton" onclick='changeExternalAPI(this,true)'>
                                 WebUI or Forge
                             </button>
+                            <button id="runpodComfyUIButton" data-value="runpodComfyUIButton" onclick='changeExternalAPI(this,true)'>
+                                RunPod
+                            </button>
 
                             <div id="apiSettingsUrlHelpe">
                             </div>
@@ -1904,6 +1918,7 @@ function getElementClasses(element) {
     <script src="js/ai/provider/provider-registry.js?v=7.3" defer></script>
     <script src="js/ai/provider/local-comfyui-provider.js?v=7.3" defer></script>
     <script src="js/ai/provider/local-sdwebui-provider.js?v=7.3" defer></script>
+    <script src="js/ai/provider/runpod-comfyui-provider.js?v=7.3" defer></script>
     <script src="js/ai/queue/spinner.js?v=7.2" defer></script>
     <script src="js/ai/queue/task-queue.js?v=7.2" defer></script>
     <script src="js/ai/queue/generation-task-manager.js?v=7.2" defer></script>
