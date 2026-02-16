@@ -654,25 +654,25 @@ function getElementClasses(element) {
 <!-- ========== Sidebar ========== -->
         <div id="head-id" style="display: none; flex-grow: 1;">
             <div id="sidebar">
-                <div class="icon-wrapper">
-                 <i class="material-icons" id="intro_svg-container-template" onclick="toggleVisibility('svg-container-template')">auto_awesome_mosaic</i>
-                 <span class="icon-label" data-i18n="side-label-template" onclick="toggleVisibility('svg-container-template')">ひな形</span>
+                <div class="icon-wrapper" data-action="toggleVisibility" data-target="svg-container-template">
+                 <i class="material-icons" id="intro_svg-container-template">auto_awesome_mosaic</i>
+                 <span class="icon-label" data-i18n="side-label-template">ひな形</span>
                 </div>
                 <hr>
-                <div class="icon-wrapper">
-                 <i class="material-icons" id="intro_page-manager-area" onclick="toggleVisibility('panel-manager-area')">dashboard_customize</i>
-                 <span class="icon-label" data-i18n="side-label-page-manager" onclick="toggleVisibility('panel-manager-area')">ページ管理</span>
+                <div class="icon-wrapper" data-action="toggleVisibility" data-target="panel-manager-area">
+                 <i class="material-icons" id="intro_page-manager-area">dashboard_customize</i>
+                 <span class="icon-label" data-i18n="side-label-page-manager">ページ管理</span>
                 </div>
                 <hr>
-                <div class="icon-wrapper">
-                 <i class="material-icons" id="intro_auto-generate-area" onclick="toggleVisibility('auto-generate-area')">smart_toy</i>
-                 <span class="icon-label" data-i18n="auto_generate" onclick="toggleVisibility('auto-generate-area')">自動生成</span>
+                <div class="icon-wrapper" data-action="toggleVisibility" data-target="auto-generate-area">
+                 <i class="material-icons" id="intro_auto-generate-area">smart_toy</i>
+                 <span class="icon-label" data-i18n="auto_generate">自動生成</span>
                 </div>
                 <hr>
 
-                <div class="icon-wrapper">
-                 <i class="material-icons" id="intro_prompt-manager-area" onclick="toggleVisibility('prompt-manager-area')">assignment</i>
-                 <span class="icon-label" data-i18n="prompt" onclick="toggleVisibility('prompt-manager-area')">プロンプト</span>
+                <div class="icon-wrapper" data-action="toggleVisibility" data-target="prompt-manager-area">
+                 <i class="material-icons" id="intro_prompt-manager-area">assignment</i>
+                 <span class="icon-label" data-i18n="prompt">プロンプト</span>
                  </div>
                 <hr>
   

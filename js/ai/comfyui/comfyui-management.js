@@ -38,7 +38,9 @@ history: '/history/',
 view: '/view',
 uploadImage: '/upload/image',
 objectInfo: '/object_info/',
-objectInfoOnly: '/object_info'
+objectInfoOnly: '/object_info',
+queue: '/queue',
+interrupt: '/interrupt'
 };
 return endpoints[key]||'';
 }
@@ -68,6 +70,23 @@ socket=null;
 return;
 } catch (error) {
 socket=null;
+}
+}
+
+async function comfyuiCancelPrompt(promptId){
+try{
+await fetch(comfyUIUrls.interrupt,{
+method:"POST",
+headers:{"Content-Type":"application/json"}
+});
+await fetch(comfyUIUrls.queue,{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({delete:[promptId]})
+});
+comfyuiLogger.debug("Cancelled prompt: "+promptId);
+}catch(error){
+comfyuiLogger.error("Cancel prompt error:",error);
 }
 }
 
