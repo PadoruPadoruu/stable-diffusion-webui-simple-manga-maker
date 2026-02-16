@@ -1,3 +1,4 @@
+// AI機能の中央ルーター: プロバイダーレジストリ経由でディスパッチ
 const sdQueue=new TaskQueue(1);
 const comfyuiQueue=new TaskQueue(1);
 
@@ -41,70 +42,54 @@ return sdCleared+comfyCleared;
 
 
 async function T2I(layer,spinner){
-if (apiMode==apis.A1111) {
-sdwebuiT2IProcessQueue(layer,spinner.id);
-}else if (apiMode==apis.COMFYUI){
-return comfyuiHandleProcessQueue(layer,spinner.id);
+var provider=providerRegistry.getActive();
+if(provider&&provider.supportsRole(AI_ROLES.Text2Image)){
+return provider.executeT2I(layer,spinner.id);
 }
 }
 function I2I(layer,spinner){
-if (apiMode==apis.A1111) {
-sdwebuiI2IProcessQueue(layer,spinner.id);
-}else if (apiMode==apis.COMFYUI){
-comfyuiHandleProcessQueue(layer,spinner.id,'I2I');
+var provider=providerRegistry.getActive();
+if(provider&&provider.supportsRole(AI_ROLES.Image2Image)){
+return provider.executeI2I(layer,spinner.id);
 }
 }
 
 async function aiRembg(layer,spinner){
-if (apiMode==apis.A1111) {
-sdwebuiRembgProcessQueue(layer,spinner.id);
-}else if (apiMode==apis.COMFYUI){
-return comfyuiHandleProcessQueue(layer,spinner.id,'Rembg');
+var provider=providerRegistry.getActive();
+if(provider&&provider.supportsRole(AI_ROLES.RemoveBG)){
+return provider.executeRembg(layer,spinner.id);
 }
 }
 
 async function aiUpscale(layer,spinner){
-if (apiMode==apis.A1111) {
-//TODO
-}else if (apiMode==apis.COMFYUI){
-return comfyuiHandleProcessQueue(layer,spinner.id,'Upscaler');
+var provider=providerRegistry.getActive();
+if(provider&&provider.supportsRole(AI_ROLES.Upscaler)){
+return provider.executeUpscale(layer,spinner.id);
 }
 }
 
 function canUseInpaint(){
-return apiMode==apis.COMFYUI&&hasRole(AI_ROLES.Inpaint);
+var provider=providerRegistry.getActive();
+return provider!==null&&provider.canUseInpaint()&&hasRole(AI_ROLES.Inpaint);
 }
 
 function canUseAngle(){
-return apiMode==apis.COMFYUI&&hasRole(AI_ROLES.I2I_Angle);
+var provider=providerRegistry.getActive();
+return provider!==null&&provider.canUseAngle()&&hasRole(AI_ROLES.I2I_Angle);
 }
 
 function AngleGenerate(layer,spinner,anglePrompt){
-if(apiMode==apis.COMFYUI){
-comfyuiHandleProcessQueue(layer,spinner.id,'I2I_Angle',{anglePrompt:anglePrompt});
+var provider=providerRegistry.getActive();
+if(provider&&provider.supportsRole(AI_ROLES.I2I_Angle)){
+return provider.executeAngle(layer,spinner.id,anglePrompt);
 }
 }
 
 
 function getDiffusionInformation() {
-if (apiMode==apis.A1111) {
-fetchSDOptions().then(()=>{
-fetchSdModels();
-fetchSdSampler();
-fetchSdUpscaler();
-fetchSdAdModels();
-fetchSdModules();
-}).catch((error)=>{
-logger.error('getDiffusionInformation:',error);
-});
-
-}else if(apiMode==apis.COMFYUI){
-comfyuiFetchModels();
-comfyuiFetchSampler();
-comfyuiFetchUpscaler();
-comfyuiVaeLoader();
-comfyuiClipModels();
-comfyuiFetchObjectInfoOnly();
+var provider=providerRegistry.getActive();
+if(provider){
+provider.fetchDiffusionInformation();
 }
 }
 
@@ -119,10 +104,9 @@ if (pingCheck.checked) {
 return;
 }
 
-if (apiMode==apis.A1111) {
-sdwebuiApiHeartbeat();
-} else if(apiMode==apis.COMFYUI) {
-comfyuiApiHeartbeat();
+var provider=providerRegistry.getActive();
+if(provider){
+provider.heartbeat();
 }
 
 const label=$('ExternalService_Heartbeat_Label');

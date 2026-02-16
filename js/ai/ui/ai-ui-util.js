@@ -6,10 +6,12 @@ const selectedValue=getSelectedValueByGroup("externalApiGroup");
 var helpTitle=getText("help_api_connect_settings");
 if (selectedValue==="sdWebUIButton") {
 apiMode=apis.A1111;
+providerRegistry.syncFromApiMode(apiMode);
 if(showToast)createToast("API CHANGE!","WebUI(A1111/Forge)",2000);
 $('apiSettingsUrlHelpe').innerHTML=`<a href="html/API_Help/sd-api-guide.html" target="_blank" class="es-btn-small" title="${helpTitle}">?</a>`;
 } else if (selectedValue==="comfyUIButton") {
 apiMode=apis.COMFYUI;
+providerRegistry.syncFromApiMode(apiMode);
 if(showToast)createToast("API CHANGE!","COMFYUI",2000);
 $('apiSettingsUrlHelpe').innerHTML=`<a href="html/API_Help/comfyui_settings.html" target="_blank" class="es-btn-small" title="${helpTitle}">?</a>`;
 }
