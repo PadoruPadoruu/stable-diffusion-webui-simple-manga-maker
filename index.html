@@ -1437,10 +1437,10 @@ function getElementClasses(element) {
                     <div class="param-group">
                         <div class="param-group-header" data-i18n="secFlip"></div>
                         <div class="input-group-multi">
-                            <button onclick="flipHorizontally()">
+                            <button data-action="flipHorizontally">
                                 <i class="material-icons">swap_horiz</i>
                             </button>
-                            <button onclick="flipVertically()">
+                            <button data-action="flipVertically">
                                 <i class="material-icons">swap_vert</i>
                             </button>
                             <button style="visibility: hidden;">
@@ -1856,6 +1856,7 @@ function getElementClasses(element) {
     <script src="js/ui/tutorial.js?v=7.2" defer></script>
     <script src="js/ui/toast.js?v=7.2" defer></script>
     <script src="js/ui/util/ui-util.js?v=7.2" defer></script>
+    <script src="js/ui/util/event-delegator.js?v=7.2" defer></script>
     <script src="js/ui/third/tippy.js?v=7.2" defer></script>
 
     <script src="js/ui/third/base-translation/base-de.js?v=7.2" defer></script>

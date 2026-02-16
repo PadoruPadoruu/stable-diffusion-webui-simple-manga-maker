@@ -176,7 +176,7 @@ gap:6px;
 cursor:pointer;
 }
 .tutorial-dont-show:hover{
-color:#ccc;
+color:var(--color-text-secondary);
 }
 .tutorial-dont-show input{
 cursor:pointer;
@@ -215,9 +215,9 @@ gap:8px;
 margin-right:4px;
 }
 .tutorial-lang-btn:hover{
-border-color:#505050;
-background:#2a2a2a;
-color:#d0d0d0;
+border-color:var(--color-tertiary);
+background:var(--color-secondary);
+color:var(--color-text-secondary);
 }
 .tutorial-lang-btn.active{
 border-color:#3b82f6;
@@ -329,7 +329,7 @@ color:#f87171;
 border-left:2px solid #ef4444;
 }
 .guide-error-nodes code{
-background:#1a1a1a;
+background:var(--color-base);
 padding:2px 6px;
 border-radius:var(--fjm-button-border-radius);
 font-family:monospace;

@@ -4,11 +4,13 @@ toggleVisibility("svg-container-template");
 
 function toggleVisibility(id) {
 var element=$(id);
-var icons=document.querySelectorAll("#sidebar i");
-icons.forEach((icon)=>{
-if (icon.getAttribute("onclick").includes(`toggleVisibility('${id}')`)) {
+var wrappers=document.querySelectorAll('#sidebar .icon-wrapper[data-target]');
+wrappers.forEach(function(wrapper){
+var icon=wrapper.querySelector('i');
+if(!icon)return;
+if(wrapper.dataset.target===id){
 icon.classList.toggle("active",element.style.display==="none");
-} else {
+}else{
 icon.classList.remove("active");
 }
 });
