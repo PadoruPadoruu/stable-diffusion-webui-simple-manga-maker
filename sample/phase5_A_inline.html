@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>Phase5 Sample A: コントロールパネル内インライン方式</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+background:#212121;
+color:#dedede;
+font-family:'Open Sans',Arial,sans-serif;
+font-size:12px;
+display:flex;
+justify-content:center;
+padding:40px 20px;
+}
+.description{
+position:fixed;
+top:0;left:0;right:0;
+background:#333;
+color:#ff7c7c;
+font-size:11px;
+padding:8px 16px;
+text-align:center;
+border-bottom:2px solid #810000;
+z-index:10;
+}
+.container{
+width:300px;
+border:1px solid rgba(255,255,255,0.15);
+overflow:hidden;
+margin-top:30px;
+}
+.panel{
+padding-top:5px;
+margin-bottom:10px;
+}
+.area-header{
+font-size:12px;
+font-weight:bold;
+padding:2px;
+color:#dedede;
+background:rgba(0,0,0,0.35);
+box-shadow:0 2px 6px rgba(0,0,0,0.3);
+text-align:center;
+cursor:pointer;
+position:relative;
+z-index:1;
+}
+.controls-mini{
+padding:4px;
+}
+.input-group{
+display:flex;
+flex-wrap:wrap;
+gap:2px;
+margin-left:7px;
+margin-right:7px;
+}
+button{
+background:rgba(255,255,255,0.07);
+color:#fff;
+border:1px solid rgba(255,255,255,0.10);
+border-radius:4px;
+cursor:pointer;
+padding:0px 3px;
+font-size:12px;
+margin:4px 2px;
+text-align:left;
+transition:background 0.15s,border 0.15s;
+}
+button:hover{
+background:rgba(255,255,255,0.15);
+}
+button.selected{
+background:rgba(129,0,0,0.4);
+border-color:rgba(160,48,48,0.6);
+box-shadow:0 0 8px rgba(129,0,0,0.2);
+}
+label{
+color:#dedede;
+margin:5px;
+font-size:12px;
+display:flex;
+align-items:center;
+gap:4px;
+}
+select{
+background:#333;
+color:#dedede;
+border:1px solid #505050;
+border-radius:4px;
+font-size:11px;
+padding:2px 4px;
+appearance:none;
+-webkit-appearance:none;
+cursor:pointer;
+}
+select:focus{
+outline:none;
+border-color:#fff;
+}
+hr{
+border:none;
+border-top:1px solid #505050;
+margin:6px 7px;
+}
+.role-assign-section{
+margin:0 7px 8px;
+}
+.role-assign-header{
+display:flex;
+align-items:center;
+justify-content:space-between;
+cursor:pointer;
+padding:4px 6px;
+background:rgba(0,0,0,0.25);
+border-radius:4px;
+margin-bottom:4px;
+}
+.role-assign-header:hover{
+background:rgba(0,0,0,0.4);
+}
+.role-assign-title{
+color:#ff7c7c;
+font-size:11px;
+font-weight:bold;
+}
+.role-assign-arrow{
+color:#888;
+font-size:10px;
+transition:transform 0.2s;
+}
+.role-assign-arrow.open{
+transform:rotate(180deg);
+}
+.role-row{
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:3px 6px;
+margin-bottom:2px;
+}
+.role-label{
+font-size:11px;
+color:#dedede;
+min-width:70px;
+}
+.role-select{
+flex:1;
+max-width:160px;
+font-size:11px;
+padding:2px 20px 2px 6px;
+background:#333 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%23888'/%3E%3C/svg%3E") no-repeat right 6px center;
+}
+.role-badge{
+display:inline-block;
+font-size:9px;
+padding:1px 4px;
+border-radius:3px;
+background:rgba(129,0,0,0.3);
+color:#ff7c7c;
+border:1px solid rgba(160,48,48,0.4);
+margin-left:4px;
+}
+.role-badge.default{
+background:rgba(255,255,255,0.05);
+color:#888;
+border-color:rgba(255,255,255,0.1);
+}
+.prompt-area{
+margin:0 7px;
+}
+.prompt-area textarea{
+width:100%;
+height:60px;
+background:#333;
+color:#dedede;
+border:1px solid #505050;
+border-radius:4px;
+font-size:11px;
+padding:4px 6px;
+resize:vertical;
+}
+.prompt-area textarea:focus{
+outline:none;
+border-color:#fff;
+}
+.param-group-header{
+font-weight:bold;
+margin-bottom:5px;
+color:#ff7c7c;
+font-size:12px;
+margin-left:7px;
+margin-top:8px;
+}
+.note{
+margin:16px 7px;
+padding:8px;
+background:rgba(255,149,50,0.1);
+border:1px solid rgba(255,149,50,0.3);
+border-radius:4px;
+font-size:10px;
+color:#ff9532;
+line-height:1.5;
+}
+</style>
+</head>
+<body>
+<div class="description">
+Sample A: コントロールパネル内インライン方式 — プロバイダーボタンの直下に折りたたみセクションとして配置
+</div>
+
+<div class="container">
+<!-- esApiControlsPanel -->
+<div class="panel">
+<div class="area-header">API Controls</div>
+<div class="controls-mini">
+<div class="input-group">
+<button class="selected">ComfyUI</button>
+<button>WebUI</button>
+<button>RunPod</button>
+<button>Serverless</button>
+<button>Fal.ai</button>
+</div>
+</div>
+
+<hr>
+
+<!-- Phase5: Role Assignment Section (折りたたみ) -->
+<div class="role-assign-section">
+<div class="role-assign-header" onclick="toggleRoleAssign()">
+<span class="role-assign-title">&#9881; Role Assignment</span>
+<span class="role-assign-arrow open" id="roleArrow">&#9660;</span>
+</div>
+<div id="roleAssignBody">
+<div class="role-row">
+<span class="role-label">T2I</span>
+<select class="role-select">
+<option selected>Default (ComfyUI)</option>
+<option>ComfyUI</option>
+<option>RunPod ComfyUI</option>
+<option>Serverless</option>
+<option>Fal.ai</option>
+</select>
+</div>
+<div class="role-row">
+<span class="role-label">I2I</span>
+<select class="role-select">
+<option selected>Default (ComfyUI)</option>
+<option>ComfyUI</option>
+<option>RunPod ComfyUI</option>
+<option>Fal.ai</option>
+</select>
+</div>
+<div class="role-row">
+<span class="role-label">Inpaint</span>
+<select class="role-select">
+<option>Default (ComfyUI)</option>
+<option selected>ComfyUI</option>
+<option>RunPod ComfyUI</option>
+</select>
+</div>
+<div class="role-row">
+<span class="role-label">Upscale</span>
+<select class="role-select">
+<option>Default (ComfyUI)</option>
+<option>ComfyUI</option>
+<option>RunPod ComfyUI</option>
+<option selected>Fal.ai</option>
+</select>
+</div>
+<div class="role-row">
+<span class="role-label">RemoveBG</span>
+<select class="role-select">
+<option selected>Default (ComfyUI)</option>
+<option>ComfyUI</option>
+<option>RunPod ComfyUI</option>
+<option>Fal.ai</option>
+</select>
+</div>
+<div class="role-row">
+<span class="role-label">Angle</span>
+<select class="role-select">
+<option selected>Default (ComfyUI)</option>
+<option>ComfyUI</option>
+<option>RunPod ComfyUI</option>
+</select>
+</div>
+</div>
+</div>
+
+<div class="input-group">
+<label>
+<input type="checkbox" checked> AI Check
+</label>
+<label style="color:#888;font-size:11px;">ComfyUI Connected</label>
+</div>
+</div>
+
+<!-- baseControlsPanel -->
+<div class="panel">
+<div class="area-header">Generation</div>
+<div class="controls-mini">
+<div class="param-group-header">Prompt</div>
+<div class="prompt-area">
+<textarea placeholder="Enter prompt...">1girl, manga style, black and white</textarea>
+</div>
+</div>
+</div>
+
+<div class="note">
+<b>A方式の特徴:</b><br>
+・プロバイダーボタンのすぐ下に折りたたみセクションとして配置<br>
+・画面遷移なしで即座に確認・変更可能<br>
+・コントロールパネルの縦幅が増える<br>
+・折りたたみで省スペース化可能<br>
+・「今どのプロバイダーがどの機能に割り当てられているか」が一目で分かる
+</div>
+</div>
+
+<script>
+function toggleRoleAssign(){
+var body=document.getElementById('roleAssignBody');
+var arrow=document.getElementById('roleArrow');
+if(body.style.display==='none'){
+body.style.display='block';
+arrow.classList.add('open');
+}else{
+body.style.display='none';
+arrow.classList.remove('open');
+}
+}
+</script>
+</body>
+</html>
