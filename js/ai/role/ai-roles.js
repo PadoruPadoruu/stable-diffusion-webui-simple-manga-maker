@@ -1,10 +1,4 @@
-// if( hasNotRole( AI_ROLES.XXXXX )){return;}
-// if( hasRole( AI_ROLES.XXXXX )){return;}
-
-//WebUI : SDXL
-//Forge : SDXL, Flux
-//ComfyUI : SDXL, Flux
-
+// AIロール定義とロール判定
 const AI_ROLES={
 Text2Image: "Text2Image",
 Image2Image: "Image2Image",
@@ -58,21 +52,22 @@ AI_ROLES.RemoveBG
 ]
 };
 
+const ROLE_ASSIGNABLE_ROLES=[
+AI_ROLES.Text2Image,
+AI_ROLES.Image2Image,
+AI_ROLES.Inpaint,
+AI_ROLES.Upscaler,
+AI_ROLES.RemoveBG,
+AI_ROLES.I2I_Angle
+];
+
 function hasNotRole(role) {
 return!(hasRole(role));
 }
 
 function hasRole(role) {
-if (apiMode==apis.A1111) {
-return roles.A1111.includes(role);
-} else if (apiMode==apis.COMFYUI) {
-return roles.COMFYUI.includes(role);
-} else if (apiMode==apis.RUNPOD_COMFYUI) {
-return roles.RUNPOD_COMFYUI.includes(role);
-} else if (apiMode==apis.RUNPOD_ENDPOINT) {
-return roles.RUNPOD_ENDPOINT.includes(role);
-} else if (apiMode==apis.FAL_AI) {
-return roles.FAL_AI.includes(role);
+if(providerRegistry.getProviderForRole(role)!==null){
+return true;
 }
 return false;
 }

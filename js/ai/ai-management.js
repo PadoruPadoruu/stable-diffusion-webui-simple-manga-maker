@@ -54,45 +54,45 @@ return sdCleared+comfyCleared+rpCleared+falCleared;
 
 
 async function T2I(layer,spinner){
-var provider=providerRegistry.getActive();
-if(provider&&provider.supportsRole(AI_ROLES.Text2Image)){
+var provider=providerRegistry.getProviderForRole(AI_ROLES.Text2Image);
+if(provider){
 return provider.executeT2I(layer,spinner.id);
 }
 }
 function I2I(layer,spinner){
-var provider=providerRegistry.getActive();
-if(provider&&provider.supportsRole(AI_ROLES.Image2Image)){
+var provider=providerRegistry.getProviderForRole(AI_ROLES.Image2Image);
+if(provider){
 return provider.executeI2I(layer,spinner.id);
 }
 }
 
 async function aiRembg(layer,spinner){
-var provider=providerRegistry.getActive();
-if(provider&&provider.supportsRole(AI_ROLES.RemoveBG)){
+var provider=providerRegistry.getProviderForRole(AI_ROLES.RemoveBG);
+if(provider){
 return provider.executeRembg(layer,spinner.id);
 }
 }
 
 async function aiUpscale(layer,spinner){
-var provider=providerRegistry.getActive();
-if(provider&&provider.supportsRole(AI_ROLES.Upscaler)){
+var provider=providerRegistry.getProviderForRole(AI_ROLES.Upscaler);
+if(provider){
 return provider.executeUpscale(layer,spinner.id);
 }
 }
 
 function canUseInpaint(){
-var provider=providerRegistry.getActive();
-return provider!==null&&provider.canUseInpaint()&&hasRole(AI_ROLES.Inpaint);
+var provider=providerRegistry.getProviderForRole(AI_ROLES.Inpaint);
+return provider!==null&&provider.canUseInpaint();
 }
 
 function canUseAngle(){
-var provider=providerRegistry.getActive();
-return provider!==null&&provider.canUseAngle()&&hasRole(AI_ROLES.I2I_Angle);
+var provider=providerRegistry.getProviderForRole(AI_ROLES.I2I_Angle);
+return provider!==null&&provider.canUseAngle();
 }
 
 function AngleGenerate(layer,spinner,anglePrompt){
-var provider=providerRegistry.getActive();
-if(provider&&provider.supportsRole(AI_ROLES.I2I_Angle)){
+var provider=providerRegistry.getProviderForRole(AI_ROLES.I2I_Angle);
+if(provider){
 return provider.executeAngle(layer,spinner.id,anglePrompt);
 }
 }

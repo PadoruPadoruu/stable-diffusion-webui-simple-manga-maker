@@ -1639,6 +1639,7 @@ function getElementClasses(element) {
                                 Fal.ai
                             </button>
 
+                            <button class="role-assign-trigger" onclick="roleAssignmentUI.open()" data-i18n="roleAssignButton">&#9881; Role</button>
                             <div id="apiSettingsUrlHelpe">
                             </div>
                         </div>
@@ -1855,7 +1856,40 @@ function getElementClasses(element) {
         </div>
     </div>
 
+<!-- ========== Modal: Role Assignment ========== -->
+    <div id="roleAssignModal" class="role-assign-modal" style="display:none;">
+        <div class="role-assign-modal-overlay" onclick="roleAssignmentUI.close()"></div>
+        <div class="role-assign-modal-content">
+            <div class="role-assign-modal-header">
+                <h2 data-i18n="roleAssignTitle">&#9881; Role Assignment</h2>
+                <button class="role-assign-modal-close" onclick="roleAssignmentUI.close()">&times;</button>
+            </div>
+            <div class="role-assign-modal-body">
+                <table class="role-matrix">
+                    <thead>
+                        <tr>
+                            <th data-i18n="roleAssignRole">Role</th>
+                            <th data-i18n="roleDefault">Default</th>
+                            <th>ComfyUI</th>
+                            <th>WebUI</th>
+                            <th>RunPod</th>
+                            <th>Serverless</th>
+                            <th>Fal.ai</th>
+                        </tr>
+                    </thead>
+                    <tbody id="roleMatrixBody"></tbody>
+                </table>
+                <div class="role-assign-note" data-i18n="roleAssignNote">&#8251; Greyed out = provider does not support this role. Default = follows the active provider.</div>
+            </div>
+            <div class="role-assign-modal-footer">
+                <button class="role-assign-btn-cancel" onclick="roleAssignmentUI.close()" data-i18n="roleAssignCancel">Cancel</button>
+                <button class="role-assign-btn-submit" onclick="roleAssignmentUI.apply()" data-i18n="roleAssignApply">Apply</button>
+            </div>
+        </div>
+    </div>
+
 <!-- ========== Additional CSS ========== -->
+    <link rel="stylesheet" href="css/ui/role-assign-modal.css?v=7.3" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="css/ui/shortcut-modal.css?v=7.2" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="third/intro/introjs.min.css">
     <link rel="stylesheet" href="css/ui/intro.css?" media="print" onload="this.media='all'">
@@ -1969,6 +2003,7 @@ function getElementClasses(element) {
     <script src="js/ai/comfyui/comfyui-management.js?v=7.2" defer></script>
     <script src="js/ai/ai-settings.js?v=7.2" defer></script>
     <script src="js/ai/ai-management.js?v=7.2" defer></script>
+    <script src="js/ai/role/role-assignment-ui.js?v=7.3" defer></script>
     <script src="js/ai/inpainting/inpaint-mask.js?v=7.3" defer></script>
     <script src="js/ai/inpainting/inpaint-workflow.js?v=7.3" defer></script>
     <script src="js/ai/inpainting/inpaint-editor.js?v=7.3" defer></script>

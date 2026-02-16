@@ -325,6 +325,9 @@ else if(mode===apis.RUNPOD_COMFYUI)changeExternalAPI($('runpodComfyUIButton'));
 else if(mode===apis.RUNPOD_ENDPOINT)changeExternalAPI($('runpodEndpointButton'));
 else if(mode===apis.FAL_AI)changeExternalAPI($('falaiButton'));
 else changeExternalAPI($('comfyUIButton'));
+if(data.roleAssignments){
+providerRegistry.loadRoleAssignments(data.roleAssignments);
+}
 }
 
 function saveSettingsLocalStrage(silent){
@@ -340,6 +343,7 @@ Object.keys(BASEPROMPT_SCHEMA).forEach(function(key){
 var cfg=BASEPROMPT_SCHEMA[key];
 data[key]=basePrompt[cfg.key];
 });
+data.roleAssignments=providerRegistry.getAllRoleAssignments();
 localStorage.setItem('localSettingsData',JSON.stringify(data));
 }
 

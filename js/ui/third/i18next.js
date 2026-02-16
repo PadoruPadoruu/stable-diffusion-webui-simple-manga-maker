@@ -10,6 +10,80 @@
 // },
 //マージされるので追加日ごとにyyyyMMddHHmmss_SSSをTopKeyに入れます。個別の翻訳はKey名・翻訳文を任意に付けてください。ただし被らないように。
 const resources = {
+"20260216170000_001":{
+"ja":{
+"roleAssignTitle":"&#9881; Role割当",
+"roleAssignButton":"&#9881; Role",
+"roleAssignRole":"Role",
+"roleDefault":"Default",
+"roleAssignNote":"※ グレーアウト=そのプロバイダーは該当Roleをサポートしていません。Default=アクティブプロバイダーに従います。",
+"roleAssignCancel":"Cancel",
+"roleAssignApply":"Apply"
+},
+"en":{
+"roleAssignTitle":"&#9881; Role Assignment",
+"roleAssignButton":"&#9881; Role",
+"roleAssignRole":"Role",
+"roleDefault":"Default",
+"roleAssignNote":"※ Greyed out = provider does not support this role. Default = follows the active provider.",
+"roleAssignCancel":"Cancel",
+"roleAssignApply":"Apply"
+},
+"ko":{
+"roleAssignTitle":"&#9881; Role 할당",
+"roleAssignButton":"&#9881; Role",
+"roleAssignRole":"Role",
+"roleDefault":"Default",
+"roleAssignNote":"※ 회색=해당 프로바이더가 이 Role을 지원하지 않습니다. Default=활성 프로바이더를 따릅니다.",
+"roleAssignCancel":"Cancel",
+"roleAssignApply":"Apply"
+},
+"fr":{
+"roleAssignTitle":"&#9881; Attribution des rôles",
+"roleAssignButton":"&#9881; Role",
+"roleAssignRole":"Rôle",
+"roleDefault":"Défaut",
+"roleAssignNote":"※ Grisé = le fournisseur ne prend pas en charge ce rôle. Défaut = suit le fournisseur actif.",
+"roleAssignCancel":"Annuler",
+"roleAssignApply":"Appliquer"
+},
+"zh":{
+"roleAssignTitle":"&#9881; Role分配",
+"roleAssignButton":"&#9881; Role",
+"roleAssignRole":"Role",
+"roleDefault":"Default",
+"roleAssignNote":"※ 灰色=该提供者不支持此Role。Default=跟随当前活动提供者。",
+"roleAssignCancel":"Cancel",
+"roleAssignApply":"Apply"
+},
+"ru":{
+"roleAssignTitle":"&#9881; Назначение ролей",
+"roleAssignButton":"&#9881; Role",
+"roleAssignRole":"Role",
+"roleDefault":"Default",
+"roleAssignNote":"※ Серый = провайдер не поддерживает эту роль. Default = активный провайдер.",
+"roleAssignCancel":"Отмена",
+"roleAssignApply":"Применить"
+},
+"es":{
+"roleAssignTitle":"&#9881; Asignación de roles",
+"roleAssignButton":"&#9881; Role",
+"roleAssignRole":"Rol",
+"roleDefault":"Default",
+"roleAssignNote":"※ Gris = el proveedor no soporta este rol. Default = sigue al proveedor activo.",
+"roleAssignCancel":"Cancelar",
+"roleAssignApply":"Aplicar"
+},
+"de":{
+"roleAssignTitle":"&#9881; Rollenzuweisung",
+"roleAssignButton":"&#9881; Role",
+"roleAssignRole":"Rolle",
+"roleDefault":"Standard",
+"roleAssignNote":"※ Ausgegraut = Anbieter unterstützt diese Rolle nicht. Standard = folgt dem aktiven Anbieter.",
+"roleAssignCancel":"Abbrechen",
+"roleAssignApply":"Anwenden"
+}
+},
 "20260216160000_001":{
 "ja":{
 "copyAndPast":"複製",
