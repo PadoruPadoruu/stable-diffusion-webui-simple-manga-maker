@@ -26,6 +26,11 @@ apiMode=apis.RUNPOD_ENDPOINT;
 providerRegistry.syncFromApiMode(apiMode);
 if(showToast)createToast("API CHANGE!","RunPod Endpoint",2000);
 $('apiSettingsUrlHelpe').innerHTML='';
+} else if (selectedValue==="falaiButton") {
+apiMode=apis.FAL_AI;
+providerRegistry.syncFromApiMode(apiMode);
+if(showToast)createToast("API CHANGE!","Fal.ai",2000);
+$('apiSettingsUrlHelpe').innerHTML='';
 }
 
 updateWorkflowType();
@@ -58,6 +63,27 @@ const externalApiGroup=getSelectedValueByGroup("externalApiGroup");
 const generateModelGroup=getSelectedValueByGroup("generateModelGroup");
 const generateWorkflow=getSelectedValueByGroup("generateWorkflow");
 
+if (externalApiGroup==="falaiButton"){
+hideById("comfyUIWorkflowId");
+hideById("manualSelectWorkflowId");
+hideById("manualSelectModelId");
+hideById("clipDropdownControl");
+hideById("vaeDropdownControl");
+showById("prompt-A");
+showById("negativeAreaId");
+hideById("prompt-B");
+hideById("prompt-C");
+hideById("prompt-D");
+showById("prompt-E");
+showById("prompt-F");
+hideById("prompt-G");
+hideById("prompt-H");
+hideById("prompt-I");
+hideById("prompt-J");
+hideById("prompt-K");
+hideById("checSD_WebUI_Announce");
+return;
+}
 if (externalApiGroup==="runpodEndpointButton"){
 hideById("comfyUIWorkflowId");
 hideById("manualSelectWorkflowId");

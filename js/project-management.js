@@ -3,7 +3,8 @@ const apis={
 A1111: "A1111",
 COMFYUI: "comfyui",
 RUNPOD_COMFYUI: "runpodComfyUI",
-RUNPOD_ENDPOINT: "runpodEndpoint"
+RUNPOD_ENDPOINT: "runpodEndpoint",
+FAL_AI: "falai"
 };
 
 
@@ -207,6 +208,11 @@ runpodApiKey:{id:'runpodApiKey',default:''},
 runpodEndpointId:{id:'runpodEndpointId',default:''},
 runpodEndpointApiKey:{id:'runpodEndpointApiKey',default:''},
 runpodEndpointTimeout:{id:'runpodEndpointTimeout',default:'120'},
+falaiApiKey:{id:'falaiApiKey',default:''},
+falaiModelT2I:{id:'falaiModelT2I',default:''},
+falaiModelI2I:{id:'falaiModelI2I',default:''},
+falaiModelUpscale:{id:'falaiModelUpscale',default:''},
+falaiModelRembg:{id:'falaiModelRembg',default:''},
 apiHeartbeatCheckbox:{id:'apiHeartbeatCheckbox',default:true,type:'checkbox'},
 autoSaveEnabled:{id:'autoSaveCheckbox',default:true,type:'checkbox'},
 autoSaveInterval:{id:'autoSaveInterval',default:'60'},
@@ -317,6 +323,7 @@ var mode=data.externalAI||apis.COMFYUI;
 if(mode===apis.A1111)changeExternalAPI($('sdWebUIButton'));
 else if(mode===apis.RUNPOD_COMFYUI)changeExternalAPI($('runpodComfyUIButton'));
 else if(mode===apis.RUNPOD_ENDPOINT)changeExternalAPI($('runpodEndpointButton'));
+else if(mode===apis.FAL_AI)changeExternalAPI($('falaiButton'));
 else changeExternalAPI($('comfyUIButton'));
 }
 

@@ -2,6 +2,7 @@
 const sdQueue=new TaskQueue(1);
 const comfyuiQueue=new TaskQueue(1);
 const runpodEndpointQueue=new TaskQueue(1);
+const falaiQueue=new TaskQueue(1);
 
 var firstSDConnection=true;
 var firstComfyConnection=true;
@@ -35,6 +36,10 @@ const rpQueueStatus=runpodEndpointQueue.getStatus();
 if(rpQueueStatus.total>0){
 return true;
 }
+const falQueueStatus=falaiQueue.getStatus();
+if(falQueueStatus.total>0){
+return true;
+}
 return false;
 }
 
@@ -42,8 +47,9 @@ function clearAllQueues() {
 const sdCleared=sdQueue.clearQueue();
 const comfyCleared=comfyuiQueue.clearQueue();
 const rpCleared=runpodEndpointQueue.clearQueue();
-logger.info(`All queues cleared: SD=${sdCleared}, ComfyUI=${comfyCleared}, RP=${rpCleared}`);
-return sdCleared+comfyCleared+rpCleared;
+const falCleared=falaiQueue.clearQueue();
+logger.info(`All queues cleared: SD=${sdCleared}, ComfyUI=${comfyCleared}, RP=${rpCleared}, Fal=${falCleared}`);
+return sdCleared+comfyCleared+rpCleared+falCleared;
 }
 
 

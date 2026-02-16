@@ -49,6 +49,12 @@ AI_ROLES.I2I_Angle
 ],
 RUNPOD_ENDPOINT: [
 AI_ROLES.Text2Image
+],
+FAL_AI: [
+AI_ROLES.Text2Image,
+AI_ROLES.Image2Image,
+AI_ROLES.Upscaler,
+AI_ROLES.RemoveBG
 ]
 };
 
@@ -65,6 +71,8 @@ return roles.COMFYUI.includes(role);
 return roles.RUNPOD_COMFYUI.includes(role);
 } else if (apiMode==apis.RUNPOD_ENDPOINT) {
 return roles.RUNPOD_ENDPOINT.includes(role);
+} else if (apiMode==apis.FAL_AI) {
+return roles.FAL_AI.includes(role);
 }
 return false;
 }

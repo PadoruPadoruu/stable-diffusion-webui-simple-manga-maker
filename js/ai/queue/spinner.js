@@ -118,6 +118,9 @@ waitingCount+=sdQueue.getWaitingCount();
 if(typeof runpodEndpointQueue!=='undefined'){
 waitingCount+=runpodEndpointQueue.getWaitingCount();
 }
+if(typeof falaiQueue!=='undefined'){
+waitingCount+=falaiQueue.getWaitingCount();
+}
 
 var text='';
 if(waitingCount>0){
@@ -159,6 +162,9 @@ sdQueue.clearQueue();
 }
 if(typeof runpodEndpointQueue!=='undefined'){
 runpodEndpointQueue.clearQueue();
+}
+if(typeof falaiQueue!=='undefined'){
+falaiQueue.clearQueue();
 }
 var keys=Object.keys(aiProgressState.spinners);
 for(var i=0;i<keys.length;i++){

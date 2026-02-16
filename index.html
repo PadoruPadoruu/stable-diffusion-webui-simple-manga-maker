@@ -387,12 +387,29 @@ function getElementClasses(element) {
                                     <input type="number" id="runpodEndpointTimeout" value="120" min="10" max="600" placeholder="Timeout(s)">
                                 </li>
                             </div>
+                            <div class="FalAI_api_content">
+                                <li class="es-section-title">Fal.ai</li>
+                                <li class="es-url-row">
+                                    <input type="password" id="falaiApiKey" value="" placeholder="API Key" autocomplete="off">
+                                    <button id="falaiApiKeyToggle" class="es-btn-small" title="Show/Hide">👁</button>
+                                </li>
+                                <li class="es-url-row">
+                                    <input type="text" id="falaiModelT2I" value="" placeholder="T2I: fal-ai/flux/schnell">
+                                </li>
+                                <li class="es-url-row">
+                                    <input type="text" id="falaiModelI2I" value="" placeholder="I2I: fal-ai/image-to-image">
+                                </li>
+                                <li class="es-url-row">
+                                    <input type="text" id="falaiModelUpscale" value="" placeholder="Upscale: fal-ai/creative-upscaler">
+                                </li>
+                                <li class="es-url-row">
+                                    <input type="text" id="falaiModelRembg" value="" placeholder="RemoveBG: fal-ai/birefnet">
+                                </li>
+                            </div>
                         </ul>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownView" role="button"
                             data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
                             <span data-i18n="viewMenu">表示</span>
                         </a>
@@ -1618,6 +1635,9 @@ function getElementClasses(element) {
                             <button id="runpodEndpointButton" data-value="runpodEndpointButton" onclick='changeExternalAPI(this,true)'>
                                 Serverless
                             </button>
+                            <button id="falaiButton" data-value="falaiButton" onclick='changeExternalAPI(this,true)'>
+                                Fal.ai
+                            </button>
 
                             <div id="apiSettingsUrlHelpe">
                             </div>
@@ -1937,6 +1957,7 @@ function getElementClasses(element) {
     <script src="js/ai/provider/local-sdwebui-provider.js?v=7.3" defer></script>
     <script src="js/ai/provider/runpod-comfyui-provider.js?v=7.3" defer></script>
     <script src="js/ai/provider/runpod-endpoint-provider.js?v=7.3" defer></script>
+    <script src="js/ai/provider/falai-provider.js?v=7.3" defer></script>
     <script src="js/ai/queue/spinner.js?v=7.2" defer></script>
     <script src="js/ai/queue/task-queue.js?v=7.2" defer></script>
     <script src="js/ai/queue/generation-task-manager.js?v=7.2" defer></script>
