@@ -452,7 +452,7 @@ saveStateByManual();
 canvas.renderAll();
 updateLayerPanel();
 return;
-case 'copyAndPast':
+case 'copyAndPaste':
 activeObject.clone(function (cloned) {
 cloned.set({
 left: cloned.left+10,

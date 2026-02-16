@@ -157,7 +157,7 @@ label.innerHTML='SD WebUI or Forge ON';
 label.style.color='green';
 
 if(firstSDConnection){
-getDiffusionInfomation();
+getDiffusionInformation();
 firstSDConnection=false;
 }
 return true;

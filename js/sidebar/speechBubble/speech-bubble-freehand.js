@@ -354,7 +354,7 @@ obj.set({selectable:currentMode==="select",evented:true});
 });
 }
 function createControlPoints(obj){
-sbClearControlePoints();
+sbClearControlPoints();
 if(!obj)return;
 const path=obj.path;
 for(let i=1;i<path.length-1;i++){
@@ -451,7 +451,7 @@ removeTemporary(temporaryShape);
 temporaryLine=null;
 temporaryShape=null;
 }
-function sbClearControlePoints(){
+function sbClearControlPoints(){
 controlPoints.forEach(p=>removeTemporary(p));
 controlPoints=[];
 requestAnimationFrame(()=>canvas.renderAll());
@@ -469,7 +469,7 @@ sbClear();
 points=[];
 mousePosition=null;
 updateObjectSelectability();
-sbClearControlePoints();
+sbClearControlPoints();
 
 canvas.selection=false;
 canvas.forEachObject(obj=>{
@@ -516,7 +516,7 @@ obj.set({selectable:true,evented:true});
 });
 nonActiveClearButton();
 }
-sbClearControlePoints();
+sbClearControlPoints();
 }
 
 setSelectionMode(sbSelectButton);

@@ -22,7 +22,7 @@ labelfw.style.color="green";
 }
 
 if (firstComfyConnection) {
-getDiffusionInfomation();
+getDiffusionInformation();
 firstComfyConnection=false;
 }
 return true;

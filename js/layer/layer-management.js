@@ -188,7 +188,7 @@ putActionButton(actionBar,"directions_run","actAiGenerate",function(){
 var spinner=createSpinner(index);T2I(layer,spinner);
 },AI_ROLES.Image2Image);
 putActionButton(actionBar,"recycling","actSeedApply",function(){
-if(layer.tempSeed){layer.text2img_seed=layer.tempSeed;createToast("Recycling Seed",layer.text2img_seed);}else{createToast("Nothing Seed","");}
+if(layer.tempSeed){layer.text2img_seed=layer.tempSeed;createToast("Recycling Seed",layer.text2img_seed);}else{createToastError("Nothing Seed","");}
 },AI_ROLES.PutSeed);
 putActionBarSeparator(actionBar);
 putActionButton(actionBar,"download","actDownload",function(){
@@ -216,8 +216,8 @@ var spinner=createSpinnerSuccess(index);sdwebuiInterrogate(layer,"clip",spinner.
 },AI_ROLES.Image2Prompt_CLIP);
 putActionBarSeparator(actionBar);
 putActionButton(actionBar,"text_snippet","actPromptApply",function(){
-if(layer.tempPrompt){layer.text2img_prompt=layer.tempPrompt;createToast("Apply Prompt",layer.text2img_prompt);}else{createToast("Nothing Prompt","");}
-if(layer.tempNegative){layer.text2img_negative=layer.tempNegative;createToast("Apply Negative Prompt",layer.text2img_negative);}else{createToast("Nothing Negative Prompt","");}
+if(layer.tempPrompt){layer.text2img_prompt=layer.tempPrompt;createToast("Apply Prompt",layer.text2img_prompt);}else{createToastError("Nothing Prompt","");}
+if(layer.tempNegative){layer.text2img_negative=layer.tempNegative;createToast("Apply Negative Prompt",layer.text2img_negative);}else{createToastError("Nothing Negative Prompt","");}
 },AI_ROLES.PutPrompt);
 putActionButton(actionBar,"download","actDownload",function(){
 var dataURL=imageObject2DataURL(layer);var link=getLink(dataURL);link.click();

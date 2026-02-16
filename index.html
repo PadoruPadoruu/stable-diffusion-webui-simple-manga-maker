@@ -129,7 +129,7 @@ const b = `<svg viewBox="0 0 100 100" width="100%" height="100%" style="position
 
 
 
-<!-- ========== Analytics ========== -->
+// ========== Analytics ==========
         window.dataLayer = window.dataLayer || [];
         function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
@@ -234,6 +234,7 @@ function getElementClasses(element) {
 <script src="https://cdn.jsdelivr.net/npm/wordcloud" defer></script>
 
 <link rel="stylesheet" href="css/comfyui-workflow-editor.css?v=7.2" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="css/responsive.css?v=7.3">
 
 </head>
 <!-- ========== Body ========== -->
@@ -1846,6 +1847,7 @@ function getElementClasses(element) {
     <script src="js/core/settings.js?v=7.2" defer></script>
     <script src="js/core/debug.js?v=7.2" defer></script>
     <script src="js/core/logger.js?v=7.2" defer></script>
+    <script src="js/ui/util/focus-trap.js?v=7.2" defer></script>
     <script src="js/core/global-error-handler.js?v=7.2" defer></script>
 
     <script src="js/ui/glfx-ui.js?v=7.2" defer></script>
@@ -2004,6 +2006,7 @@ function getElementClasses(element) {
     <script src="js/ai/comfyui/v2/comfyui-workflow-interact.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jscolor/2.4.5/jscolor.min.js"></script>
+<!-- ========== Inline Scripts ========== -->
     
 <script>
 function autoResize(event) {
@@ -2067,6 +2070,7 @@ setAutoSizeingControlMini();
 </script>
 
 
+<!-- ========== Modal: Inpaint Editor ========== -->
 <div id="inpaint-modal" class="inpaint-modal-overlay" style="display:none;">
 <div id="inpaint-editor" class="inpaint-modal-content">
 <button id="inpaint-cancel-btn" class="inpaint-close-btn">✕</button>
@@ -2106,6 +2110,7 @@ oninput="document.getElementById('inpaint-denoise-label').textContent=this.value
 </div>
 </div>
 
+<!-- ========== Modal: Angle Editor ========== -->
 <div id="angle-modal" class="angle-modal-overlay" style="display:none;">
 <div class="angle-modal-content">
 <button id="angle-cancel-btn" class="angle-close-btn">✕</button>
@@ -2128,6 +2133,7 @@ oninput="document.getElementById('inpaint-denoise-label').textContent=this.value
 </div>
 </div>
 
+<!-- ========== Modal: Dashboard ========== -->
 <div id="dashboard-modal" class="dashboard-modal-overlay" style="display:none;">
 <div class="dashboard-modal-content">
 <button id="dashboard-close-btn" class="dashboard-modal-close-btn">&#10005;</button>

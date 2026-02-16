@@ -1,3 +1,4 @@
+// createToast(NieR風): success/info, createToastError(DbD風): error/warning
 function createToast(title,messages,time=4000) {
 uiLogger.debug("createToast",time);
 
@@ -114,7 +115,7 @@ return true;
 }
 }
 let text=getText("nothingImage");
-createToast(text,"",2000);
+createToastError(text,"",2000);
 return false;
 }
 function checkPanelImage() {
@@ -125,6 +126,6 @@ return true;
 }
 }
 let text=getText("nothingPanel");
-createToast(text,"",2000);
+createToastError(text,"",2000);
 return false;
 }

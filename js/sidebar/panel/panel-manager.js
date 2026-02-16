@@ -651,7 +651,7 @@ document.addEventListener('DOMContentLoaded',function() {
 $("view_layers_checkbox").addEventListener("change",function () {
 changeView("layer-panel",this.checked);
 });
-$("view_controles_checkbox").addEventListener("change",function () {
+$("view_controls_checkbox").addEventListener("change",function () {
 changeView("controls",this.checked);
 });
 $("view_prompt_checkbox").addEventListener("change",function () {

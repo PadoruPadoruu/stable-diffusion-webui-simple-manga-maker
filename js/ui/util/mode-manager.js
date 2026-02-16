@@ -312,7 +312,7 @@ ModeManager.change(mode);
 
 clear:function(){
 if(typeof sbClear==='function')sbClear();
-if(typeof sbClearControlePoints==='function')sbClearControlePoints();
+if(typeof sbClearControlPoints==='function')sbClearControlPoints();
 if(typeof points!=='undefined')points=[];
 },
 

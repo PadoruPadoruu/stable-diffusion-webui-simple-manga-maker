@@ -136,13 +136,13 @@ if (layer.tempPrompt) {
 layer.text2img_prompt=layer.tempPrompt;
 createToast("Apply Prompt",layer.text2img_prompt);
 } else {
-createToast("Nothing Prompt","");
+createToastError("Nothing Prompt","");
 }
 if (layer.tempNegative) {
 layer.text2img_negative=layer.tempNegative;
 createToast("Apply Negative Prompt",layer.text2img_negative);
 } else {
-createToast("Nothing Negative Prompt","");
+createToastError("Nothing Negative Prompt","");
 }
 };
 
@@ -235,7 +235,7 @@ if (layer.tempSeed) {
 layer.text2img_seed=layer.tempSeed;
 createToast("Recycling Seed",layer.text2img_seed);
 } else {
-createToast("Nothing Seed","");
+createToastError("Nothing Seed","");
 }
 };
 

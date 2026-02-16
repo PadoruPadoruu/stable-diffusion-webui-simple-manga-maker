@@ -70,8 +70,8 @@ e.preventDefault();
 
 // bind toggle controls shortcut
 hotkeys(hotkeysMap.toggleControls,'all',function (e) {
-changeView('controls',$('view_controles_checkbox').checked);
-$('view_controles_checkbox').click();
+changeView('controls',$('view_controls_checkbox').checked);
+$('view_controls_checkbox').click();
 e.preventDefault();
 });
 
@@ -282,6 +282,7 @@ var shortcutCategories=[
 ]},
 ];
 
+var shortcutFocusTrap=null;
 function openShortcutModal(){
 var container=$('shortcutGrid');
 container.innerHTML='';
@@ -324,10 +325,15 @@ rightCol.appendChild(catDiv);
 });
 container.appendChild(leftCol);
 container.appendChild(rightCol);
-$('shortcutModal').style.display='flex';
+var modal=$('shortcutModal');
+modal.style.display='flex';
+shortcutFocusTrap=FocusTrap.create(modal,closeShortcutModal);
+FocusTrap.activate(shortcutFocusTrap);
 }
 
 function closeShortcutModal(){
+FocusTrap.deactivate(shortcutFocusTrap);
+shortcutFocusTrap=null;
 $('shortcutModal').style.display='none';
 }
 

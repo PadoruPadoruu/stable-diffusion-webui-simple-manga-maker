@@ -32,7 +32,7 @@ knifeModeButton.textContent=isKnifeMode
 if (isKnifeMode) {
 if(currentMode==="freehand"||currentMode==="point"){
 sbClear();
-sbClearControlePoints();
+sbClearControlPoints();
 points=[];
 }
 currentMode="select";

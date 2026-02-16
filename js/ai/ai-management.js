@@ -86,7 +86,7 @@ comfyuiHandleProcessQueue(layer,spinner.id,'I2I_Angle',{anglePrompt:anglePrompt}
 }
 
 
-function getDiffusionInfomation() {
+function getDiffusionInformation() {
 if (apiMode==apis.A1111) {
 fetchSDOptions().then(()=>{
 fetchSdModels();
@@ -95,7 +95,7 @@ fetchSdUpscaler();
 fetchSdAdModels();
 fetchSdModules();
 }).catch((error)=>{
-logger.error('getDiffusionInfomation:',error);
+logger.error('getDiffusionInformation:',error);
 });
 
 }else if(apiMode==apis.COMFYUI){

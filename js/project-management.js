@@ -192,7 +192,7 @@ else el.classList.remove('settings-highlight');
 
 var SETTINGS_SCHEMA={
 view_layers_checkbox:{id:'view_layers_checkbox',default:true,type:'checkbox'},
-view_controles_checkbox:{id:'view_controles_checkbox',default:true,type:'checkbox'},
+view_controls_checkbox:{id:'view_controls_checkbox',default:true,type:'checkbox'},
 knifePanelSpaceSize:{id:'knifePanelSpaceSize',default:'20'},
 canvasBgColor:{id:'bg-color',default:'#ffffff'},
 canvasDpi:{id:'outputDpi',default:'450'},
@@ -233,15 +233,15 @@ svg_icon_shadowColor:{id:'svg_icon_shadowColor',default:'rgba(255,255,255,1)'},
 svg_icon_shadowBlur:{id:'svg_icon_shadowBlur',default:'3'},
 svg_icon_shadowOffsetX:{id:'svg_icon_shadowOffsetX',default:'0'},
 svg_icon_shadowOffsetY:{id:'svg_icon_shadowOffsetY',default:'0'},
-InfomationFPS:{id:'InfomationFPS',default:true,type:'checkbox'},
-InfomationCoordinate:{id:'InfomationCoordinate',default:true,type:'checkbox'},
+InformationFPS:{id:'InformationFPS',default:true,type:'checkbox'},
+InformationCoordinate:{id:'InformationCoordinate',default:true,type:'checkbox'},
 AdetailerCheck:{id:'AdetailerCheck',default:false,type:'checkbox'},
 AdetilerModelsPrompt:{id:'AdetilerModelsPrompt',default:''},
 AdetilerModelsNegative:{id:'AdetilerModelsNegative',default:''},
 pageCount:{id:'pageCount',default:'18'},
 verticalRandomPanelCount:{id:'verticalRandomPanelCount',default:'2'},
-horizontalRandamPanelCount:{id:'horizontalRandamPanelCount',default:'3'},
-tiltRandam:{id:'tiltRandam',default:'6'},
+horizontalRandomPanelCount:{id:'horizontalRandomPanelCount',default:'3'},
+tiltRandom:{id:'tiltRandom',default:'6'},
 cutChangeRate:{id:'cutChangeRate',default:'10'},
 onePanelGenerateNumber:{id:'onePanelGenerateNumber',default:'1'},
 inpaintBrushSize:{id:'inpaint-brush-size',default:'30'},
@@ -344,7 +344,7 @@ setTimeout(function(){location.reload();},1500);
 document.addEventListener('DOMContentLoaded',function() {
 loadSettingsLocalStrage();
 changeView("layer-panel",$('view_layers_checkbox').checked);
-changeView("controls",$('view_controles_checkbox').checked);
+changeView("controls",$('view_controls_checkbox').checked);
 if(DEBUG_FLAGS.settingsHighlight)toggleSettingsHighlight(true);
 AutoSaveManager.init();
 initSettingsAutoSave();

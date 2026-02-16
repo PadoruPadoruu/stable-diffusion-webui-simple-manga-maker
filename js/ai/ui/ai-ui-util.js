@@ -45,8 +45,8 @@ if (externalApiGroup==="comfyUIButton"){
 showById("comfyUIWorkflowId");
 hideById("manualSelectWorkflowId");
 hideById("manualSelectModelId");
-hideById("clipDropdownControle");
-hideById("vaeDropdownControle");
+hideById("clipDropdownControl");
+hideById("vaeDropdownControl");
 showById("prompt-A");
 showById("negativeAreaId");
 hideById("prompt-B");
@@ -91,21 +91,21 @@ hideById("negativeAreaId");
 if (externalApiGroup==="comfyUIButton"){
 showById("manualSelectModelId");
 if(generateModelGroup==="Flux"&&generateWorkflow==="Diffution"){
-showById("clipDropdownControle");
-showById("vaeDropdownControle");
+showById("clipDropdownControl");
+showById("vaeDropdownControl");
 return;
 }
 }else if(externalApiGroup==="sdWebUIButton"){
 showById("manualSelectModelId");
 hideById("manualSelectWorkflowId");
-showById("clipDropdownControle");
-hideById("vaeDropdownControle");
+showById("clipDropdownControl");
+hideById("vaeDropdownControl");
 hideById("manualSelectWorkflowId");
 return;
 }
 
 showById("manualSelectModelId");
-hideById("clipDropdownControle");
-hideById("vaeDropdownControle");
+hideById("clipDropdownControl");
+hideById("vaeDropdownControl");
 return;
 }
