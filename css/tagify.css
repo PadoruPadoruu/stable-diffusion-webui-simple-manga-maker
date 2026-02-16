@@ -6,31 +6,31 @@
   --tags-focus-border-color: var(--border-color-C);
   width: 100%;
   max-width: none;
-  background-color: #2a2a2a;
+  background-color: var(--color-secondary);
 }
 .tagify__tag {
   --tag-bg: var(--button-backgroun);
   --tag-hover: var(--border-color-C);
-  --tag-text-color: #e0e0e0;
+  --tag-text-color: var(--color-text-secondary);
   --tag-border-radius: var(--fjm-button-border-radius);
   --tag-pad: 0.3em 0.5em;
 }
 .tagify__tag > div {
-  color: #e0e0e0 !important;
+  color: var(--color-text-secondary) !important;
 }
 .tagify__tag__removeBtn {
   color: #bb86fc;
 }
 .tagify__input {
-  color: #e0e0e0;
+  color: var(--color-text-secondary);
 }
 .tagify__input::placeholder {
-  color: #9e9e9e;
+  color: var(--slider-accent);
   opacity: 1;
 }
 .tagify__dropdown {
-  background-color: #2a2a2a;
-  color: #e0e0e0;
+  background-color: var(--color-secondary);
+  color: var(--color-text-secondary);
   overflow-y: auto;
 }
 .tagify__dropdown__wrapper {

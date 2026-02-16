@@ -389,7 +389,7 @@ glfxOriginalImage=activeObject.getElement();
 }
 
 if (!activeObject) {
-createToast("Select Image!");
+createToastError("Select Image!");
 return;
 }
 

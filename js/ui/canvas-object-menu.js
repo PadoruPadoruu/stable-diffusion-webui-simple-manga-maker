@@ -232,7 +232,11 @@ name="${item.options.id}"
 min="${item.options.min}"
 max="${item.options.max}"
 step="${item.options.step}"
-value="${item.options.value}">
+value="${item.options.value}"
+aria-label="${label}"
+aria-valuemin="${item.options.min}"
+aria-valuemax="${item.options.max}"
+aria-valuenow="${item.options.value}">
 </div>`;
 break;
 case 'colorpicker':
@@ -243,6 +247,8 @@ menuContent+=`
 <input id="${item.options.id}"
 name="${item.options.id}"
 value="${item.options.value}"
+tabindex="0"
+aria-label="${labelColor}"
 class="jscolor-color-picker" data-initial-color="${item.options.rgba}">
 </div>`;
 break;

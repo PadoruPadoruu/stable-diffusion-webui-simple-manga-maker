@@ -179,7 +179,7 @@
 }
 
 #download-buttons button:hover {
- color: #FFFFFF;
+ color: var(--color-text-primary);
 }
 
 #download-buttons button .material-icons,
@@ -195,7 +195,7 @@
 }
 
 #canvas-buttons button:hover {
- color: #FFFFFF;
+ color: var(--color-text-primary);
 }
 
 #canvas-buttons button .material-icons {

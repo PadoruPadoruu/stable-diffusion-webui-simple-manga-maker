@@ -6,7 +6,7 @@
     width: 100vw;
     height: 100vh;
     background: rgba(0, 0, 0, 0.6);
-    z-index: 10000;
+    z-index: var(--z-modal);
     display: none;
     justify-content: center;
     align-items: center;
@@ -19,9 +19,9 @@
     height: 85vh;
     display: flex;
     flex-direction: column;
-    background: #1a1a1a;
+    background: var(--color-base);
     border-radius: var(--fjm-border-radius);
-    border: 1px solid #333;
+    border: 1px solid var(--color-secondary);
 }
 
 .dashboard-modal-close-btn {
@@ -115,7 +115,7 @@
 
 .summary-label {
     font-size: 10px;
-    color: #888;
+    color: #a0a0a0;
 }
 
 /* Dashboard Sections */
@@ -175,7 +175,7 @@
 }
 
 .stats-table th {
-    color: #888;
+    color: #a0a0a0;
     font-weight: normal;
     font-size: 10px;
 }
@@ -251,7 +251,7 @@
 }
 
 .no-tags {
-    color: #666;
+    color: #a0a0a0;
     text-align: center;
     padding: 20px;
     font-size: 13px;
@@ -283,7 +283,7 @@
 .heatmap-label {
     width: 40px;
     font-size: 10px;
-    color: #888;
+    color: #a0a0a0;
     text-align: right;
     padding-right: 8px;
     flex-shrink: 0;
@@ -293,7 +293,7 @@
     width: 20px;
     height: 16px;
     font-size: 9px;
-    color: #666;
+    color: #a0a0a0;
     text-align: center;
     flex-shrink: 0;
 }
@@ -396,7 +396,7 @@
 
 .streak-label {
     font-size: 10px;
-    color: #888;
+    color: #a0a0a0;
     margin-top: 2px;
 }
 
@@ -422,7 +422,7 @@
 
 .calendar-month-label {
     font-size: 9px;
-    color: #888;
+    color: #a0a0a0;
     text-align: left;
 }
 
@@ -442,7 +442,7 @@
     width: 24px;
     height: 11px;
     font-size: 9px;
-    color: #888;
+    color: #a0a0a0;
     text-align: right;
     line-height: 11px;
 }
@@ -482,7 +482,7 @@
     margin-top: 8px;
     justify-content: flex-end;
     font-size: 9px;
-    color: #888;
+    color: #a0a0a0;
 }
 
 .calendar-legend-cell {
@@ -627,7 +627,7 @@
 }
 
 .badge-item.badge-locked .badge-name {
-    color: #666;
+    color: #a0a0a0;
 }
 
 /* Export */
@@ -692,7 +692,7 @@ body:not(.dark-mode) .summary-value {
 }
 
 body:not(.dark-mode) .summary-label {
-    color: #999;
+    color: #767676;
 }
 
 body:not(.dark-mode) .streak-card {
@@ -705,7 +705,7 @@ body:not(.dark-mode) .streak-value {
 }
 
 body:not(.dark-mode) .streak-label {
-    color: #999;
+    color: #767676;
 }
 
 body:not(.dark-mode) .chart-container {
@@ -719,7 +719,7 @@ body:not(.dark-mode) .mode-selector {
 }
 
 body:not(.dark-mode) .stats-table th {
-    color: #999;
+    color: #767676;
 }
 
 body:not(.dark-mode) .stats-table td {
@@ -748,7 +748,7 @@ body:not(.dark-mode) .tag-bar-container {
 }
 
 body:not(.dark-mode) .no-tags {
-    color: #999;
+    color: #767676;
 }
 
 body:not(.dark-mode) .goal-input {
@@ -775,7 +775,7 @@ body:not(.dark-mode) .badge-name {
 }
 
 body:not(.dark-mode) .badge-item.badge-locked .badge-name {
-    color: #999;
+    color: #767676;
 }
 
 body:not(.dark-mode) .wordcloud-container {
@@ -793,15 +793,15 @@ body:not(.dark-mode) .dashboard-modal-close-btn:hover {
 body:not(.dark-mode) .calendar-month-label,
 body:not(.dark-mode) .calendar-day-label,
 body:not(.dark-mode) .calendar-legend {
-    color: #999;
+    color: #767676;
 }
 
 body:not(.dark-mode) .heatmap-label {
-    color: #999;
+    color: #767676;
 }
 
 body:not(.dark-mode) .heatmap-hour {
-    color: #999;
+    color: #767676;
 }
 
 body:not(.dark-mode) .dashboard-container::-webkit-scrollbar-track,

@@ -24,7 +24,7 @@ var loadButton=$("projectLoad");
 
 saveButton.addEventListener("click",async function () {
 if (stateStack.length===0) {
-createToast("Save Error","Not Found.");
+createToastError("Save Error","Not Found.");
 return;
 }
 

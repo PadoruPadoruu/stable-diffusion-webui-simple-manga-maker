@@ -19,7 +19,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
+  background-color: var(--color-accent-hover);
   transition: .4s;
   border-radius: 22px;
 }
@@ -31,12 +31,12 @@
   width: 16px;
   left: 0px;
   bottom: 3.5px;
-  background-color: white;
+  background-color: var(--toggle-button-color);
   border-radius: 50%;
 }
 
 input:checked + .slider {
-  background-color: #2196F3;
+  background-color: var(--checkbox-checked-background);
 }
 
 input:checked + .slider:before {

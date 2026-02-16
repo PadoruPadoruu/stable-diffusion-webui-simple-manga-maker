@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="dark-mode">
-
+<!-- ========== Head ========== -->
 <head>
     <title>Manga Editor Desu! Pro Edition: The Premier Standalone Manga Editing Platform</title>
 
@@ -47,6 +47,7 @@
     <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
 
     <div id="a" style="display:none"></div>
+<!-- ========== Boot Animation ========== -->
     <script>
 
 
@@ -128,6 +129,7 @@ const b = `<svg viewBox="0 0 100 100" width="100%" height="100%" style="position
 
 
 
+<!-- ========== Analytics ========== -->
         window.dataLayer = window.dataLayer || [];
         function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
@@ -190,7 +192,7 @@ function getElementClasses(element) {
             trackCustomEvent('page_unload', 'page_unload', 'Page Unload', 1, {});
         });
     </script>
-
+<!-- ========== CSS Stylesheets ========== -->
 <link rel="stylesheet" href="css/core/main-component.css?v=7.2">
 <link rel="stylesheet" href="css/css2.css?v=7.2">
 <link rel="stylesheet" href="css/icon.css?v=7.2">
@@ -198,43 +200,43 @@ function getElementClasses(element) {
 <link rel="stylesheet" href="css/common.css?v=7.2">
 <link rel="stylesheet" href="css/components.css?v=7.2">
 <link rel="stylesheet" href="css/layout.css?v=7.2">
-<link rel="stylesheet" href="css/image-controle-manager.css?v=7.2">
+<link rel="stylesheet" href="css/image-control-manager.css?v=7.2">
 <!-- <link rel="stylesheet" href="css/anime.css?v=7.2"> -->
 <link rel="stylesheet" href="css/layout-layer.css?v=7.2">
 <link rel="stylesheet" href="css/toast.css?v=7.2">
 <link rel="stylesheet" href="css/ui/mode-change.css?v=7.2">
 <link rel="stylesheet" href="css/ui/object-menu.css?v=7.2">
-<link rel="stylesheet" href="css/ui/share.css?v=7.2">
-<link rel="stylesheet" href="css/ui/flowting-window.css?v=7.2">
+<link rel="stylesheet" href="css/ui/share.css?v=7.2" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="css/ui/floating-window.css?v=7.2">
 <link rel="stylesheet" href="css/ui/image-prompt-helper.css?v=7.2">
-<link rel="stylesheet" href="css/ui/overlay-progress.css?v=7.2">
-<link rel="stylesheet" href="css/ui/inpaint-editor.css?v=7.3">
-<link rel="stylesheet" href="css/ui/angle-editor.css?v=7.3">
-<link rel="stylesheet" href="css/ui/dashboard.css?v=7.3">
+<link rel="stylesheet" href="css/ui/overlay-progress.css?v=7.2" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="css/ui/inpaint-editor.css?v=7.3" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="css/ui/angle-editor.css?v=7.3" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="css/ui/dashboard.css?v=7.3" media="print" onload="this.media='all'">
 
 <link rel="stylesheet" href="third/tippy/tippy.css">
 <link rel="stylesheet" href="third/Bootstrup/bootstrap.min.css">
 <link rel="stylesheet" href="css/form.css?v=7.2">
 <link rel="stylesheet" href="css/all.min.css?v=7.2">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/4.1.3/css/flag-icons.min.css">
-<link rel="stylesheet" href="css/ui/blend.css?v=7.2">
+<link rel="stylesheet" href="css/ui/blend.css?v=7.2" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="css/ui/bottom-bar.css?v=7.3">
 <link rel="stylesheet" href="css/ui/custom-html-components.css?v=7.2">
-<link rel="stylesheet" href="css/tagify.css?v=7.2">
+<link rel="stylesheet" href="css/tagify.css?v=7.2" media="print" onload="this.media='all'">
 
-<link rel="stylesheet" href="css/ui/font-manager.css?v=7.2">
+<link rel="stylesheet" href="css/ui/font-manager.css?v=7.2" media="print" onload="this.media='all'">
 
 <script src="https://cdn.jsdelivr.net/npm/stacktrace-js/dist/stacktrace.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.31.3/tagify.min.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.31.3/tagify.min.css" rel="stylesheet" type="text/css" />
-<script src="https://unpkg.com/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/wordcloud"></script>
+<script src="https://unpkg.com/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/wordcloud" defer></script>
 
-<link rel="stylesheet" href="css/comfyui-workflow-editor.css?v=7.2">
+<link rel="stylesheet" href="css/comfyui-workflow-editor.css?v=7.2" media="print" onload="this.media='all'">
 
 </head>
-
+<!-- ========== Body ========== -->
 <body>
 
     <div itemscope itemtype="http://schema.org/SoftwareApplication">
@@ -244,7 +246,7 @@ function getElementClasses(element) {
         <meta itemprop="applicationCategory" content="Multimedia">
 
 
-<!-- Category:Menu -->
+<!-- ========== Navbar ========== -->
         <nav id="desu-nav" class="navbar navbar-expand custom-navbar" style="display: none;">
 <span class="navbar-logo-text" id="navbar-logo">DESU<br><span class="navbar-logo-ver">v1</span></span>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
@@ -382,7 +384,7 @@ function getElementClasses(element) {
                             <li>
                                 <div style="padding:2px 10px 4px 18px;white-space:nowrap;font-size:11px;">
                                     <label style="display:inline-flex;align-items:center;gap:4px;cursor:pointer;">
-                                        <input type="checkbox" id="view_controles_checkbox" checked>
+                                        <input type="checkbox" id="view_controls_checkbox" checked>
                                         <i class="material-icons" style="font-size:16px;">smart_toy</i>
                                         <span data-i18n="view_AI">AI</span> (Ctrl+K)
                                     </label>
@@ -648,7 +650,7 @@ function getElementClasses(element) {
             </div>
         </nav>
 
-        <!-- Link html-loader.js -->
+<!-- ========== Sidebar ========== -->
         <div id="head-id" style="display: none; flex-grow: 1;">
             <div id="sidebar">
                 <div class="icon-wrapper">
@@ -712,8 +714,8 @@ function getElementClasses(element) {
 
                 
                 <div class="icon-wrapper">
-                 <i class="material-icons" id="intro_controle-area" onclick="toggleVisibility('controle-area')">videogame_asset</i>
-                 <span class="icon-label" data-i18n="side-label-control" onclick="toggleVisibility('controle-area')">操作</span>
+                 <i class="material-icons" id="intro_control-area" onclick="toggleVisibility('control-area')">videogame_asset</i>
+                 <span class="icon-label" data-i18n="side-label-control" onclick="toggleVisibility('control-area')">操作</span>
                 </div>
                 <hr>
                 <div class="icon-wrapper">
@@ -722,7 +724,7 @@ function getElementClasses(element) {
                 </div>
                </div>
 
-<!-- Category:Template -->
+<!-- ========== Panel: Template ========== -->
             <div class="left_area" id="svg-container-template" style="display: none;">
                 <div class="area-header template-header">
                     <span data-i18n="panelsTemplate">パネル</span>
@@ -739,7 +741,7 @@ function getElementClasses(element) {
                 <div id="svg-preview-area-landscape" style="display:none;"></div>
             </div>
 
-<!-- Category:PageManager -->
+<!-- ========== Panel: Page Manager ========== -->
             <div class="left_area" id="panel-manager-area" style="display: none;">
                 <div class="area-header" data-i18n="pageManager">Page Manager</div>
                 <div id="panel-manager-items">
@@ -855,7 +857,7 @@ function getElementClasses(element) {
 
 
 
-<!-- Category:PromptManager -->
+<!-- ========== Panel: Auto Generate ========== -->
             <div class="left_area" id="auto-generate-area" style="display: none;">
                 <div class="area-header" data-i18n="auto_generate">Auto Generate</div>
                 <div class="prompt-manager-items">
@@ -882,18 +884,18 @@ function getElementClasses(element) {
                     <div class="param-group">
                         <div class="param-group-header" data-i18n="secRandomCut"></div>
                         <div class="input-group">
-                            <button id="panelRandamCutButton">
-                                <span data-i18n="panelRandamCut">Randam Cut</span>
+                            <button id="panelRandomCutButton">
+                                <span data-i18n="panelRandomCut">Random Cut</span>
                             </button>
                         </div>
                         <div class="input-container-leftSpace" data-i18n-label="verticalRandomPanelCount">
                             <input type="range" id="verticalRandomPanelCount" name="verticalRandomPanelCount" min="0" max="5" step="1" value="2">
                         </div>
-                        <div class="input-container-leftSpace" data-i18n-label="horizontalRandamPanelCount">
-                            <input type="range" id="horizontalRandamPanelCount" name="horizontalRandamPanelCount" min="0" max="5" step="1" value="3">
+                        <div class="input-container-leftSpace" data-i18n-label="horizontalRandomPanelCount">
+                            <input type="range" id="horizontalRandomPanelCount" name="horizontalRandomPanelCount" min="0" max="5" step="1" value="3">
                         </div>
-                        <div class="input-container-leftSpace" data-i18n-label="tiltRandam">
-                            <input type="range" id="tiltRandam" name="tiltRandam" min="0" max="50" step="1" value="6">
+                        <div class="input-container-leftSpace" data-i18n-label="tiltRandom">
+                            <input type="range" id="tiltRandom" name="tiltRandom" min="0" max="50" step="1" value="6">
                         </div>
                         <div class="input-container-leftSpace" data-i18n-label="cutChangeRate">
                             <input type="range" id="cutChangeRate" name="cutChangeRate" min="0" max="45" step="1" value="10">
@@ -929,7 +931,7 @@ function getElementClasses(element) {
 
 
 
-<!-- Category:PromptManager -->
+<!-- ========== Panel: Prompt Manager ========== -->
 <div class="left_area" id="prompt-manager-area" style="display: none;">
     <div class="area-header" data-i18n="prompt"></div>
     <div class="prompt-manager-items">
@@ -960,7 +962,7 @@ function getElementClasses(element) {
 
 
 
-<!-- Category:SpeechBubble -->
+<!-- ========== Panel: Speech Bubble Template ========== -->
             <div class="left_area" id="speech-bubble-area1" style="display: none;">
                 <div class="area-header" data-i18n="bubble">Bubble</div>
                 <div id="speech-bubble-svg-preview-area1">
@@ -1004,7 +1006,7 @@ function getElementClasses(element) {
                 </div>
             </div>
 
-<!-- Category:CustomSpeechBubble -->
+<!-- ========== Panel: Custom Speech Bubble ========== -->
             <div class="left_area" id="speech-bubble-area2" style="display: none;">
                 <div class="area-header">
                     <a href="html/Minual/custom-speechBubble.html" target="_blank" data-i18n="custom_bubble">
@@ -1095,6 +1097,7 @@ function getElementClasses(element) {
                 </div>
             </div>
 
+<!-- ========== Panel: Text ========== -->
             <div class="left_area" id="text-area" style="display: none;">
                 <div class="area-header" data-i18n="text">Text</div>
                 <div id="text-preview-area">
@@ -1165,6 +1168,7 @@ function getElementClasses(element) {
             </div>
 
 
+<!-- ========== Panel: Image Text ========== -->
             <div class="left_area" id="text-area2" style="display: none;">
                 <div class="area-header" data-i18n="image_text">
                     <a href="html/Minual/custom-text.html" target="_blank">
@@ -1237,6 +1241,7 @@ function getElementClasses(element) {
 
 
 
+<!-- ========== Panel: Manga Effect ========== -->
             <div class="left_area" id="manga-effect-area">
                 <div class="area-header">
                     <a href="html/Minual/effect.html" target="_blank">
@@ -1300,6 +1305,7 @@ function getElementClasses(element) {
 
 
 
+<!-- ========== Panel: Pen Tools ========== -->
             <div class="left_area" id="tool-area" style="display: none;">
                 <div class="area-header" data-i18n="tools">Tools</div>
                 <div id="tool-buttons">
@@ -1346,6 +1352,7 @@ function getElementClasses(element) {
 
 
 
+<!-- ========== Panel: Manga Tone ========== -->
             <div class="left_area" id="manga-tone-area">
                 <div class="area-header">
                     <a href="html/Minual/screen-tone.html" target="_blank">
@@ -1381,20 +1388,21 @@ function getElementClasses(element) {
 
 
 
-            <div class="left_area" id="controle-area" style="display: none;">
+<!-- ========== Panel: Controls ========== -->
+            <div class="left_area" id="control-area" style="display: none;">
                 <div class="area-header" data-i18n="Controle">Controle</div>
-                <div id="controle-preview-area">
+                <div id="control-preview-area">
                     <div class="param-group">
                         <div class="param-group-header" data-i18n="secInfoDisplay"></div>
                         <div class="input-group">
                             <label>
-                                <input type="checkbox" id="InfomationFPS" checked>
+                                <input type="checkbox" id="InformationFPS" checked>
                                 FPS :0
                             </label>
                         </div>
                         <div class="input-group">
                             <label>
-                                <input type="checkbox" id="InfomationCoordinate" checked>
+                                <input type="checkbox" id="InformationCoordinate" checked>
                                 X:0.0 Y:0.0
                             </label>
                         </div>
@@ -1446,6 +1454,7 @@ function getElementClasses(element) {
 
 
 
+<!-- ========== Panel: Shape ========== -->
             <div class="left_area" id="shape-area" style="display: none;">
                 <div class="area-header" data-i18n="shape">Shape</div>
                 <div id="shape-preview-area">
@@ -1513,6 +1522,7 @@ function getElementClasses(element) {
 
 
 
+<!-- ========== Canvas Area ========== -->
             <div id="canvas-area">
                 <div class="area-header">
 
@@ -1548,6 +1558,7 @@ function getElementClasses(element) {
             </div>
 
 
+<!-- ========== Layer Panel ========== -->
             <div id="layer-panel">
                 <div class="area-header" >
                         <label data-i18n="layers">Layers</label>
@@ -1561,6 +1572,7 @@ function getElementClasses(element) {
             </div>
 
 
+<!-- ========== AI Controls ========== -->
             <div id="controls">
 
                 <div class="panel" id="esApiControlsPanel">
@@ -1655,11 +1667,11 @@ function getElementClasses(element) {
                             <span class="label">Model</span>
                         </div>
                         <div id="prompt-C" class="dual-number-control">
-                            <div class="control" id="clipDropdownControle">
+                            <div class="control" id="clipDropdownControl">
                                 <input id="clipDropdownId">
                                 <span class="label">Clip</span>
                             </div>
-                            <div class="control" id="vaeDropdownControle">
+                            <div class="control" id="vaeDropdownControl">
                                 <select id="vaeDropdownId" name="dropdown"></select>
                                 <span class="label">Vae</span>
                             </div>
@@ -1761,6 +1773,7 @@ function getElementClasses(element) {
         </div>
     </div>
 
+<!-- ========== Bottom Drawer ========== -->
     <div id="btm-drawer" class="btm-drawer btm-closed" style="display: none;">
         <div id="btm-drawer-handle" class="btm-drawer-handle neon-text">
             OPEN (Ctrl+B)
@@ -1772,9 +1785,11 @@ function getElementClasses(element) {
         </div>
     </div>
 
+<!-- ========== Toast Container ========== -->
     <div id="sp-manga-toastContainer" class="position-fixed bottom-0 end-0 p-3" style="min-width: 250px;">
     </div>
 
+<!-- ========== Modal: Shortcut ========== -->
     <div id="shortcutModal" class="shortcut-modal" style="display:none;">
         <div class="shortcut-modal-overlay" onclick="closeShortcutModal()"></div>
         <div class="shortcut-modal-content">
@@ -1788,12 +1803,14 @@ function getElementClasses(element) {
         </div>
     </div>
 
-    <link rel="stylesheet" href="css/ui/shortcut-modal.css?v=7.2">
+<!-- ========== Additional CSS ========== -->
+    <link rel="stylesheet" href="css/ui/shortcut-modal.css?v=7.2" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="third/intro/introjs.min.css">
-    <link rel="stylesheet" href="css/ui/intro.css?">
-    <link rel="stylesheet" href="css/ui/tutorial.css?v=7.2">
+    <link rel="stylesheet" href="css/ui/intro.css?" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="css/ui/tutorial.css?v=7.2" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="css/styles-css.css?v=7.2">
 
+<!-- ========== Third-party Scripts ========== -->
     <script src="third/lz4/wasm.js"></script>
     <script src="third/lz4/lz4asm.js"></script>
     <script src="third/lz4/lz4wasm.js"></script>
@@ -1818,6 +1835,7 @@ function getElementClasses(element) {
     <script src="third/font-awesome/all.min.js"></script>
     <script src="third/localforage/localforage.min.js"></script>
 
+<!-- ========== Application Scripts ========== -->
     <script src="js/sidebar/pen/fabric/fabric-brush.min.js?v=7.2"></script>
     <script src="js/sidebar/pen/fabric/brushes/crayon_brush.js?v=7.2"></script>
     <script src="js/sidebar/pen/fabric/brushes/ink_brush.js?v=7.2"></script>
@@ -1874,7 +1892,7 @@ function getElementClasses(element) {
     <script src="js/project-management.js?v=7.2" defer></script>
     <script src="js/shortcut.js?v=7.2" defer></script>
     <script src="js/panel/grid.js?v=7.2" defer></script>
-    <script src="js/panel/randam-cut.js?v=7.2" defer></script>
+    <script src="js/panel/random-cut.js?v=7.2" defer></script>
     <script src="js/sidebar/panel/panel-manager.js?v=7.2" defer></script>
     <script src="js/sidebar/panel/panel-template.js?v=7.2" defer></script>
     <script src="js/ui/prompt-manager.js?v=7.2" defer></script>
@@ -1893,7 +1911,7 @@ function getElementClasses(element) {
     <script src="js/ai/inpainting/inpaint-mask.js?v=7.3" defer></script>
     <script src="js/ai/inpainting/inpaint-workflow.js?v=7.3" defer></script>
     <script src="js/ai/inpainting/inpaint-editor.js?v=7.3" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
     <script src="js/ai/angle/camera-widget.js?v=7.3" defer></script>
     <script src="js/ai/angle/angle-editor.js?v=7.3" defer></script>
     <script src="js/ai/ui/ai-ui-util.js?v=7.2" defer></script>
@@ -1943,10 +1961,10 @@ function getElementClasses(element) {
     <script src="js/sidebar/panel/knife/knife-mode.js?v=7.2" defer></script>
     <script src="js/sidebar/panel/knife/knife-index.js?v=7.2" defer></script>
 
-    <script src="js/ui/controle/common-controle-management.js?v=7.2" defer></script>
-    <script src="js/ui/controle/image-controle-manager.js?v=7.2" defer></script>
-    <script src="js/ui/controle/infomation-controle.js?v=7.2" defer></script>
-    <script src="js/ui/controle/glfx-controle.js?v=7.2" defer></script>
+    <script src="js/ui/control/common-control-management.js?v=7.2" defer></script>
+    <script src="js/ui/control/image-control-manager.js?v=7.2" defer></script>
+    <script src="js/ui/control/information-control.js?v=7.2" defer></script>
+    <script src="js/ui/control/glfx-control.js?v=7.2" defer></script>
     <script src="js/fabric/fabric-management.js?v=7.2" defer></script>
     <script src="js/core/svg/google-icon-names.js?v=7.2"></script>
     <script src="js/core/svg/google-icon-helper.js?v=7.2"></script>

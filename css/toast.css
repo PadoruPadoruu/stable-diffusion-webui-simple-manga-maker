@@ -110,16 +110,16 @@
  }
  
  .toast-progress-bar {
-  background-color: #454545;
+  background-color: var(--color-tertiary);
  }
- 
+
  .toast-progress-bar-error {
-  background-color: #ff3333;
+  background-color: var(--btn-danger-color);
  }
  
  #toast-container {
   position: fixed;
-  z-index: 9999;
+  z-index: var(--z-toast);
   bottom: 20px;
   right: 20px;
  }

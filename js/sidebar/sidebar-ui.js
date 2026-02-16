@@ -87,7 +87,7 @@ const transLavel=getText(label);
 return `
       <div class="pen-input-2group">
           <label for="${id}" data-i18n="${label}">${transLavel}</label>
-          <input id="${id}" value="${value}" class="jscolor-color-picker" data-initial-color="${value}">
+          <input id="${id}" value="${value}" tabindex="0" aria-label="${transLavel}" class="jscolor-color-picker" data-initial-color="${value}">
       </div>
   `;
 }
@@ -96,7 +96,7 @@ function addSlider(id,label,min,max,value,step=1) {
 const transLavel=getText(label);
 return `
       <div class="input-container-leftSpace" data-label="${transLavel}">
-          <input type="range" id="${id}" min="${min}" max="${max}" value="${value}" step="${step}">
+          <input type="range" id="${id}" min="${min}" max="${max}" value="${value}" step="${step}" aria-label="${transLavel}" aria-valuemin="${min}" aria-valuemax="${max}" aria-valuenow="${value}">
       </div>
   `;
 }

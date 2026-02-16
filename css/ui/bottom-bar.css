@@ -12,25 +12,26 @@ transform:rotate(360deg)
 .btm-drawer {
 position:fixed;
 bottom:0;
-left:30%;
-width:40%;
+left:50%;
+transform:translateX(-50%);
+width:clamp(320px,40%,720px);
 background-color:var(--background-color-A);
 border-top:1px solid rgba(255,255,255,0.08);
 border-top-left-radius:12px;
 border-top-right-radius:12px;
 transition:transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), width 0.2s cubic-bezier(0.4, 0, 0.2, 1), left 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-radius 0.2s ease;
-z-index:1000;
+z-index:var(--z-bottom-drawer);
 box-shadow:0 -1px 3px rgba(0,0,0,0.2);
 }
 
 .btm-drawer.btm-closed {
-transform:translateY(calc(100% - 30px));
+transform:translateX(-50%) translateY(calc(100% - 30px));
 }
 
 .btm-drawer:not(.btm-closed) {
 width:100%;
 left:0;
-transform:translateY(0);
+transform:none;
 border-radius:0;
 }
 

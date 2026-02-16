@@ -114,21 +114,43 @@ jsColorSet();
 function jsColorSet(){
 const colorPickers=document.querySelectorAll('.jscolor-color-picker');
 colorPickers.forEach(picker=>{
-if (picker.hasAttribute('data-jscolor')) return;
+if(picker.hasAttribute('data-jscolor'))return;
 
 const initialValue=picker.getAttribute('data-initial-color')||'rgba(0,0,0,1)';
 jscolorOptions.value=initialValue;
 picker.setAttribute('data-jscolor',JSON.stringify(jscolorOptions));
+if(!picker.hasAttribute('tabindex'))picker.setAttribute('tabindex','0');
+if(!picker.hasAttribute('role'))picker.setAttribute('role','button');
+if(!picker._a11yKeydown){
+picker.addEventListener('keydown',function(e){
+if(e.key==='Enter'||e.key===' '){
+e.preventDefault();
+picker.jscolor.show();
+}
+});
+picker._a11yKeydown=true;
+}
 });
 jscolor.install();
 }
 
 function jsColorSetById(id){
 const picker=document.getElementById(id);
-if (!picker) return;
+if(!picker)return;
 
 const initialValue=picker.getAttribute('data-initial-color')||'rgba(0,0,0,1)';
 jscolorOptions.value=initialValue;
 picker.setAttribute('data-jscolor',JSON.stringify(jscolorOptions));
+if(!picker.hasAttribute('tabindex'))picker.setAttribute('tabindex','0');
+if(!picker.hasAttribute('role'))picker.setAttribute('role','button');
+if(!picker._a11yKeydown){
+picker.addEventListener('keydown',function(e){
+if(e.key==='Enter'||e.key===' '){
+e.preventDefault();
+picker.jscolor.show();
+}
+});
+picker._a11yKeydown=true;
+}
 jscolor.install();
 }

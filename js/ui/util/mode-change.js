@@ -108,7 +108,7 @@ if(!targetImage){
 targetImage=canvas.getActiveObject();
 }
 if(!targetImage||!isImage(targetImage)){
-createToast("Select Image!","");
+createToastError("Select Image!","");
 return;
 }
 cropActiveObject=targetImage;

@@ -27,7 +27,7 @@
   top: 50%;
   transform: translateY(-50%);
   font-size: 14px;
-  color: #757575;
+  color: var(--text-color-B);
   pointer-events: none;
   transition: 0.3s ease all;
 }
@@ -51,7 +51,7 @@
 }
 .controls-mini .textarea-label {
   font-size: 12px;
-  color: #757575;
+  color: var(--text-color-B);
 }
 .controls-mini textarea {
   width: 100%;
