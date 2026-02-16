@@ -2,20 +2,19 @@
 var roleAssignmentUI=(function(){
 var raLogger=new SimpleLogger('roleAssignUI',LogLevel.DEBUG);
 var PROVIDER_COLUMNS=[
-{id:'default',labelKey:'roleDefault'},
 {id:'localComfyUI',label:'ComfyUI'},
-{id:'localSDWebUI',label:'WebUI'},
-{id:'runpodComfyUI',label:'RunPod'},
-{id:'runpodEndpoint',label:'Serverless'},
+{id:'localSDWebUI',label:'SD WebUI'},
+{id:'runpodComfyUI',label:'RunPod ComfyUI'},
+{id:'runpodEndpoint',label:'RunPod Serverless'},
 {id:'falai',label:'Fal.ai'}
 ];
 var ROLE_ROWS=[
-{role:AI_ROLES.Text2Image,label:'T2I'},
-{role:AI_ROLES.Image2Image,label:'I2I'},
-{role:AI_ROLES.Inpaint,label:'Inpaint'},
-{role:AI_ROLES.Upscaler,label:'Upscale'},
-{role:AI_ROLES.RemoveBG,label:'RemoveBG'},
-{role:AI_ROLES.I2I_Angle,label:'Angle'}
+{role:AI_ROLES.Text2Image,labelKey:'roleText2Image'},
+{role:AI_ROLES.Image2Image,labelKey:'roleImage2Image'},
+{role:AI_ROLES.Inpaint,labelKey:'roleInpaint'},
+{role:AI_ROLES.Upscaler,labelKey:'roleUpscaler'},
+{role:AI_ROLES.RemoveBG,labelKey:'roleRemoveBG'},
+{role:AI_ROLES.I2I_Angle,labelKey:'roleAngle'}
 ];
 var tempAssignments={};
 function open(){
@@ -44,7 +43,8 @@ tbody.innerHTML='';
 ROLE_ROWS.forEach(function(row){
 var tr=document.createElement('tr');
 var tdLabel=document.createElement('td');
-tdLabel.textContent=row.label;
+tdLabel.setAttribute('data-i18n',row.labelKey);
+tdLabel.textContent=i18next.t(row.labelKey);
 tr.appendChild(tdLabel);
 PROVIDER_COLUMNS.forEach(function(col){
 var td=document.createElement('td');
@@ -53,15 +53,16 @@ radio.type='radio';
 radio.name='roleAssign_'+row.role;
 radio.className='role-radio';
 radio.value=col.id;
-if(col.id==='default'){
-radio.checked=(tempAssignments[row.role]==='default');
-}else{
 var provider=providerRegistry.get(col.id);
 if(!provider||!provider.supportsRole(row.role)){
 radio.disabled=true;
 td.className='role-provider-unavailable';
 }
-radio.checked=(tempAssignments[row.role]===col.id);
+var assigned=tempAssignments[row.role];
+if(assigned==='default'||!assigned){
+radio.checked=(col.id==='localComfyUI');
+}else{
+radio.checked=(assigned===col.id);
 }
 radio.addEventListener('change',function(){
 if(this.checked){

@@ -383,9 +383,7 @@ function getElementClasses(element) {
                                     <input type="password" id="runpodEndpointApiKey" value="" placeholder="API Key" autocomplete="off">
                                     <button id="runpodEndpointApiKeyToggle" class="es-btn-small" title="Show/Hide">👁</button>
                                 </li>
-                                <li class="es-url-row">
-                                    <input type="number" id="runpodEndpointTimeout" value="120" min="10" max="600" placeholder="Timeout(s)">
-                                </li>
+                                <input type="hidden" id="runpodEndpointTimeout" value="120">
                             </div>
                             <div class="FalAI_api_content">
                                 <li class="es-section-title">Fal.ai</li>
@@ -394,22 +392,28 @@ function getElementClasses(element) {
                                     <button id="falaiApiKeyToggle" class="es-btn-small" title="Show/Hide">👁</button>
                                 </li>
                                 <li class="es-url-row">
-                                    <input type="text" id="falaiModelT2I" value="" placeholder="T2I: fal-ai/flux/schnell">
+                                    <select id="falaiModelT2I" disabled><option value="">T2I</option></select>
+                                    <button id="falaiReloadT2I" class="es-btn-small" title="Reload">↻</button>
                                 </li>
                                 <li class="es-url-row">
-                                    <input type="text" id="falaiModelI2I" value="" placeholder="I2I: fal-ai/image-to-image">
+                                    <select id="falaiModelI2I" disabled><option value="">I2I</option></select>
+                                    <button id="falaiReloadI2I" class="es-btn-small" title="Reload">↻</button>
                                 </li>
                                 <li class="es-url-row">
-                                    <input type="text" id="falaiModelUpscale" value="" placeholder="Upscale: fal-ai/creative-upscaler">
+                                    <select id="falaiModelUpscale" disabled><option value="">Upscale</option></select>
+                                    <button id="falaiReloadUpscale" class="es-btn-small" title="Reload">↻</button>
                                 </li>
                                 <li class="es-url-row">
-                                    <input type="text" id="falaiModelRembg" value="" placeholder="RemoveBG: fal-ai/birefnet">
+                                    <select id="falaiModelRembg" disabled><option value="">RemoveBG</option></select>
+                                    <button id="falaiReloadRembg" class="es-btn-small" title="Reload">↻</button>
                                 </li>
                             </div>
                         </ul>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownView" role="button"
                             data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
                             <span data-i18n="viewMenu">表示</span>
                         </a>
@@ -1623,23 +1627,7 @@ function getElementClasses(element) {
                     </div>
                     <div id="esApi-controls-mini" class="controls-mini">
                         <div class="input-group" data-group="externalApiGroup">
-                            <button id="comfyUIButton" data-value="comfyUIButton" onclick="changeExternalAPI(this,true)" class="selected">
-                                ComfyUI
-                            </button>
-                            <button id="sdWebUIButton" data-value="sdWebUIButton" onclick='changeExternalAPI(this,true)'>
-                                WebUI or Forge
-                            </button>
-                            <button id="runpodComfyUIButton" data-value="runpodComfyUIButton" onclick='changeExternalAPI(this,true)'>
-                                RunPod
-                            </button>
-                            <button id="runpodEndpointButton" data-value="runpodEndpointButton" onclick='changeExternalAPI(this,true)'>
-                                Serverless
-                            </button>
-                            <button id="falaiButton" data-value="falaiButton" onclick='changeExternalAPI(this,true)'>
-                                Fal.ai
-                            </button>
-
-                            <button class="role-assign-trigger" onclick="roleAssignmentUI.open()" data-i18n="roleAssignButton">&#9881; Role</button>
+                            <button class="role-assign-trigger" onclick="roleAssignmentUI.open()" data-i18n="roleAssignButton">&#9881; 使用APIサービス</button>
                             <div id="apiSettingsUrlHelpe">
                             </div>
                         </div>
@@ -1868,18 +1856,17 @@ function getElementClasses(element) {
                 <table class="role-matrix">
                     <thead>
                         <tr>
-                            <th data-i18n="roleAssignRole">Role</th>
-                            <th data-i18n="roleDefault">Default</th>
+                            <th></th>
                             <th>ComfyUI</th>
-                            <th>WebUI</th>
-                            <th>RunPod</th>
-                            <th>Serverless</th>
+                            <th>SD WebUI</th>
+                            <th>RunPod<br>ComfyUI</th>
+                            <th>RunPod<br>Serverless</th>
                             <th>Fal.ai</th>
                         </tr>
                     </thead>
                     <tbody id="roleMatrixBody"></tbody>
                 </table>
-                <div class="role-assign-note" data-i18n="roleAssignNote">&#8251; Greyed out = provider does not support this role. Default = follows the active provider.</div>
+                <div class="role-assign-note" data-i18n="roleAssignNote">「—」は非対応のプロバイダーです</div>
             </div>
             <div class="role-assign-modal-footer">
                 <button class="role-assign-btn-cancel" onclick="roleAssignmentUI.close()" data-i18n="roleAssignCancel">Cancel</button>

@@ -25,16 +25,76 @@ return'https://queue.fal.run';
 }
 _getModelId(role){
 var map={
-t2i:{id:'falaiModelT2I',fallback:'fal-ai/flux/schnell'},
-i2i:{id:'falaiModelI2I',fallback:'fal-ai/image-to-image'},
-upscale:{id:'falaiModelUpscale',fallback:'fal-ai/creative-upscaler'},
-rembg:{id:'falaiModelRembg',fallback:'fal-ai/birefnet'}
+t2i:'falaiModelT2I',
+i2i:'falaiModelI2I',
+upscale:'falaiModelUpscale',
+rembg:'falaiModelRembg'
 };
-var entry=map[role];
-if(!entry)return'';
-var el=$(entry.id);
-var val=el?el.value.trim():'';
-return val||entry.fallback;
+var id=map[role];
+if(!id)return'';
+var el=$(id);
+return el?el.value:'';
+}
+async fetchModels(){
+var apiKey=this.getApiKey();
+if(!apiKey){
+this._enableSelects(false);
+return;
+}
+var queries={
+falaiModelT2I:'category=text-to-image&status=active&limit=50',
+falaiModelI2I:'category=image-to-image&status=active&limit=50',
+falaiModelUpscale:'q=upscale&status=active&limit=50',
+falaiModelRembg:'q=background+removal&status=active&limit=50'
+};
+var headers={
+'Authorization':'Key '+apiKey
+};
+var entries=Object.entries(queries);
+var results=await Promise.allSettled(entries.map(function(entry){
+return fetch('https://api.fal.ai/v1/models?'+entry[1],{headers:headers}).then(function(r){
+if(!r.ok)throw new Error(r.status+'');
+return r.json();
+});
+}));
+for(var i=0;i<entries.length;i++){
+var selectId=entries[i][0];
+var result=results[i];
+if(result.status==='fulfilled'&&result.value&&result.value.models){
+this._populateSelect(selectId,result.value.models);
+}else{
+this._populateSelect(selectId,[]);
+}
+}
+}
+_enableSelects(enabled){
+var labels={falaiModelT2I:'T2I',falaiModelI2I:'I2I',falaiModelUpscale:'Upscale',falaiModelRembg:'RemoveBG'};
+var ids=Object.keys(labels);
+for(var i=0;i<ids.length;i++){
+var el=$(ids[i]);
+if(!el)continue;
+el.disabled=!enabled;
+if(!enabled){
+el.innerHTML='<option value="">'+labels[ids[i]]+'</option>';
+}
+}
+}
+_populateSelect(selectId,models){
+var el=$(selectId);
+if(!el)return;
+var prev=el.value;
+el.innerHTML='<option value="">-- select --</option>';
+for(var i=0;i<models.length;i++){
+var m=models[i];
+var opt=document.createElement('option');
+opt.value=m.endpoint_id||'';
+opt.textContent=m.metadata&&m.metadata.display_name?m.metadata.display_name:m.endpoint_id;
+el.appendChild(opt);
+}
+if(prev){
+el.value=prev;
+}
+el.disabled=false;
 }
 _authHeaders(){
 var apiKey=this.getApiKey();
@@ -238,7 +298,11 @@ removeSpinner(spinnerId);
 }
 async executeT2I(layer,spinnerId){
 var modelId=this._getModelId('t2i');
-var self=this;
+if(!modelId){
+removeSpinner(spinnerId);
+createToastError('Fal.ai','T2I model not selected',5000);
+return;
+}
 return this._execute(layer,spinnerId,'T2I',modelId,()=>{
 var rd=baseRequestData(layer);
 if(basePrompt.text2img_model!=''){
@@ -256,6 +320,11 @@ seed:rd.seed>0?rd.seed:undefined
 }
 async executeI2I(layer,spinnerId){
 var modelId=this._getModelId('i2i');
+if(!modelId){
+removeSpinner(spinnerId);
+createToastError('Fal.ai','I2I model not selected',5000);
+return;
+}
 return this._execute(layer,spinnerId,'I2I',modelId,()=>{
 var rd=baseRequestData(layer);
 var base64Image=imageObject2Base64ImageEffectKeep(layer);
@@ -273,6 +342,11 @@ seed:rd.seed>0?rd.seed:undefined
 }
 async executeUpscale(layer,spinnerId){
 var modelId=this._getModelId('upscale');
+if(!modelId){
+removeSpinner(spinnerId);
+createToastError('Fal.ai','Upscale model not selected',5000);
+return;
+}
 return this._execute(layer,spinnerId,'Upscaler',modelId,()=>{
 var base64Image=imageObject2Base64ImageEffectKeep(layer);
 return{
@@ -282,6 +356,11 @@ image_url:base64Image
 }
 async executeRembg(layer,spinnerId){
 var modelId=this._getModelId('rembg');
+if(!modelId){
+removeSpinner(spinnerId);
+createToastError('Fal.ai','RemoveBG model not selected',5000);
+return;
+}
 return this._execute(layer,spinnerId,'Rembg',modelId,()=>{
 var base64Image=imageObject2Base64ImageEffectKeep(layer);
 return{

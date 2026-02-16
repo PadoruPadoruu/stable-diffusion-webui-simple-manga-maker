@@ -49,6 +49,25 @@ var input=$('falaiApiKey');
 input.type=input.type==='password'?'text':'password';
 });
 
+var falaiProvider=providerRegistry.get('falai');
+$('falaiApiKey').addEventListener('change',function(){
+if(!falaiProvider)return;
+if(this.value.trim()){
+falaiProvider.fetchModels();
+}else{
+falaiProvider._enableSelects(false);
+}
+});
+['T2I','I2I','Upscale','Rembg'].forEach(function(role){
+$('falaiReload'+role).addEventListener('click',function(event){
+event.stopPropagation();
+if(!falaiProvider)return;
+if($('falaiApiKey').value.trim()){
+falaiProvider.fetchModels();
+}
+});
+});
+
 setInterval(apiHeartbeat,1000*15);
 $('apiHeartbeatCheckbox').addEventListener('change',function () {
 apiHeartbeat();

@@ -19,7 +19,7 @@ var menuIconMap={
 "rembg":"auto_fix_high",
 "upscale":"zoom_in",
 "inpaint":"brush",
-"angleGenerate":"threed_rotation",
+"angleGenerate":"view_in_ar",
 "flipHorizontal":"flip",
 "flipVertical":"flip",
 "cropImage":"crop",
@@ -280,6 +280,14 @@ menuItems.push(opacity,strokeWidth,textColor,outlineColor,bgColor);
 var isBoldNow=activeObject.fontWeight==="bold";
 var boldMenu=createObjectMenuButton(isBoldNow?'boldOff':'boldOn');
 menuItems.push(fontSize,boldMenu,font);
+menuItems.push({type:'separator'});
+menuItems.push(deleteMenu);
+}else if(isPath(activeObject)){
+menuItems.push(selectClear);
+menuItems.push(createObjectMenuGroupHeader('menuGroupOperation'));
+menuItems.push(visible,duplicate);
+menuItems.push(createObjectMenuGroupHeader('menuGroupStyle'));
+menuItems.push(opacity,strokeWidth,fillColor,strokeColor);
 menuItems.push({type:'separator'});
 menuItems.push(deleteMenu);
 }

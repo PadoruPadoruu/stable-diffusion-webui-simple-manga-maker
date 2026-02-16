@@ -299,7 +299,10 @@ color:var(--text-color-C);
  width: var(--width-50);
 }
 .A1111_api_content,
-.Comfyui_api_content {
+.Comfyui_api_content,
+.RunPod_api_content,
+.RunPodEndpoint_api_content,
+.FalAI_api_content {
 padding: 6px 10px 6px 18px;
 }
 .es-section-title {
@@ -316,7 +319,8 @@ gap: 4px;
 list-style: none;
 padding: 2px 0;
 }
-.es-url-row input {
+.es-url-row input,
+.es-url-row select {
 flex: 1;
 font-size: 11px;
 padding: 3px 6px;
@@ -325,6 +329,10 @@ border-radius: var(--textarea-border-radius);
 background: var(--background-color-B);
 color: var(--text-color-B);
 min-width: 180px;
+}
+.es-url-row select:disabled {
+opacity: 0.5;
+cursor: not-allowed;
 }
 .es-btn-small {
 font-size: 11px;
