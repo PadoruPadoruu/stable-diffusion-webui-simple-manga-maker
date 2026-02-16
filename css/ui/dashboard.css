@@ -422,7 +422,7 @@
 
 .calendar-month-label {
     font-size: 9px;
-    color: #a0a0a0;
+    color: var(--slider-accent);
     text-align: left;
 }
 
@@ -442,7 +442,7 @@
     width: 24px;
     height: 11px;
     font-size: 9px;
-    color: #a0a0a0;
+    color: var(--slider-accent);
     text-align: right;
     line-height: 11px;
 }
@@ -466,7 +466,7 @@
 }
 
 .calendar-cell:hover {
-    outline: 1px solid #fff;
+    outline: 1px solid var(--color-text-primary);
     outline-offset: -1px;
 }
 
@@ -482,7 +482,7 @@
     margin-top: 8px;
     justify-content: flex-end;
     font-size: 9px;
-    color: #a0a0a0;
+    color: var(--slider-accent);
 }
 
 .calendar-legend-cell {
@@ -540,7 +540,7 @@
 }
 
 .goal-label {
-    color: #fff;
+    color: var(--color-text-primary);
     font-size: 12px;
     min-width: 80px;
 }
