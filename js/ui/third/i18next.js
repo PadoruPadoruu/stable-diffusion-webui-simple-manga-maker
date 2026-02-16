@@ -10,6 +10,32 @@
 // },
 //マージされるので追加日ごとにyyyyMMddHHmmss_SSSをTopKeyに入れます。個別の翻訳はKey名・翻訳文を任意に付けてください。ただし被らないように。
 const resources = {
+"20260216150000_001":{
+"ja":{
+"aiCancelTask":"AI生成をキャンセル"
+},
+"en":{
+"aiCancelTask":"Cancel AI generation"
+},
+"ko":{
+"aiCancelTask":"AI 생성 취소"
+},
+"fr":{
+"aiCancelTask":"Annuler la génération IA"
+},
+"zh":{
+"aiCancelTask":"取消AI生成"
+},
+"ru":{
+"aiCancelTask":"Отменить генерацию ИИ"
+},
+"es":{
+"aiCancelTask":"Cancelar generación IA"
+},
+"de":{
+"aiCancelTask":"KI-Generierung abbrechen"
+}
+},
 "20260216120000_001":{
 "ja":{
 "tipTemplate":"テンプレート",
