@@ -384,23 +384,38 @@ if (!socket) comfyuiConnect();
 return new Promise((resolve,reject)=>{
 socket.onmessage=(event)=>{
 if (event.data instanceof Blob) {
-//akip
+//skip
 } else {
 const message=JSON.parse(event.data);
-// console.log('WebSocketメッセージ:', message);
-if (
+if(message.type==="progress"&&message.data){
+var value=message.data.value||0;
+var max=message.data.max||0;
+if(typeof updateAiStepProgress==='function'){
+updateAiStepProgress(value,max,promptId);
+}
+}
+if(
 message.type==="executing"&&
 message.data.node===null&&
 message.data.prompt_id===promptId
-) {
+){
+if(typeof resetAiStepProgress==='function'){
+resetAiStepProgress();
+}
 resolve("Stop message received with matching promptId");
 }
 }
 };
 socket.onerror=(error)=>{
+if(typeof resetAiStepProgress==='function'){
+resetAiStepProgress();
+}
 reject(`WebSocket error: ${error}`);
 };
 socket.onclose=()=>{
+if(typeof resetAiStepProgress==='function'){
+resetAiStepProgress();
+}
 reject("WebSocket closed before receiving stop message");
 };
 });

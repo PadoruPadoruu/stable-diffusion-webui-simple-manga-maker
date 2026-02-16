@@ -676,29 +676,29 @@ function getElementClasses(element) {
                  </div>
                 <hr>
   
-                <div class="icon-wrapper">
-                 <i class="material-icons" id="intro_speech-bubble-area1" onclick="toggleVisibility('speech-bubble-area1')">chat_bubble</i>
-                 <span class="icon-label" data-i18n="side-label-template-bubble" onclick="toggleVisibility('speech-bubble-area1')">ひな形💭</span>
+                <div class="icon-wrapper" data-action="toggleVisibility" data-target="speech-bubble-area1">
+                 <i class="material-icons" id="intro_speech-bubble-area1">chat_bubble</i>
+                 <span class="icon-label" data-i18n="side-label-template-bubble">ひな形💭</span>
                 </div>
                 <hr>
-                <div class="icon-wrapper">
-                 <i class="material-icons" id="intro_speech-bubble-area2" onclick="toggleVisibility('speech-bubble-area2')">reviews</i>
-                 <span class="icon-label" data-i18n="side-label-free-bubble" onclick="toggleVisibility('speech-bubble-area2')">自由💭</span>
+                <div class="icon-wrapper" data-action="toggleVisibility" data-target="speech-bubble-area2">
+                 <i class="material-icons" id="intro_speech-bubble-area2">reviews</i>
+                 <span class="icon-label" data-i18n="side-label-free-bubble">自由💭</span>
                 </div>
                 <hr>
-                <div class="icon-wrapper">
-                 <i class="material-icons" id="intro_text-area" onclick="toggleVisibility('text-area')">text_format</i>
-                 <span class="icon-label" data-i18n="side-label-text" onclick="toggleVisibility('text-area')">テキスト</span>
+                <div class="icon-wrapper" data-action="toggleVisibility" data-target="text-area">
+                 <i class="material-icons" id="intro_text-area">text_format</i>
+                 <span class="icon-label" data-i18n="side-label-text">テキスト</span>
                 </div>
                 <hr>
-                <div class="icon-wrapper">
-                 <i class="material-icons" id="intro_text-area2" onclick="toggleVisibility('text-area2')">text_increase</i>
-                 <span class="icon-label" data-i18n="side-label-image-text" onclick="toggleVisibility('text-area2')">画像テキスト</span>
+                <div class="icon-wrapper" data-action="toggleVisibility" data-target="text-area2">
+                 <i class="material-icons" id="intro_text-area2">text_increase</i>
+                 <span class="icon-label" data-i18n="side-label-image-text">画像テキスト</span>
                 </div>
                 <hr>
-                <div class="icon-wrapper">
-                 <i class="material-icons" id="intro_tool-area" onclick="toggleVisibility('tool-area')">brush</i>
-                 <span class="icon-label" data-i18n="side-label-pen" onclick="toggleVisibility('tool-area')">ペン</span>
+                <div class="icon-wrapper" data-action="toggleVisibility" data-target="tool-area">
+                 <i class="material-icons" id="intro_tool-area">brush</i>
+                 <span class="icon-label" data-i18n="side-label-pen">ペン</span>
                 </div>
                 <hr>
                 <div class="icon-wrapper">
@@ -886,16 +886,16 @@ function getElementClasses(element) {
                         <div class="param-group-header" data-i18n="secRandomCut"></div>
                         <div class="input-group">
                             <button id="panelRandomCutButton">
-                                <span data-i18n="panelRandomCut">Random Cut</span>
+                                <span data-i18n="panelRandamCut">Random Cut</span>
                             </button>
                         </div>
                         <div class="input-container-leftSpace" data-i18n-label="verticalRandomPanelCount">
                             <input type="range" id="verticalRandomPanelCount" name="verticalRandomPanelCount" min="0" max="5" step="1" value="2">
                         </div>
-                        <div class="input-container-leftSpace" data-i18n-label="horizontalRandomPanelCount">
+                        <div class="input-container-leftSpace" data-i18n-label="horizontalRandamPanelCount">
                             <input type="range" id="horizontalRandomPanelCount" name="horizontalRandomPanelCount" min="0" max="5" step="1" value="3">
                         </div>
-                        <div class="input-container-leftSpace" data-i18n-label="tiltRandom">
+                        <div class="input-container-leftSpace" data-i18n-label="tiltRandam">
                             <input type="range" id="tiltRandom" name="tiltRandom" min="0" max="50" step="1" value="6">
                         </div>
                         <div class="input-container-leftSpace" data-i18n-label="cutChangeRate">

@@ -644,18 +644,18 @@
 
 .dashboard-container::-webkit-scrollbar-track,
 .top-tags-container::-webkit-scrollbar-track {
-    background: #1a1a1a;
+    background: var(--color-base);
 }
 
 .dashboard-container::-webkit-scrollbar-thumb,
 .top-tags-container::-webkit-scrollbar-thumb {
-    background: #444;
+    background: var(--color-tertiary);
     border-radius: 3px;
 }
 
 .dashboard-container::-webkit-scrollbar-thumb:hover,
 .top-tags-container::-webkit-scrollbar-thumb:hover {
-    background: #555;
+    background: var(--color-accent-hover);
 }
 
 /* Light theme */
