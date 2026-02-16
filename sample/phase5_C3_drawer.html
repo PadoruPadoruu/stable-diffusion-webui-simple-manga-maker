@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>Phase5 Sample C3: スライドドロワー方式</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+background:#212121;
+color:#dedede;
+font-family:'Open Sans',Arial,sans-serif;
+font-size:12px;
+display:flex;
+justify-content:center;
+padding:40px 20px;
+}
+.description{
+position:fixed;
+top:0;left:0;right:0;
+background:#333;
+color:#ff7c7c;
+font-size:11px;
+padding:8px 16px;
+text-align:center;
+border-bottom:2px solid #810000;
+z-index:2000;
+}
+.container{
+width:300px;
+border:1px solid rgba(255,255,255,0.15);
+overflow:hidden;
+margin-top:30px;
+}
+.panel{
+padding-top:5px;
+margin-bottom:10px;
+}
+.area-header{
+font-size:12px;
+font-weight:bold;
+padding:2px;
+color:#dedede;
+background:rgba(0,0,0,0.35);
+box-shadow:0 2px 6px rgba(0,0,0,0.3);
+text-align:center;
+cursor:pointer;
+}
+.controls-mini{padding:4px;}
+.input-group{
+display:flex;
+flex-wrap:wrap;
+gap:2px;
+margin-left:7px;
+margin-right:7px;
+align-items:center;
+}
+button{
+background:rgba(255,255,255,0.07);
+color:#fff;
+border:1px solid rgba(255,255,255,0.10);
+border-radius:4px;
+cursor:pointer;
+padding:0px 3px;
+font-size:12px;
+margin:4px 2px;
+text-align:left;
+transition:background 0.15s,border 0.15s;
+}
+button:hover{background:rgba(255,255,255,0.15);}
+button.selected{
+background:rgba(129,0,0,0.4);
+border-color:rgba(160,48,48,0.6);
+box-shadow:0 0 8px rgba(129,0,0,0.2);
+}
+label{
+color:#dedede;
+margin:5px;
+font-size:12px;
+display:flex;
+align-items:center;
+gap:4px;
+}
+.prompt-area{margin:0 7px;}
+.prompt-area textarea{
+width:100%;
+height:60px;
+background:#333;
+color:#dedede;
+border:1px solid #505050;
+border-radius:4px;
+font-size:11px;
+padding:4px 6px;
+resize:vertical;
+}
+.param-group-header{
+font-weight:bold;
+margin-bottom:5px;
+color:#ff7c7c;
+font-size:12px;
+margin-left:7px;
+margin-top:8px;
+}
+.role-assign-trigger{
+font-size:11px;
+padding:1px 6px;
+margin-left:auto;
+color:#ff7c7c;
+border:1px solid rgba(160,48,48,0.4);
+background:rgba(129,0,0,0.2);
+border-radius:4px;
+cursor:pointer;
+white-space:nowrap;
+}
+.role-assign-trigger:hover{
+background:rgba(129,0,0,0.4);
+border-color:rgba(160,48,48,0.6);
+color:#fff;
+}
+/* Drawer Overlay */
+.drawer-overlay{
+position:fixed;
+top:0;left:0;
+width:100vw;height:100vh;
+background:rgba(0,0,0,0.4);
+z-index:1000;
+transition:opacity 0.25s;
+}
+.drawer-overlay.hidden{
+opacity:0;
+pointer-events:none;
+}
+/* Drawer Panel */
+.drawer{
+position:fixed;
+top:0;right:0;
+width:320px;
+max-width:85vw;
+height:100vh;
+background:#1a1a1a;
+border-left:1px solid rgba(255,255,255,0.08);
+box-shadow:-8px 0 32px rgba(0,0,0,0.5);
+z-index:1001;
+display:flex;
+flex-direction:column;
+transform:translateX(0);
+transition:transform 0.25s ease;
+}
+.drawer.hidden{
+transform:translateX(100%);
+}
+.drawer-header{
+padding:12px 16px;
+border-bottom:1px solid #333;
+display:flex;
+align-items:center;
+justify-content:space-between;
+flex-shrink:0;
+}
+.drawer-title{
+font-size:14px;
+font-weight:bold;
+color:#dedede;
+}
+.drawer-close{
+font-size:16px;
+color:#888;
+cursor:pointer;
+background:none;
+border:none;
+padding:2px 6px;
+margin:0;
+}
+.drawer-close:hover{color:#ff7c7c;background:none;}
+.drawer-body{
+padding:12px 16px;
+overflow-y:auto;
+flex:1;
+}
+.drawer-footer{
+padding:12px 16px;
+border-top:1px solid #333;
+display:flex;
+justify-content:flex-end;
+gap:8px;
+flex-shrink:0;
+}
+.drawer-btn{
+padding:6px 16px;
+border-radius:4px;
+font-size:12px;
+cursor:pointer;
+}
+.drawer-btn-cancel{
+background:rgba(255,255,255,0.08);
+color:#dedede;
+border:1px solid rgba(255,255,255,0.1);
+}
+.drawer-btn-submit{
+background:#810000;
+color:#fff;
+border:1px solid rgba(160,48,48,0.6);
+}
+.drawer-btn-submit:hover{background:#a00;}
+/* Role Section */
+.role-section{
+margin-bottom:12px;
+}
+.role-section-header{
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:6px 0;
+border-bottom:1px solid rgba(255,255,255,0.06);
+margin-bottom:6px;
+}
+.role-section-name{
+font-size:12px;
+font-weight:bold;
+color:#ff7c7c;
+}
+.role-section-badge{
+font-size:9px;
+padding:1px 6px;
+border-radius:3px;
+background:rgba(255,255,255,0.06);
+color:#888;
+}
+.provider-list{
+display:flex;
+flex-direction:column;
+gap:2px;
+}
+.provider-option{
+display:flex;
+align-items:center;
+gap:8px;
+padding:5px 8px;
+border-radius:4px;
+cursor:pointer;
+transition:background 0.15s;
+}
+.provider-option:hover{
+background:rgba(255,255,255,0.05);
+}
+.provider-option.selected{
+background:rgba(129,0,0,0.2);
+}
+.provider-option.disabled{
+opacity:0.25;
+cursor:not-allowed;
+pointer-events:none;
+}
+.provider-dot{
+width:8px;
+height:8px;
+border-radius:50%;
+border:1px solid #505050;
+background:#333;
+flex-shrink:0;
+}
+.provider-option.selected .provider-dot{
+border-color:rgba(160,48,48,0.8);
+background:#ff7c7c;
+}
+.provider-label{
+font-size:11px;
+color:#dedede;
+flex:1;
+}
+.provider-option.disabled .provider-label{
+color:#555;
+}
+.provider-status{
+font-size:9px;
+color:#555;
+}
+.provider-status.connected{color:#4caf50;}
+.section-divider{
+height:1px;
+background:rgba(255,255,255,0.04);
+margin:4px 0;
+}
+.note{
+margin:16px 7px;
+padding:8px;
+background:rgba(255,149,50,0.1);
+border:1px solid rgba(255,149,50,0.3);
+border-radius:4px;
+font-size:10px;
+color:#ff9532;
+line-height:1.5;
+}
+</style>
+</head>
+<body>
+<div class="description">
+Sample C3: スライドドロワー方式 — 右からスライドインするパネルでRole割当を管理
+</div>
+
+<!-- Right Panel -->
+<div class="container" style="margin-top:30px;">
+<div class="panel">
+<div class="area-header">API Controls</div>
+<div class="controls-mini">
+<div class="input-group">
+<button class="selected">ComfyUI</button>
+<button>WebUI</button>
+<button>RunPod</button>
+<button>Serverless</button>
+<button>Fal.ai</button>
+<button class="role-assign-trigger" onclick="openDrawer()">&#9881; Role</button>
+</div>
+</div>
+<div class="input-group">
+<label>
+<input type="checkbox" checked> AI Check
+</label>
+<label style="color:#888;font-size:11px;">ComfyUI Connected</label>
+</div>
+</div>
+<div class="panel">
+<div class="area-header">Generation</div>
+<div class="controls-mini">
+<div class="param-group-header">Prompt</div>
+<div class="prompt-area">
+<textarea placeholder="Enter prompt...">1girl, manga style, black and white</textarea>
+</div>
+</div>
+</div>
+
+<div class="note">
+<b>C3方式の特徴:</b><br>
+・右からスライドインするドロワーパネル<br>
+・モーダルと違い画面の一部に留まるため、背後のUIを参照しながら設定可能<br>
+・縦スクロールで全Roleを一覧でき、各Role内でプロバイダーをリスト選択<br>
+・プロバイダーの接続状態もインラインで確認できる<br>
+・スマホ・タブレット等の狭い画面でも使いやすいレイアウト
+</div>
+</div>
+
+<!-- Drawer Overlay -->
+<div class="drawer-overlay hidden" id="drawerOverlay" onclick="closeDrawer()"></div>
+
+<!-- Drawer Panel -->
+<div class="drawer hidden" id="drawerPanel">
+<div class="drawer-header">
+<span class="drawer-title">&#9881; Role Assignment</span>
+<button class="drawer-close" onclick="closeDrawer()">&times;</button>
+</div>
+<div class="drawer-body">
+<!-- T2I -->
+<div class="role-section">
+<div class="role-section-header">
+<span class="role-section-name">T2I</span>
+<span class="role-section-badge">Default</span>
+</div>
+<div class="provider-list">
+<div class="provider-option selected" onclick="selectProvider(this)">
+<div class="provider-dot"></div>
+<span class="provider-label">Default (Active)</span>
+</div>
+<div class="provider-option" onclick="selectProvider(this)">
+<div class="provider-dot"></div>
+<span class="provider-label">ComfyUI</span>
+<span class="provider-status connected">Connected</span>
+</div>
+<div class="provider-option" onclick="selectProvider(this)">
+<div class="provider-dot"></div>
+<span class="provider-label">WebUI</span>
+<span class="provider-status">Disconnected</span>
+</div>
+<div class="provider-option" onclick="selectProvider(this)">
+<div class="provider-dot"></div>
+<span class="provider-label">RunPod</span>
+<span class="provider-status">Disconnected</span>
+</div>
+<div class="provider-option" onclick="selectProvider(this)">
+<div class="provider-dot"></div>
+<span class="provider-label">Serverless</span>
+<span class="provider-status">Disconnected</span>
+</div>
+<div class="provider-option" onclick="selectProvider(this)">
+<div class="provider-dot"></div>
+<span class="provider-label">Fal.ai</span>
+<span class="provider-status connected">Connected</span>
+</div>
+</div>
+</div>
+<!-- I2I -->
+<div class="role-section">
+<div class="role-section-header">
+<span class="role-section-name">I2I</span>
+<span class="role-section-badge">Default</span>
+</div>
+<div class="provider-list">
+<div class="provider-option selected" onclick="selectProvider(this)">
+<div class="provider-dot"></div>
+<span class="provider-label">Default (Active)</span>
+</div>
+<div class="provider-option" onclick="selectProvider(this)">
+<div class="provider-dot"></div>
+<span class="provider-label">ComfyUI</span>
+<span class="provider-status connected">Connected</span>
+</div>
+<div class="provider-option" onclick="selectProvider(this)">
+<div class="provider-dot"></div>
+<span class="provider-label">WebUI</span>
+<span class="provider-status">Disconnected</span>
+</div>
+<div class="provider-option" onclick="selectProvider(this)">
+<div class="provider-dot"></div>
+<span class="provider-label">RunPod</span>
+<span class="provider-status">Disconnected</span>
+</div>
+<div class="provider-option disabled">
+<div class="provider-dot"></div>
+<span class="provider-label">Serverless</span>
+</div>
+<div class="provider-option" onclick="selectProvider(this)">
+<div class="provider-dot"></div>
+<span class="provider-label">Fal.ai</span>
+<span class="provider-status connected">Connected</span>
+</div>
+</div>
+</div>
+<!-- Inpaint -->
+<div class="role-section">
+<div class="role-section-header">
+<span class="role-section-name">Inpaint</span>
+<span class="role-section-badge">ComfyUI</span>
+</div>
+<div class="provider-list">
+<div class="provider-option" onclick="selectProvider(this)">
+<div class="provider-dot"></div>
+<span class="provider-label">Default (Active)</span>
+</div>
+<div class="provider-option selected" onclick="selectProvider(this)">
+<div class="provider-dot"></div>
+<span class="provider-label">ComfyUI</span>
+<span class="provider-status connected">Connected</span>
+</div>
+<div class="provider-option disabled">
+<div class="provider-dot"></div>
+<span class="provider-label">WebUI</span>
+</div>
+<div class="provider-option" onclick="selectProvider(this)">
+<div class="provider-dot"></div>
+<span class="provider-label">RunPod</span>
+<span class="provider-status">Disconnected</span>
+</div>
+<div class="provider-option disabled">
+<div class="provider-dot"></div>
+<span class="provider-label">Serverless</span>
+</div>
+<div class="provider-option disabled">
+<div class="provider-dot"></div>
+<span class="provider-label">Fal.ai</span>
+</div>
+</div>
+</div>
+<!-- Upscale -->
+<div class="role-section">
+<div class="role-section-header">
+<span class="role-section-name">Upscale</span>
+<span class="role-section-badge">Fal.ai</span>
+</div>
+<div class="provider-list">
+<div class="provider-option" onclick="selectProvider(this)">
+<div class="provider-dot"></div>
+<span class="provider-label">Default (Active)</span>
+</div>
+<div class="provider-option" onclick="selectProvider(this)">
+<div class="provider-dot"></div>
+<span class="provider-label">ComfyUI</span>
+<span class="provider-status connected">Connected</span>
+</div>
+<div class="provider-option disabled">
+<div class="provider-dot"></div>
+<span class="provider-label">WebUI</span>
+</div>
+<div class="provider-option" onclick="selectProvider(this)">
+<div class="provider-dot"></div>
+<span class="provider-label">RunPod</span>
+<span class="provider-status">Disconnected</span>
+</div>
+<div class="provider-option disabled">
+<div class="provider-dot"></div>
+<span class="provider-label">Serverless</span>
+</div>
+<div class="provider-option selected" onclick="selectProvider(this)">
+<div class="provider-dot"></div>
+<span class="provider-label">Fal.ai</span>
+<span class="provider-status connected">Connected</span>
+</div>
+</div>
+</div>
+<!-- RemoveBG -->
+<div class="role-section">
+<div class="role-section-header">
+<span class="role-section-name">RemoveBG</span>
+<span class="role-section-badge">Default</span>
+</div>
+<div class="provider-list">
+<div class="provider-option selected" onclick="selectProvider(this)">
+<div class="provider-dot"></div>
+<span class="provider-label">Default (Active)</span>
+</div>
+<div class="provider-option" onclick="selectProvider(this)">
+<div class="provider-dot"></div>
+<span class="provider-label">ComfyUI</span>
+<span class="provider-status connected">Connected</span>
+</div>
+<div class="provider-option disabled">
+<div class="provider-dot"></div>
+<span class="provider-label">WebUI</span>
+</div>
+<div class="provider-option" onclick="selectProvider(this)">
+<div class="provider-dot"></div>
+<span class="provider-label">RunPod</span>
+<span class="provider-status">Disconnected</span>
+</div>
+<div class="provider-option disabled">
+<div class="provider-dot"></div>
+<span class="provider-label">Serverless</span>
+</div>
+<div class="provider-option" onclick="selectProvider(this)">
+<div class="provider-dot"></div>
+<span class="provider-label">Fal.ai</span>
+<span class="provider-status connected">Connected</span>
+</div>
+</div>
+</div>
+<!-- Angle -->
+<div class="role-section">
+<div class="role-section-header">
+<span class="role-section-name">Angle</span>
+<span class="role-section-badge">Default</span>
+</div>
+<div class="provider-list">
+<div class="provider-option selected" onclick="selectProvider(this)">
+<div class="provider-dot"></div>
+<span class="provider-label">Default (Active)</span>
+</div>
+<div class="provider-option" onclick="selectProvider(this)">
+<div class="provider-dot"></div>
+<span class="provider-label">ComfyUI</span>
+<span class="provider-status connected">Connected</span>
+</div>
+<div class="provider-option disabled">
+<div class="provider-dot"></div>
+<span class="provider-label">WebUI</span>
+</div>
+<div class="provider-option" onclick="selectProvider(this)">
+<div class="provider-dot"></div>
+<span class="provider-label">RunPod</span>
+<span class="provider-status">Disconnected</span>
+</div>
+<div class="provider-option disabled">
+<div class="provider-dot"></div>
+<span class="provider-label">Serverless</span>
+</div>
+<div class="provider-option disabled">
+<div class="provider-dot"></div>
+<span class="provider-label">Fal.ai</span>
+</div>
+</div>
+</div>
+<div style="margin-top:8px;font-size:10px;color:#888;">
+&#8251; グレーアウト = そのプロバイダーは該当Roleをサポートしていません
+</div>
+</div>
+<div class="drawer-footer">
+<button class="drawer-btn drawer-btn-cancel" onclick="closeDrawer()">Cancel</button>
+<button class="drawer-btn drawer-btn-submit" onclick="closeDrawer()">Apply</button>
+</div>
+</div>
+
+<script>
+function openDrawer(){
+document.getElementById('drawerOverlay').classList.remove('hidden');
+document.getElementById('drawerPanel').classList.remove('hidden');
+}
+function closeDrawer(){
+document.getElementById('drawerOverlay').classList.add('hidden');
+document.getElementById('drawerPanel').classList.add('hidden');
+}
+function selectProvider(el){
+var siblings=el.parentElement.querySelectorAll('.provider-option');
+for(var i=0;i<siblings.length;i++){siblings[i].classList.remove('selected');}
+el.classList.add('selected');
+var section=el.closest('.role-section');
+var badge=section.querySelector('.role-section-badge');
+var label=el.querySelector('.provider-label');
+badge.textContent=label.textContent.replace(' (Active)','');
+}
+</script>
+</body>
+</html>

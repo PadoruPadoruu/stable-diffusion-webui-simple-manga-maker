@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>Phase5 Sample C1: タブ切替モーダル方式</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+background:#212121;
+color:#dedede;
+font-family:'Open Sans',Arial,sans-serif;
+font-size:12px;
+display:flex;
+justify-content:center;
+padding:40px 20px;
+}
+.description{
+position:fixed;
+top:0;left:0;right:0;
+background:#333;
+color:#ff7c7c;
+font-size:11px;
+padding:8px 16px;
+text-align:center;
+border-bottom:2px solid #810000;
+z-index:2000;
+}
+.container{
+width:300px;
+border:1px solid rgba(255,255,255,0.15);
+overflow:hidden;
+margin-top:30px;
+}
+.panel{
+padding-top:5px;
+margin-bottom:10px;
+}
+.area-header{
+font-size:12px;
+font-weight:bold;
+padding:2px;
+color:#dedede;
+background:rgba(0,0,0,0.35);
+box-shadow:0 2px 6px rgba(0,0,0,0.3);
+text-align:center;
+cursor:pointer;
+}
+.controls-mini{padding:4px;}
+.input-group{
+display:flex;
+flex-wrap:wrap;
+gap:2px;
+margin-left:7px;
+margin-right:7px;
+align-items:center;
+}
+button{
+background:rgba(255,255,255,0.07);
+color:#fff;
+border:1px solid rgba(255,255,255,0.10);
+border-radius:4px;
+cursor:pointer;
+padding:0px 3px;
+font-size:12px;
+margin:4px 2px;
+text-align:left;
+transition:background 0.15s,border 0.15s;
+}
+button:hover{background:rgba(255,255,255,0.15);}
+button.selected{
+background:rgba(129,0,0,0.4);
+border-color:rgba(160,48,48,0.6);
+box-shadow:0 0 8px rgba(129,0,0,0.2);
+}
+label{
+color:#dedede;
+margin:5px;
+font-size:12px;
+display:flex;
+align-items:center;
+gap:4px;
+}
+.prompt-area{margin:0 7px;}
+.prompt-area textarea{
+width:100%;
+height:60px;
+background:#333;
+color:#dedede;
+border:1px solid #505050;
+border-radius:4px;
+font-size:11px;
+padding:4px 6px;
+resize:vertical;
+}
+.param-group-header{
+font-weight:bold;
+margin-bottom:5px;
+color:#ff7c7c;
+font-size:12px;
+margin-left:7px;
+margin-top:8px;
+}
+.role-assign-trigger{
+font-size:11px;
+padding:1px 6px;
+margin-left:auto;
+color:#ff7c7c;
+border:1px solid rgba(160,48,48,0.4);
+background:rgba(129,0,0,0.2);
+border-radius:4px;
+cursor:pointer;
+white-space:nowrap;
+}
+.role-assign-trigger:hover{
+background:rgba(129,0,0,0.4);
+border-color:rgba(160,48,48,0.6);
+color:#fff;
+}
+/* Modal Overlay */
+.modal-overlay{
+position:fixed;
+top:0;left:0;
+width:100vw;height:100vh;
+background:rgba(0,0,0,0.6);
+backdrop-filter:blur(4px);
+z-index:1000;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+.modal-overlay.hidden{display:none;}
+.modal{
+background:#212121;
+border-radius:8px;
+border:1px solid rgba(255,255,255,0.08);
+box-shadow:0 16px 48px rgba(0,0,0,0.5);
+width:420px;
+max-width:90vw;
+max-height:80vh;
+overflow:hidden;
+display:flex;
+flex-direction:column;
+}
+.modal-header{
+padding:12px 16px;
+border-bottom:1px solid #333;
+display:flex;
+align-items:center;
+justify-content:space-between;
+}
+.modal-title{
+font-size:14px;
+font-weight:bold;
+color:#dedede;
+}
+.modal-close{
+font-size:16px;
+color:#888;
+cursor:pointer;
+background:none;
+border:none;
+padding:2px 6px;
+margin:0;
+}
+.modal-close:hover{color:#ff7c7c;background:none;}
+.modal-body{
+padding:0;
+overflow-y:auto;
+flex:1;
+}
+.modal-footer{
+padding:12px 16px;
+border-top:1px solid #333;
+display:flex;
+justify-content:flex-end;
+gap:8px;
+}
+.modal-btn{
+padding:6px 16px;
+border-radius:4px;
+font-size:12px;
+cursor:pointer;
+}
+.modal-btn-cancel{
+background:rgba(255,255,255,0.08);
+color:#dedede;
+border:1px solid rgba(255,255,255,0.1);
+}
+.modal-btn-submit{
+background:#810000;
+color:#fff;
+border:1px solid rgba(160,48,48,0.6);
+}
+.modal-btn-submit:hover{background:#a00;}
+/* Tab Navigation */
+.tab-nav{
+display:flex;
+border-bottom:1px solid #333;
+background:rgba(0,0,0,0.2);
+}
+.tab-btn{
+flex:1;
+padding:8px 4px;
+font-size:11px;
+color:#888;
+background:transparent;
+border:none;
+border-bottom:2px solid transparent;
+border-radius:0;
+cursor:pointer;
+text-align:center;
+margin:0;
+transition:color 0.15s,border-color 0.15s;
+}
+.tab-btn:hover{
+color:#dedede;
+background:rgba(255,255,255,0.03);
+}
+.tab-btn.active{
+color:#ff7c7c;
+border-bottom-color:#ff7c7c;
+background:rgba(129,0,0,0.08);
+}
+.tab-btn.active:hover{
+background:rgba(129,0,0,0.12);
+}
+/* Tab Content */
+.tab-content{display:none;padding:12px 16px;}
+.tab-content.active{display:block;}
+.role-row{
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:8px 0;
+border-bottom:1px solid rgba(255,255,255,0.04);
+}
+.role-row:last-child{border-bottom:none;}
+.role-name{
+font-size:11px;
+font-weight:bold;
+color:#dedede;
+min-width:70px;
+}
+.role-select{
+background:#333;
+color:#dedede;
+border:1px solid #505050;
+border-radius:4px;
+padding:3px 6px;
+font-size:11px;
+cursor:pointer;
+min-width:100px;
+}
+.role-select:focus{
+border-color:rgba(160,48,48,0.6);
+outline:none;
+}
+.role-select option{
+background:#333;
+color:#dedede;
+}
+.role-unavailable{
+font-size:10px;
+color:#555;
+font-style:italic;
+}
+.provider-icon{
+display:inline-block;
+width:6px;
+height:6px;
+border-radius:50%;
+margin-right:4px;
+}
+.provider-icon.connected{background:#4caf50;}
+.provider-icon.disconnected{background:#555;}
+.tab-status{
+font-size:9px;
+color:#555;
+text-align:center;
+padding:2px;
+}
+.note{
+margin:16px 7px;
+padding:8px;
+background:rgba(255,149,50,0.1);
+border:1px solid rgba(255,149,50,0.3);
+border-radius:4px;
+font-size:10px;
+color:#ff9532;
+line-height:1.5;
+}
+</style>
+</head>
+<body>
+<div class="description">
+Sample C1: タブ切替モーダル方式 — プロバイダー別タブでRole割当を管理
+</div>
+
+<!-- Right Panel -->
+<div class="container" style="margin-top:30px;">
+<div class="panel">
+<div class="area-header">API Controls</div>
+<div class="controls-mini">
+<div class="input-group">
+<button class="selected">ComfyUI</button>
+<button>WebUI</button>
+<button>RunPod</button>
+<button>Serverless</button>
+<button>Fal.ai</button>
+<button class="role-assign-trigger" onclick="openModal()">&#9881; Role</button>
+</div>
+</div>
+<div class="input-group">
+<label>
+<input type="checkbox" checked> AI Check
+</label>
+<label style="color:#888;font-size:11px;">ComfyUI Connected</label>
+</div>
+</div>
+<div class="panel">
+<div class="area-header">Generation</div>
+<div class="controls-mini">
+<div class="param-group-header">Prompt</div>
+<div class="prompt-area">
+<textarea placeholder="Enter prompt...">1girl, manga style, black and white</textarea>
+</div>
+</div>
+</div>
+
+<div class="note">
+<b>C1方式の特徴:</b><br>
+・Cのモーダルをベースに、プロバイダー別タブに分割<br>
+・各タブ内でそのプロバイダーが担当するRoleをドロップダウンで選択<br>
+・プロバイダーごとの接続状態をタブ内に表示<br>
+・タブ切替で情報量を抑え、一画面の視認性を向上<br>
+・プロバイダー単位で設定を確認しやすい
+</div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay">
+<div class="modal">
+<div class="modal-header">
+<span class="modal-title">&#9881; Role Assignment</span>
+<button class="modal-close" onclick="closeModal()">&times;</button>
+</div>
+<div class="tab-nav">
+<button class="tab-btn active" onclick="switchTab('overview')">Overview</button>
+<button class="tab-btn" onclick="switchTab('comfyui')">ComfyUI</button>
+<button class="tab-btn" onclick="switchTab('webui')">WebUI</button>
+<button class="tab-btn" onclick="switchTab('runpod')">RunPod</button>
+<button class="tab-btn" onclick="switchTab('falai')">Fal.ai</button>
+</div>
+<div class="modal-body">
+<!-- Overview Tab -->
+<div class="tab-content active" id="tab-overview">
+<div class="role-row">
+<span class="role-name">T2I</span>
+<select class="role-select">
+<option selected>Default (Active)</option>
+<option>ComfyUI</option>
+<option>WebUI</option>
+<option>RunPod</option>
+<option>Serverless</option>
+<option>Fal.ai</option>
+</select>
+</div>
+<div class="role-row">
+<span class="role-name">I2I</span>
+<select class="role-select">
+<option selected>Default (Active)</option>
+<option>ComfyUI</option>
+<option>WebUI</option>
+<option>RunPod</option>
+<option>Fal.ai</option>
+</select>
+</div>
+<div class="role-row">
+<span class="role-name">Inpaint</span>
+<select class="role-select">
+<option>Default (Active)</option>
+<option selected>ComfyUI</option>
+<option>RunPod</option>
+</select>
+</div>
+<div class="role-row">
+<span class="role-name">Upscale</span>
+<select class="role-select">
+<option>Default (Active)</option>
+<option>ComfyUI</option>
+<option>RunPod</option>
+<option selected>Fal.ai</option>
+</select>
+</div>
+<div class="role-row">
+<span class="role-name">RemoveBG</span>
+<select class="role-select">
+<option selected>Default (Active)</option>
+<option>ComfyUI</option>
+<option>RunPod</option>
+<option>Fal.ai</option>
+</select>
+</div>
+<div class="role-row">
+<span class="role-name">Angle</span>
+<select class="role-select">
+<option selected>Default (Active)</option>
+<option>ComfyUI</option>
+<option>RunPod</option>
+</select>
+</div>
+</div>
+<!-- ComfyUI Tab -->
+<div class="tab-content" id="tab-comfyui">
+<div class="tab-status"><span class="provider-icon connected"></span> Connected</div>
+<div class="role-row">
+<span class="role-name">T2I</span>
+<select class="role-select"><option>Not assigned</option><option selected>Assigned</option></select>
+</div>
+<div class="role-row">
+<span class="role-name">I2I</span>
+<select class="role-select"><option selected>Not assigned</option><option>Assigned</option></select>
+</div>
+<div class="role-row">
+<span class="role-name">Inpaint</span>
+<select class="role-select"><option>Not assigned</option><option selected>Assigned</option></select>
+</div>
+<div class="role-row">
+<span class="role-name">Upscale</span>
+<select class="role-select"><option selected>Not assigned</option><option>Assigned</option></select>
+</div>
+<div class="role-row">
+<span class="role-name">RemoveBG</span>
+<select class="role-select"><option selected>Not assigned</option><option>Assigned</option></select>
+</div>
+<div class="role-row">
+<span class="role-name">Angle</span>
+<select class="role-select"><option selected>Not assigned</option><option>Assigned</option></select>
+</div>
+</div>
+<!-- WebUI Tab -->
+<div class="tab-content" id="tab-webui">
+<div class="tab-status"><span class="provider-icon disconnected"></span> Disconnected</div>
+<div class="role-row">
+<span class="role-name">T2I</span>
+<select class="role-select"><option selected>Not assigned</option><option>Assigned</option></select>
+</div>
+<div class="role-row">
+<span class="role-name">I2I</span>
+<select class="role-select"><option selected>Not assigned</option><option>Assigned</option></select>
+</div>
+<div class="role-row">
+<span class="role-name">Inpaint</span>
+<span class="role-unavailable">Not supported</span>
+</div>
+<div class="role-row">
+<span class="role-name">Upscale</span>
+<span class="role-unavailable">Not supported</span>
+</div>
+<div class="role-row">
+<span class="role-name">RemoveBG</span>
+<span class="role-unavailable">Not supported</span>
+</div>
+<div class="role-row">
+<span class="role-name">Angle</span>
+<span class="role-unavailable">Not supported</span>
+</div>
+</div>
+<!-- RunPod Tab -->
+<div class="tab-content" id="tab-runpod">
+<div class="tab-status"><span class="provider-icon disconnected"></span> Disconnected</div>
+<div class="role-row">
+<span class="role-name">T2I</span>
+<select class="role-select"><option selected>Not assigned</option><option>Assigned</option></select>
+</div>
+<div class="role-row">
+<span class="role-name">I2I</span>
+<select class="role-select"><option selected>Not assigned</option><option>Assigned</option></select>
+</div>
+<div class="role-row">
+<span class="role-name">Inpaint</span>
+<select class="role-select"><option selected>Not assigned</option><option>Assigned</option></select>
+</div>
+<div class="role-row">
+<span class="role-name">Upscale</span>
+<select class="role-select"><option selected>Not assigned</option><option>Assigned</option></select>
+</div>
+<div class="role-row">
+<span class="role-name">RemoveBG</span>
+<select class="role-select"><option selected>Not assigned</option><option>Assigned</option></select>
+</div>
+<div class="role-row">
+<span class="role-name">Angle</span>
+<select class="role-select"><option selected>Not assigned</option><option>Assigned</option></select>
+</div>
+</div>
+<!-- Fal.ai Tab -->
+<div class="tab-content" id="tab-falai">
+<div class="tab-status"><span class="provider-icon connected"></span> Connected (API Key)</div>
+<div class="role-row">
+<span class="role-name">T2I</span>
+<select class="role-select"><option selected>Not assigned</option><option>Assigned</option></select>
+</div>
+<div class="role-row">
+<span class="role-name">I2I</span>
+<select class="role-select"><option selected>Not assigned</option><option>Assigned</option></select>
+</div>
+<div class="role-row">
+<span class="role-name">Inpaint</span>
+<span class="role-unavailable">Not supported</span>
+</div>
+<div class="role-row">
+<span class="role-name">Upscale</span>
+<select class="role-select"><option>Not assigned</option><option selected>Assigned</option></select>
+</div>
+<div class="role-row">
+<span class="role-name">RemoveBG</span>
+<select class="role-select"><option selected>Not assigned</option><option>Assigned</option></select>
+</div>
+<div class="role-row">
+<span class="role-name">Angle</span>
+<span class="role-unavailable">Not supported</span>
+</div>
+</div>
+</div>
+<div class="modal-footer">
+<button class="modal-btn modal-btn-cancel" onclick="closeModal()">Cancel</button>
+<button class="modal-btn modal-btn-submit" onclick="closeModal()">Apply</button>
+</div>
+</div>
+</div>
+
+<script>
+function openModal(){
+document.getElementById('modalOverlay').classList.remove('hidden');
+}
+function closeModal(){
+document.getElementById('modalOverlay').classList.add('hidden');
+}
+function switchTab(name){
+var tabs=document.querySelectorAll('.tab-btn');
+var contents=document.querySelectorAll('.tab-content');
+for(var i=0;i<tabs.length;i++){tabs[i].classList.remove('active');}
+for(var i=0;i<contents.length;i++){contents[i].classList.remove('active');}
+event.target.classList.add('active');
+document.getElementById('tab-'+name).classList.add('active');
+}
+</script>
+</body>
+</html>

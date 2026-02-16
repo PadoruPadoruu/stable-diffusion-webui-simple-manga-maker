@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>Phase5 Sample C2: カード型モーダル方式</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+background:#212121;
+color:#dedede;
+font-family:'Open Sans',Arial,sans-serif;
+font-size:12px;
+display:flex;
+justify-content:center;
+padding:40px 20px;
+}
+.description{
+position:fixed;
+top:0;left:0;right:0;
+background:#333;
+color:#ff7c7c;
+font-size:11px;
+padding:8px 16px;
+text-align:center;
+border-bottom:2px solid #810000;
+z-index:2000;
+}
+.container{
+width:300px;
+border:1px solid rgba(255,255,255,0.15);
+overflow:hidden;
+margin-top:30px;
+}
+.panel{
+padding-top:5px;
+margin-bottom:10px;
+}
+.area-header{
+font-size:12px;
+font-weight:bold;
+padding:2px;
+color:#dedede;
+background:rgba(0,0,0,0.35);
+box-shadow:0 2px 6px rgba(0,0,0,0.3);
+text-align:center;
+cursor:pointer;
+}
+.controls-mini{padding:4px;}
+.input-group{
+display:flex;
+flex-wrap:wrap;
+gap:2px;
+margin-left:7px;
+margin-right:7px;
+align-items:center;
+}
+button{
+background:rgba(255,255,255,0.07);
+color:#fff;
+border:1px solid rgba(255,255,255,0.10);
+border-radius:4px;
+cursor:pointer;
+padding:0px 3px;
+font-size:12px;
+margin:4px 2px;
+text-align:left;
+transition:background 0.15s,border 0.15s;
+}
+button:hover{background:rgba(255,255,255,0.15);}
+button.selected{
+background:rgba(129,0,0,0.4);
+border-color:rgba(160,48,48,0.6);
+box-shadow:0 0 8px rgba(129,0,0,0.2);
+}
+label{
+color:#dedede;
+margin:5px;
+font-size:12px;
+display:flex;
+align-items:center;
+gap:4px;
+}
+.prompt-area{margin:0 7px;}
+.prompt-area textarea{
+width:100%;
+height:60px;
+background:#333;
+color:#dedede;
+border:1px solid #505050;
+border-radius:4px;
+font-size:11px;
+padding:4px 6px;
+resize:vertical;
+}
+.param-group-header{
+font-weight:bold;
+margin-bottom:5px;
+color:#ff7c7c;
+font-size:12px;
+margin-left:7px;
+margin-top:8px;
+}
+.role-assign-trigger{
+font-size:11px;
+padding:1px 6px;
+margin-left:auto;
+color:#ff7c7c;
+border:1px solid rgba(160,48,48,0.4);
+background:rgba(129,0,0,0.2);
+border-radius:4px;
+cursor:pointer;
+white-space:nowrap;
+}
+.role-assign-trigger:hover{
+background:rgba(129,0,0,0.4);
+border-color:rgba(160,48,48,0.6);
+color:#fff;
+}
+/* Modal Overlay */
+.modal-overlay{
+position:fixed;
+top:0;left:0;
+width:100vw;height:100vh;
+background:rgba(0,0,0,0.6);
+backdrop-filter:blur(4px);
+z-index:1000;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+.modal-overlay.hidden{display:none;}
+.modal{
+background:#212121;
+border-radius:8px;
+border:1px solid rgba(255,255,255,0.08);
+box-shadow:0 16px 48px rgba(0,0,0,0.5);
+width:520px;
+max-width:90vw;
+max-height:80vh;
+overflow:hidden;
+display:flex;
+flex-direction:column;
+}
+.modal-header{
+padding:12px 16px;
+border-bottom:1px solid #333;
+display:flex;
+align-items:center;
+justify-content:space-between;
+}
+.modal-title{
+font-size:14px;
+font-weight:bold;
+color:#dedede;
+}
+.modal-close{
+font-size:16px;
+color:#888;
+cursor:pointer;
+background:none;
+border:none;
+padding:2px 6px;
+margin:0;
+}
+.modal-close:hover{color:#ff7c7c;background:none;}
+.modal-body{
+padding:16px;
+overflow-y:auto;
+flex:1;
+}
+.modal-footer{
+padding:12px 16px;
+border-top:1px solid #333;
+display:flex;
+justify-content:flex-end;
+gap:8px;
+}
+.modal-btn{
+padding:6px 16px;
+border-radius:4px;
+font-size:12px;
+cursor:pointer;
+}
+.modal-btn-cancel{
+background:rgba(255,255,255,0.08);
+color:#dedede;
+border:1px solid rgba(255,255,255,0.1);
+}
+.modal-btn-submit{
+background:#810000;
+color:#fff;
+border:1px solid rgba(160,48,48,0.6);
+}
+.modal-btn-submit:hover{background:#a00;}
+/* Card Grid */
+.card-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+}
+.role-card{
+background:rgba(255,255,255,0.03);
+border:1px solid rgba(255,255,255,0.08);
+border-radius:6px;
+padding:10px;
+transition:border-color 0.15s;
+}
+.role-card:hover{
+border-color:rgba(255,255,255,0.15);
+}
+.role-card-header{
+display:flex;
+align-items:center;
+justify-content:space-between;
+margin-bottom:8px;
+}
+.role-card-name{
+font-size:12px;
+font-weight:bold;
+color:#dedede;
+}
+.role-card-current{
+font-size:9px;
+padding:1px 5px;
+border-radius:3px;
+background:rgba(129,0,0,0.3);
+color:#ff7c7c;
+border:1px solid rgba(160,48,48,0.3);
+}
+.provider-chips{
+display:flex;
+flex-wrap:wrap;
+gap:4px;
+}
+.provider-chip{
+font-size:10px;
+padding:3px 8px;
+border-radius:12px;
+cursor:pointer;
+border:1px solid rgba(255,255,255,0.1);
+background:rgba(255,255,255,0.05);
+color:#aaa;
+transition:all 0.15s;
+}
+.provider-chip:hover{
+background:rgba(255,255,255,0.1);
+color:#dedede;
+}
+.provider-chip.active{
+background:rgba(129,0,0,0.35);
+border-color:rgba(160,48,48,0.5);
+color:#ff7c7c;
+}
+.provider-chip.disabled{
+opacity:0.25;
+cursor:not-allowed;
+pointer-events:none;
+}
+.note{
+margin:16px 7px;
+padding:8px;
+background:rgba(255,149,50,0.1);
+border:1px solid rgba(255,149,50,0.3);
+border-radius:4px;
+font-size:10px;
+color:#ff9532;
+line-height:1.5;
+}
+</style>
+</head>
+<body>
+<div class="description">
+Sample C2: カード型モーダル方式 — Role別カードにプロバイダーをチップで選択
+</div>
+
+<!-- Right Panel -->
+<div class="container" style="margin-top:30px;">
+<div class="panel">
+<div class="area-header">API Controls</div>
+<div class="controls-mini">
+<div class="input-group">
+<button class="selected">ComfyUI</button>
+<button>WebUI</button>
+<button>RunPod</button>
+<button>Serverless</button>
+<button>Fal.ai</button>
+<button class="role-assign-trigger" onclick="openModal()">&#9881; Role</button>
+</div>
+</div>
+<div class="input-group">
+<label>
+<input type="checkbox" checked> AI Check
+</label>
+<label style="color:#888;font-size:11px;">ComfyUI Connected</label>
+</div>
+</div>
+<div class="panel">
+<div class="area-header">Generation</div>
+<div class="controls-mini">
+<div class="param-group-header">Prompt</div>
+<div class="prompt-area">
+<textarea placeholder="Enter prompt...">1girl, manga style, black and white</textarea>
+</div>
+</div>
+</div>
+
+<div class="note">
+<b>C2方式の特徴:</b><br>
+・Role別にカードを配置し、各カードでプロバイダーをチップ選択<br>
+・視覚的にどのRoleに何が割り当てられているか直感的に把握できる<br>
+・チップ型UIでワンクリック切替が可能<br>
+・カードのグリッドレイアウトで拡張性も確保<br>
+・グレーアウトチップで非対応の組み合わせが分かる
+</div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay">
+<div class="modal">
+<div class="modal-header">
+<span class="modal-title">&#9881; Role Assignment</span>
+<button class="modal-close" onclick="closeModal()">&times;</button>
+</div>
+<div class="modal-body">
+<div class="card-grid">
+<!-- T2I Card -->
+<div class="role-card">
+<div class="role-card-header">
+<span class="role-card-name">T2I</span>
+<span class="role-card-current">Default</span>
+</div>
+<div class="provider-chips">
+<span class="provider-chip active" onclick="selectChip(this)">Default</span>
+<span class="provider-chip" onclick="selectChip(this)">ComfyUI</span>
+<span class="provider-chip" onclick="selectChip(this)">WebUI</span>
+<span class="provider-chip" onclick="selectChip(this)">RunPod</span>
+<span class="provider-chip" onclick="selectChip(this)">Serverless</span>
+<span class="provider-chip" onclick="selectChip(this)">Fal.ai</span>
+</div>
+</div>
+<!-- I2I Card -->
+<div class="role-card">
+<div class="role-card-header">
+<span class="role-card-name">I2I</span>
+<span class="role-card-current">Default</span>
+</div>
+<div class="provider-chips">
+<span class="provider-chip active" onclick="selectChip(this)">Default</span>
+<span class="provider-chip" onclick="selectChip(this)">ComfyUI</span>
+<span class="provider-chip" onclick="selectChip(this)">WebUI</span>
+<span class="provider-chip" onclick="selectChip(this)">RunPod</span>
+<span class="provider-chip disabled">Serverless</span>
+<span class="provider-chip" onclick="selectChip(this)">Fal.ai</span>
+</div>
+</div>
+<!-- Inpaint Card -->
+<div class="role-card">
+<div class="role-card-header">
+<span class="role-card-name">Inpaint</span>
+<span class="role-card-current">ComfyUI</span>
+</div>
+<div class="provider-chips">
+<span class="provider-chip" onclick="selectChip(this)">Default</span>
+<span class="provider-chip active" onclick="selectChip(this)">ComfyUI</span>
+<span class="provider-chip disabled">WebUI</span>
+<span class="provider-chip" onclick="selectChip(this)">RunPod</span>
+<span class="provider-chip disabled">Serverless</span>
+<span class="provider-chip disabled">Fal.ai</span>
+</div>
+</div>
+<!-- Upscale Card -->
+<div class="role-card">
+<div class="role-card-header">
+<span class="role-card-name">Upscale</span>
+<span class="role-card-current">Fal.ai</span>
+</div>
+<div class="provider-chips">
+<span class="provider-chip" onclick="selectChip(this)">Default</span>
+<span class="provider-chip" onclick="selectChip(this)">ComfyUI</span>
+<span class="provider-chip disabled">WebUI</span>
+<span class="provider-chip" onclick="selectChip(this)">RunPod</span>
+<span class="provider-chip disabled">Serverless</span>
+<span class="provider-chip active" onclick="selectChip(this)">Fal.ai</span>
+</div>
+</div>
+<!-- RemoveBG Card -->
+<div class="role-card">
+<div class="role-card-header">
+<span class="role-card-name">RemoveBG</span>
+<span class="role-card-current">Default</span>
+</div>
+<div class="provider-chips">
+<span class="provider-chip active" onclick="selectChip(this)">Default</span>
+<span class="provider-chip" onclick="selectChip(this)">ComfyUI</span>
+<span class="provider-chip disabled">WebUI</span>
+<span class="provider-chip" onclick="selectChip(this)">RunPod</span>
+<span class="provider-chip disabled">Serverless</span>
+<span class="provider-chip" onclick="selectChip(this)">Fal.ai</span>
+</div>
+</div>
+<!-- Angle Card -->
+<div class="role-card">
+<div class="role-card-header">
+<span class="role-card-name">Angle</span>
+<span class="role-card-current">Default</span>
+</div>
+<div class="provider-chips">
+<span class="provider-chip active" onclick="selectChip(this)">Default</span>
+<span class="provider-chip" onclick="selectChip(this)">ComfyUI</span>
+<span class="provider-chip disabled">WebUI</span>
+<span class="provider-chip" onclick="selectChip(this)">RunPod</span>
+<span class="provider-chip disabled">Serverless</span>
+<span class="provider-chip disabled">Fal.ai</span>
+</div>
+</div>
+</div>
+<div style="margin-top:12px;font-size:10px;color:#888;">
+&#8251; グレーアウト = そのプロバイダーは該当Roleをサポートしていません<br>
+&#8251; Default = アクティブプロバイダー（上部ボタンで選択中のもの）に従います
+</div>
+</div>
+<div class="modal-footer">
+<button class="modal-btn modal-btn-cancel" onclick="closeModal()">Cancel</button>
+<button class="modal-btn modal-btn-submit" onclick="closeModal()">Apply</button>
+</div>
+</div>
+</div>
+
+<script>
+function openModal(){
+document.getElementById('modalOverlay').classList.remove('hidden');
+}
+function closeModal(){
+document.getElementById('modalOverlay').classList.add('hidden');
+}
+function selectChip(el){
+var siblings=el.parentElement.querySelectorAll('.provider-chip');
+for(var i=0;i<siblings.length;i++){siblings[i].classList.remove('active');}
+el.classList.add('active');
+var card=el.closest('.role-card');
+var badge=card.querySelector('.role-card-current');
+badge.textContent=el.textContent;
+}
+</script>
+</body>
+</html>
