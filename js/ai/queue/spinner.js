@@ -115,6 +115,9 @@ waitingCount+=comfyuiQueue.getWaitingCount();
 if(typeof sdQueue!=='undefined'){
 waitingCount+=sdQueue.getWaitingCount();
 }
+if(typeof runpodEndpointQueue!=='undefined'){
+waitingCount+=runpodEndpointQueue.getWaitingCount();
+}
 
 var text='';
 if(waitingCount>0){
@@ -153,6 +156,9 @@ comfyuiQueue.clearQueue();
 }
 if(typeof sdQueue!=='undefined'){
 sdQueue.clearQueue();
+}
+if(typeof runpodEndpointQueue!=='undefined'){
+runpodEndpointQueue.clearQueue();
 }
 var keys=Object.keys(aiProgressState.spinners);
 for(var i=0;i<keys.length;i++){

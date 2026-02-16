@@ -1,6 +1,7 @@
 // AI機能の中央ルーター: プロバイダーレジストリ経由でディスパッチ
 const sdQueue=new TaskQueue(1);
 const comfyuiQueue=new TaskQueue(1);
+const runpodEndpointQueue=new TaskQueue(1);
 
 var firstSDConnection=true;
 var firstComfyConnection=true;
@@ -30,14 +31,19 @@ const comfyuiQueueStatus=comfyuiQueue.getStatus();
 if(comfyuiQueueStatus.total>0){
 return true;
 }
+const rpQueueStatus=runpodEndpointQueue.getStatus();
+if(rpQueueStatus.total>0){
+return true;
+}
 return false;
 }
 
 function clearAllQueues() {
 const sdCleared=sdQueue.clearQueue();
 const comfyCleared=comfyuiQueue.clearQueue();
-logger.info(`All queues cleared: SD=${sdCleared}, ComfyUI=${comfyCleared}`);
-return sdCleared+comfyCleared;
+const rpCleared=runpodEndpointQueue.clearQueue();
+logger.info(`All queues cleared: SD=${sdCleared}, ComfyUI=${comfyCleared}, RP=${rpCleared}`);
+return sdCleared+comfyCleared+rpCleared;
 }
 
 

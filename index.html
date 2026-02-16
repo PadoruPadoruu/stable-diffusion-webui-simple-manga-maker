@@ -373,6 +373,20 @@ function getElementClasses(element) {
                                     <button id="runpodApiKeyToggle" class="es-btn-small" title="Show/Hide">👁</button>
                                 </li>
                             </div>
+                            <div class="RunPodEndpoint_api_content">
+                                <li class="es-section-title">RunPod Endpoint</li>
+                                <li class="es-url-row">
+                                    <input type="text" id="runpodEndpointId" value="" placeholder="Endpoint ID">
+                                    <button id="runpodEndpointIdClear" class="es-btn-small" title="Clear">↺</button>
+                                </li>
+                                <li class="es-url-row">
+                                    <input type="password" id="runpodEndpointApiKey" value="" placeholder="API Key" autocomplete="off">
+                                    <button id="runpodEndpointApiKeyToggle" class="es-btn-small" title="Show/Hide">👁</button>
+                                </li>
+                                <li class="es-url-row">
+                                    <input type="number" id="runpodEndpointTimeout" value="120" min="10" max="600" placeholder="Timeout(s)">
+                                </li>
+                            </div>
                         </ul>
                     </li>
                 </ul>
@@ -1601,6 +1615,9 @@ function getElementClasses(element) {
                             <button id="runpodComfyUIButton" data-value="runpodComfyUIButton" onclick='changeExternalAPI(this,true)'>
                                 RunPod
                             </button>
+                            <button id="runpodEndpointButton" data-value="runpodEndpointButton" onclick='changeExternalAPI(this,true)'>
+                                Serverless
+                            </button>
 
                             <div id="apiSettingsUrlHelpe">
                             </div>
@@ -1919,6 +1936,7 @@ function getElementClasses(element) {
     <script src="js/ai/provider/local-comfyui-provider.js?v=7.3" defer></script>
     <script src="js/ai/provider/local-sdwebui-provider.js?v=7.3" defer></script>
     <script src="js/ai/provider/runpod-comfyui-provider.js?v=7.3" defer></script>
+    <script src="js/ai/provider/runpod-endpoint-provider.js?v=7.3" defer></script>
     <script src="js/ai/queue/spinner.js?v=7.2" defer></script>
     <script src="js/ai/queue/task-queue.js?v=7.2" defer></script>
     <script src="js/ai/queue/generation-task-manager.js?v=7.2" defer></script>

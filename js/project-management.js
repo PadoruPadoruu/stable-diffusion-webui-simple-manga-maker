@@ -2,7 +2,8 @@
 const apis={
 A1111: "A1111",
 COMFYUI: "comfyui",
-RUNPOD_COMFYUI: "runpodComfyUI"
+RUNPOD_COMFYUI: "runpodComfyUI",
+RUNPOD_ENDPOINT: "runpodEndpoint"
 };
 
 
@@ -203,6 +204,9 @@ sdWebUIPageUrl:{id:'sdWebUIPageUrl',default:'http://127.0.0.1:7860'},
 comfyUIPageUrl:{id:'comfyUIPageUrl',default:'http://127.0.0.1:8188'},
 runpodComfyUIUrl:{id:'runpodComfyUIUrl',default:''},
 runpodApiKey:{id:'runpodApiKey',default:''},
+runpodEndpointId:{id:'runpodEndpointId',default:''},
+runpodEndpointApiKey:{id:'runpodEndpointApiKey',default:''},
+runpodEndpointTimeout:{id:'runpodEndpointTimeout',default:'120'},
 apiHeartbeatCheckbox:{id:'apiHeartbeatCheckbox',default:true,type:'checkbox'},
 autoSaveEnabled:{id:'autoSaveCheckbox',default:true,type:'checkbox'},
 autoSaveInterval:{id:'autoSaveInterval',default:'60'},
@@ -312,6 +316,7 @@ if(v!==-1)this.value=Math.round(v/8)*8;
 var mode=data.externalAI||apis.COMFYUI;
 if(mode===apis.A1111)changeExternalAPI($('sdWebUIButton'));
 else if(mode===apis.RUNPOD_COMFYUI)changeExternalAPI($('runpodComfyUIButton'));
+else if(mode===apis.RUNPOD_ENDPOINT)changeExternalAPI($('runpodEndpointButton'));
 else changeExternalAPI($('comfyUIButton'));
 }
 
