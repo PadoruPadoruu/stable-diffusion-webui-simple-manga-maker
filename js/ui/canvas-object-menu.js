@@ -33,7 +33,7 @@ var menuIconMap={
 "canvasFit":"aspect_ratio",
 "boldOn":"format_bold",
 "boldOff":"format_bold",
-"copyAndPaste":"content_copy"
+"copyAndPast":"content_copy"
 };
 
 var menuAiActions=["generate","rembg","upscale","inpaint","angleGenerate"];
@@ -160,7 +160,7 @@ var movement=createObjectMenuButton(!activeObject.selectable?'movementOn':'movem
 var edit=createObjectMenuButton(activeObject.edit?'editOff':'editOn');
 var knife=createObjectMenuButton(isKnifeMode?'knifeOff':'knifeOn');
 var deleteMenu=createObjectMenuButton('delete');
-var duplicate=createObjectMenuButton('copyAndPaste');
+var duplicate=createObjectMenuButton('copyAndPast');
 var generate=createObjectMenuButton('generate');
 var panelIn=createObjectMenuButton('panelIn');
 var panelInNotFit=createObjectMenuButton('panelInNotFit');
@@ -552,7 +552,7 @@ saveStateByManual();
 canvas.renderAll();
 updateLayerPanel();
 return;
-case 'copyAndPaste':
+case 'copyAndPast':
 activeObject.clone(function(cloned){
 cloned.set({
 left:cloned.left+10,

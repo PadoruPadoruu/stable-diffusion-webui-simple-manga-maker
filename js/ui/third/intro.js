@@ -9,7 +9,7 @@ var steps=[
 {element:'#intro_tool-area',intro:i18next.t('introBodySidePanelTool'),title:i18next.t('introTitleSidePanelTool')},
 {element:'#intro_manga-tone-area',intro:i18next.t('introBodySidePanelTone'),title:i18next.t('introTitleSidePanelTone')},
 {element:'#intro_manga-effect-area',intro:i18next.t('introBodySidePanelEffect'),title:i18next.t('introTitleSidePanelEffect')},
-{element:'#intro_controle-area',intro:i18next.t('introBodySidePanelControle'),title:i18next.t('introTitleSidePanelControle')},
+{element:'#intro_control-area',intro:i18next.t('introBodySidePanelControle'),title:i18next.t('introTitleSidePanelControle')},
 {element:'#intro_shape-area',intro:i18next.t('introBodySidePanelShape'),title:i18next.t('introTitleSidePanelShape')},
 {element:'#intro_content',intro:i18next.t('intro_content_body'),title:i18next.t('intro_content_title')},
 {element:'#intro_sdWebUI',intro:i18next.t('intro_sdWebUI_body'),title:i18next.t('intro_sdWebUI_title')}

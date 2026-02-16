@@ -55,7 +55,7 @@ var sidebarTooltipMap=[
 {id:'intro_tool-area',key:'tipPen'},
 {id:'intro_manga-tone-area',key:'tipTone'},
 {id:'intro_manga-effect-area',key:'tipEffect'},
-{id:'intro_controle-area',key:'tipControl'},
+{id:'intro_control-area',key:'tipControl'},
 {id:'intro_shape-area',key:'tipShape'},
 ];
 
