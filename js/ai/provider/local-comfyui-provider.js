@@ -17,32 +17,34 @@ getEndpointUrl(){
 return $('comfyUIPageUrl').value;
 }
 async heartbeat(){
-return comfyuiApiHeartbeat();
+return comfyUIExecWithProvider(this,()=>comfyuiApiHeartbeat());
 }
 async executeT2I(layer,spinnerId){
-return comfyuiHandleProcessQueue(layer,spinnerId,'T2I');
+return comfyUIExecWithProvider(this,()=>comfyuiHandleProcessQueue(layer,spinnerId,'T2I'));
 }
 async executeI2I(layer,spinnerId){
-return comfyuiHandleProcessQueue(layer,spinnerId,'I2I');
+return comfyUIExecWithProvider(this,()=>comfyuiHandleProcessQueue(layer,spinnerId,'I2I'));
 }
 async executeRembg(layer,spinnerId){
-return comfyuiHandleProcessQueue(layer,spinnerId,'Rembg');
+return comfyUIExecWithProvider(this,()=>comfyuiHandleProcessQueue(layer,spinnerId,'Rembg'));
 }
 async executeUpscale(layer,spinnerId){
-return comfyuiHandleProcessQueue(layer,spinnerId,'Upscaler');
+return comfyUIExecWithProvider(this,()=>comfyuiHandleProcessQueue(layer,spinnerId,'Upscaler'));
 }
 async executeInpaint(layer,spinnerId){
-return comfyuiHandleProcessQueue(layer,spinnerId,'Inpaint');
+return comfyUIExecWithProvider(this,()=>comfyuiHandleProcessQueue(layer,spinnerId,'Inpaint'));
 }
 async executeAngle(layer,spinnerId,anglePrompt){
-return comfyuiHandleProcessQueue(layer,spinnerId,'I2I_Angle',{anglePrompt:anglePrompt});
+return comfyUIExecWithProvider(this,()=>comfyuiHandleProcessQueue(layer,spinnerId,'I2I_Angle',{anglePrompt:anglePrompt}));
 }
 async fetchDiffusionInformation(){
+return comfyUIExecWithProvider(this,()=>{
 comfyuiFetchModels();
 comfyuiFetchSampler();
 comfyuiFetchUpscaler();
 comfyuiVaeLoader();
 comfyuiClipModels();
 comfyuiFetchObjectInfoOnly();
+});
 }
 }

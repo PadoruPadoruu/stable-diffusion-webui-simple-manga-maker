@@ -1,14 +1,25 @@
+var _comfyUIExecProvider=null;
+
+async function comfyUIExecWithProvider(provider,fn){
+_comfyUIExecProvider=provider;
+try{
+return await fn();
+}finally{
+_comfyUIExecProvider=null;
+}
+}
+
 function getComfyUIServerAddress(){
-var provider=providerRegistry.getActive();
-if(provider&&provider.id==='runpodComfyUI'){
-return $('runpodComfyUIUrl').value;
+var provider=_comfyUIExecProvider||providerRegistry.getActive();
+if(provider&&provider.getEndpointUrl()){
+return provider.getEndpointUrl();
 }
 return $('comfyUIPageUrl').value;
 }
 
 function getComfyUIAuthHeaders(){
-var provider=providerRegistry.getActive();
-if(provider&&typeof provider.getApiKey==='function'){
+var provider=_comfyUIExecProvider||providerRegistry.getActive();
+if(provider&&provider.needsApiKey()){
 var apiKey=provider.getApiKey();
 if(apiKey){
 return{Authorization:'Bearer '+apiKey};
