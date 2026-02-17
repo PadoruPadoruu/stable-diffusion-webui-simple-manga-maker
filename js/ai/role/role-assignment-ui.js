@@ -1,4 +1,4 @@
-// Role Assignmentモーダル: Role×プロバイダーのマトリクスUI
+// Role Assignment: Role×プロバイダーのマトリクスUI
 var roleAssignmentUI=(function(){
 var raLogger=new SimpleLogger('roleAssignUI',LogLevel.DEBUG);
 var PROVIDER_COLUMNS=[
@@ -18,26 +18,24 @@ var ROLE_ROWS=[
 ];
 var tempAssignments={};
 function open(){
-tempAssignments={};
-ROLE_ROWS.forEach(function(row){
-tempAssignments[row.role]=providerRegistry.getRoleAssignment(row.role);
-});
-buildMatrix();
-$('roleAssignModal').style.display='';
+unifiedSettingsWindow.open();
 }
 function close(){
-$('roleAssignModal').style.display='none';
+unifiedSettingsWindow.close();
 }
-function apply(){
+function applyAssignments(){
 ROLE_ROWS.forEach(function(row){
 providerRegistry.setRoleAssignment(row.role,tempAssignments[row.role]);
 });
-close();
 updateLayerPanel();
 raLogger.info('Role assignments applied');
 debouncedSettingsSave();
 }
 function buildMatrix(){
+tempAssignments={};
+ROLE_ROWS.forEach(function(row){
+tempAssignments[row.role]=providerRegistry.getRoleAssignment(row.role);
+});
 var tbody=$('roleMatrixBody');
 tbody.innerHTML='';
 ROLE_ROWS.forEach(function(row){
@@ -78,6 +76,8 @@ tbody.appendChild(tr);
 return{
 open:open,
 close:close,
-apply:apply
+apply:applyAssignments,
+applyAssignments:applyAssignments,
+buildMatrix:buildMatrix
 };
 })();

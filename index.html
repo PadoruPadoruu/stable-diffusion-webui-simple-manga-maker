@@ -345,69 +345,6 @@ function getElementClasses(element) {
                                     </label>
                                 </div>
                             </li>
-                            <label id="intro_sdWebUI" data-i18n="20260214155000_002"></label>
-                            <div class="A1111_api_content">
-                                <li class="es-section-title">WebUI (A1111/Forge)</li>
-                                <li class="es-url-row">
-                                    <input type="text" id="sdWebUIPageUrl" value="http://127.0.0.1:7860" placeholder="URL">
-                                    <button id="sdWebUIPageUrlDefaultUrl" class="es-btn-small" title="Reset">↺</button>
-                                    <a href="html/API_Help/sd-api-guide.html" target="_blank" class="es-btn-small" title="Help">?</a>
-                                </li>
-                            </div>
-                            <div class="Comfyui_api_content">
-                                <li class="es-section-title" data-i18n="comfyUI">ComfyUI</li>
-                                <li class="es-url-row">
-                                    <input type="text" id="comfyUIPageUrl" value="http://127.0.0.1:8188" placeholder="URL">
-                                    <button id="comfyUIPageUrlDefaultUrl" class="es-btn-small" title="Reset">↺</button>
-                                    <a href="html/API_Help/comfyui_settings.html" target="_blank" class="es-btn-small" title="Help">?</a>
-                                </li>
-                            </div>
-                            <div class="RunPod_api_content">
-                                <li class="es-section-title">RunPod ComfyUI</li>
-                                <li class="es-url-row">
-                                    <input type="text" id="runpodComfyUIUrl" value="" placeholder="https://{pod-id}-8188.proxy.runpod.net">
-                                    <button id="runpodComfyUIUrlClear" class="es-btn-small" title="Clear">↺</button>
-                                </li>
-                                <li class="es-url-row">
-                                    <input type="password" id="runpodApiKey" value="" placeholder="API Key" autocomplete="off">
-                                    <button id="runpodApiKeyToggle" class="es-btn-small" title="Show/Hide">👁</button>
-                                </li>
-                            </div>
-                            <div class="RunPodEndpoint_api_content">
-                                <li class="es-section-title">RunPod Endpoint</li>
-                                <li class="es-url-row">
-                                    <input type="text" id="runpodEndpointId" value="" placeholder="Endpoint ID">
-                                    <button id="runpodEndpointIdClear" class="es-btn-small" title="Clear">↺</button>
-                                </li>
-                                <li class="es-url-row">
-                                    <input type="password" id="runpodEndpointApiKey" value="" placeholder="API Key" autocomplete="off">
-                                    <button id="runpodEndpointApiKeyToggle" class="es-btn-small" title="Show/Hide">👁</button>
-                                </li>
-                                <input type="hidden" id="runpodEndpointTimeout" value="120">
-                            </div>
-                            <div class="FalAI_api_content">
-                                <li class="es-section-title">Fal.ai</li>
-                                <li class="es-url-row">
-                                    <input type="password" id="falaiApiKey" value="" placeholder="API Key" autocomplete="off">
-                                    <button id="falaiApiKeyToggle" class="es-btn-small" title="Show/Hide">👁</button>
-                                </li>
-                                <li class="es-url-row">
-                                    <select id="falaiModelT2I" disabled><option value="">T2I</option></select>
-                                    <button id="falaiReloadT2I" class="es-btn-small" title="Reload">↻</button>
-                                </li>
-                                <li class="es-url-row">
-                                    <select id="falaiModelI2I" disabled><option value="">I2I</option></select>
-                                    <button id="falaiReloadI2I" class="es-btn-small" title="Reload">↻</button>
-                                </li>
-                                <li class="es-url-row">
-                                    <select id="falaiModelUpscale" disabled><option value="">Upscale</option></select>
-                                    <button id="falaiReloadUpscale" class="es-btn-small" title="Reload">↻</button>
-                                </li>
-                                <li class="es-url-row">
-                                    <select id="falaiModelRembg" disabled><option value="">RemoveBG</option></select>
-                                    <button id="falaiReloadRembg" class="es-btn-small" title="Reload">↻</button>
-                                </li>
-                            </div>
                         </ul>
                     </li>
                 </ul>
@@ -1627,7 +1564,7 @@ function getElementClasses(element) {
                     </div>
                     <div id="esApi-controls-mini" class="controls-mini">
                         <div class="input-group" data-group="externalApiGroup">
-                            <button class="role-assign-trigger" onclick="roleAssignmentUI.open()" data-i18n="roleAssignButton">&#9881; 使用APIサービス</button>
+                            <button class="role-assign-trigger" onclick="unifiedSettingsWindow.open()" data-i18n="roleAssignButton">&#9881; 使用APIサービス</button>
                             <div id="apiSettingsUrlHelpe">
                             </div>
                         </div>
@@ -1656,11 +1593,6 @@ function getElementClasses(element) {
                     <div id="base-controls-mini" class="controls-mini">
 
 
-                        <div id="comfyUIWorkflowId" class="controls-mini">
-                            <div class="input-group" data-group="comfyUIWorkflowGroup">
-                                <button id="openWorkflowButton" data-i18n="comfyuiWorkflowSettings">ComfyUI Workflows設定</button>
-                            </div>
-                        </div>
 
                         
 
@@ -1844,39 +1776,117 @@ function getElementClasses(element) {
         </div>
     </div>
 
-<!-- ========== Modal: Role Assignment ========== -->
-    <div id="roleAssignModal" class="role-assign-modal" style="display:none;">
-        <div class="role-assign-modal-overlay" onclick="roleAssignmentUI.close()"></div>
-        <div class="role-assign-modal-content">
-            <div class="role-assign-modal-header">
-                <h2 data-i18n="roleAssignTitle">&#9881; Role Assignment</h2>
-                <button class="role-assign-modal-close" onclick="roleAssignmentUI.close()">&times;</button>
-            </div>
-            <div class="role-assign-modal-body">
-                <table class="role-matrix">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>ComfyUI</th>
-                            <th>SD WebUI</th>
-                            <th>RunPod<br>ComfyUI</th>
-                            <th>RunPod<br>Serverless</th>
-                            <th>Fal.ai</th>
-                        </tr>
-                    </thead>
-                    <tbody id="roleMatrixBody"></tbody>
-                </table>
-                <div class="role-assign-note" data-i18n="roleAssignNote">「—」は非対応のプロバイダーです</div>
-            </div>
-            <div class="role-assign-modal-footer">
-                <button class="role-assign-btn-cancel" onclick="roleAssignmentUI.close()" data-i18n="roleAssignCancel">Cancel</button>
-                <button class="role-assign-btn-submit" onclick="roleAssignmentUI.apply()" data-i18n="roleAssignApply">Apply</button>
-            </div>
-        </div>
-    </div>
+<!-- ========== Floating Window: Unified Settings ========== -->
+<div id="unifiedSettingsOverlay" class="us-overlay" onclick="if(event.target===this)unifiedSettingsWindow.close()">
+<div class="us-window">
+<div class="us-header">
+<h2 data-i18n="usWindowTitle">&#9881; 外部サービス設定</h2>
+<button class="us-close" onclick="unifiedSettingsWindow.close()">&times;</button>
+</div>
+<div class="us-tabs">
+<button class="us-tab active" onclick="unifiedSettingsWindow.switchTab(0)" data-i18n="usTabAI">使用サービス</button>
+<button class="us-tab" onclick="unifiedSettingsWindow.switchTab(1)" data-i18n="usTabWorkflow">ComfyUI Workflow</button>
+</div>
+<div class="us-body">
+<div class="us-tab-content active" id="usTabAI">
+<div class="us-split">
+<div class="us-left">
+<div class="us-panel-title" data-i18n="usServiceTitle">使用サービス</div>
+<table class="role-matrix">
+<thead>
+<tr>
+<th></th>
+<th>ComfyUI</th>
+<th>SD WebUI</th>
+<th>RunPod<br>ComfyUI</th>
+<th>RunPod<br>Serverless</th>
+<th>Fal.ai</th>
+</tr>
+</thead>
+<tbody id="roleMatrixBody"></tbody>
+</table>
+<div class="role-assign-note" data-i18n="roleAssignNote">「—」は非対応のプロバイダーです</div>
+</div>
+<div class="us-right">
+<div class="us-panel-title" data-i18n="usConnectionTitle">接続先</div>
+<table class="us-conn-table">
+<thead>
+<tr>
+<th data-i18n="usConnService">サービス</th>
+<th data-i18n="usConnSettings">URL / API Key</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>WebUI<br>(A1111/Forge)</td>
+<td><div class="us-input-row"><span class="us-field-label">URL</span><input type="text" id="sdWebUIPageUrl" value="http://127.0.0.1:7860" placeholder="URL"></div></td>
+<td><div class="us-input-row"><button id="sdWebUIPageUrlDefaultUrl" class="us-btn-s" title="Reset">↺</button><a href="html/API_Help/sd-api-guide.html" target="_blank" class="us-btn-s" title="Help">?</a></div></td>
+</tr>
+<tr>
+<td>ComfyUI</td>
+<td><div class="us-input-row"><span class="us-field-label">URL</span><input type="text" id="comfyUIPageUrl" value="http://127.0.0.1:8188" placeholder="URL"></div></td>
+<td><div class="us-input-row"><button id="comfyUIPageUrlDefaultUrl" class="us-btn-s" title="Reset">↺</button><a href="html/API_Help/comfyui_settings.html" target="_blank" class="us-btn-s" title="Help">?</a></div></td>
+</tr>
+<tr>
+<td>RunPod<br>ComfyUI</td>
+<td>
+<div class="us-input-row"><span class="us-field-label">URL</span><input type="text" id="runpodComfyUIUrl" value="" placeholder="https://{pod-id}-8188.proxy.runpod.net"></div>
+<div class="us-input-row"><span class="us-field-label">API Key</span><input type="password" id="runpodApiKey" value="" placeholder="API Key" autocomplete="off"></div>
+</td>
+<td>
+<div class="us-input-row"><button id="runpodComfyUIUrlClear" class="us-btn-s" title="Clear">↺</button></div>
+<div class="us-input-row"><button id="runpodApiKeyToggle" class="us-btn-s" title="Show/Hide">👁</button></div>
+</td>
+</tr>
+<tr>
+<td>RunPod<br>Endpoint</td>
+<td>
+<div class="us-input-row"><span class="us-field-label">ID</span><input type="text" id="runpodEndpointId" value="" placeholder="Endpoint ID"></div>
+<div class="us-input-row"><span class="us-field-label">API Key</span><input type="password" id="runpodEndpointApiKey" value="" placeholder="API Key" autocomplete="off"></div>
+<input type="hidden" id="runpodEndpointTimeout" value="120">
+</td>
+<td>
+<div class="us-input-row"><button id="runpodEndpointIdClear" class="us-btn-s" title="Clear">↺</button></div>
+<div class="us-input-row"><button id="runpodEndpointApiKeyToggle" class="us-btn-s" title="Show/Hide">👁</button></div>
+</td>
+</tr>
+<tr>
+<td>Fal.ai</td>
+<td>
+<div class="us-input-row"><span class="us-field-label">API Key</span><input type="password" id="falaiApiKey" value="" placeholder="API Key" autocomplete="off"></div>
+<div class="us-input-row"><span class="us-field-label">T2I</span><select id="falaiModelT2I" disabled><option value="">T2I</option></select></div>
+<div class="us-input-row"><span class="us-field-label">I2I</span><select id="falaiModelI2I" disabled><option value="">I2I</option></select></div>
+<div class="us-input-row"><span class="us-field-label">Upscale</span><select id="falaiModelUpscale" disabled><option value="">Upscale</option></select></div>
+<div class="us-input-row"><span class="us-field-label">RemBG</span><select id="falaiModelRembg" disabled><option value="">RemoveBG</option></select></div>
+</td>
+<td>
+<div class="us-input-row"><button id="falaiApiKeyToggle" class="us-btn-s" title="Show/Hide">👁</button></div>
+<div class="us-input-row"><button id="falaiReloadT2I" class="us-btn-s" title="Reload">↻</button></div>
+<div class="us-input-row"><button id="falaiReloadI2I" class="us-btn-s" title="Reload">↻</button></div>
+<div class="us-input-row"><button id="falaiReloadUpscale" class="us-btn-s" title="Reload">↻</button></div>
+<div class="us-input-row"><button id="falaiReloadRembg" class="us-btn-s" title="Reload">↻</button></div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="us-tab-content" id="usTabWorkflow">
+<div id="usWorkflowContainer" style="width:100%;height:100%;"></div>
+</div>
+</div>
+<div class="us-footer">
+<button class="role-assign-btn-cancel" onclick="unifiedSettingsWindow.close()" data-i18n="roleAssignCancel">Cancel</button>
+<button class="role-assign-btn-submit" onclick="unifiedSettingsWindow.apply()" data-i18n="roleAssignApply">Apply</button>
+</div>
+</div>
+</div>
 
 <!-- ========== Additional CSS ========== -->
-    <link rel="stylesheet" href="css/ui/role-assign-modal.css?v=7.3" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="css/ui/role-assign-modal.css?v=7.4" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="css/ui/unified-settings.css?v=7.4" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="css/ui/shortcut-modal.css?v=7.2" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="third/intro/introjs.min.css">
     <link rel="stylesheet" href="css/ui/intro.css?" media="print" onload="this.media='all'">
@@ -1990,7 +2000,8 @@ function getElementClasses(element) {
     <script src="js/ai/comfyui/comfyui-management.js?v=7.2" defer></script>
     <script src="js/ai/ai-settings.js?v=7.2" defer></script>
     <script src="js/ai/ai-management.js?v=7.2" defer></script>
-    <script src="js/ai/role/role-assignment-ui.js?v=7.3" defer></script>
+    <script src="js/ai/role/role-assignment-ui.js?v=7.4" defer></script>
+    <script src="js/ai/ui/unified-settings-window.js?v=7.4" defer></script>
     <script src="js/ai/inpainting/inpaint-mask.js?v=7.3" defer></script>
     <script src="js/ai/inpainting/inpaint-workflow.js?v=7.3" defer></script>
     <script src="js/ai/inpainting/inpaint-editor.js?v=7.3" defer></script>

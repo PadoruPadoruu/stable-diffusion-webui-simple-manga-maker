@@ -10,6 +10,80 @@
 // },
 //マージされるので追加日ごとにyyyyMMddHHmmss_SSSをTopKeyに入れます。個別の翻訳はKey名・翻訳文を任意に付けてください。ただし被らないように。
 const resources = {
+"20260217120000_001":{
+"ja":{
+"usWindowTitle":"&#9881; 外部サービス設定",
+"usTabAI":"使用サービス",
+"usTabWorkflow":"ComfyUI Workflow",
+"usServiceTitle":"使用サービス",
+"usConnectionTitle":"接続先",
+"usConnService":"サービス",
+"usConnSettings":"URL / API Key"
+},
+"en":{
+"usWindowTitle":"&#9881; External Services",
+"usTabAI":"Services",
+"usTabWorkflow":"ComfyUI Workflow",
+"usServiceTitle":"Services",
+"usConnectionTitle":"Connection",
+"usConnService":"Service",
+"usConnSettings":"URL / API Key"
+},
+"ko":{
+"usWindowTitle":"&#9881; 외부 서비스 설정",
+"usTabAI":"사용 서비스",
+"usTabWorkflow":"ComfyUI Workflow",
+"usServiceTitle":"사용 서비스",
+"usConnectionTitle":"접속처",
+"usConnService":"서비스",
+"usConnSettings":"URL / API Key"
+},
+"fr":{
+"usWindowTitle":"&#9881; Services Externes",
+"usTabAI":"Services",
+"usTabWorkflow":"ComfyUI Workflow",
+"usServiceTitle":"Services",
+"usConnectionTitle":"Connexion",
+"usConnService":"Service",
+"usConnSettings":"URL / API Key"
+},
+"zh":{
+"usWindowTitle":"&#9881; 外部服务设置",
+"usTabAI":"使用服务",
+"usTabWorkflow":"ComfyUI Workflow",
+"usServiceTitle":"使用服务",
+"usConnectionTitle":"连接",
+"usConnService":"服务",
+"usConnSettings":"URL / API Key"
+},
+"ru":{
+"usWindowTitle":"&#9881; Внешние сервисы",
+"usTabAI":"Сервисы",
+"usTabWorkflow":"ComfyUI Workflow",
+"usServiceTitle":"Сервисы",
+"usConnectionTitle":"Подключение",
+"usConnService":"Сервис",
+"usConnSettings":"URL / API Key"
+},
+"es":{
+"usWindowTitle":"&#9881; Servicios Externos",
+"usTabAI":"Servicios",
+"usTabWorkflow":"ComfyUI Workflow",
+"usServiceTitle":"Servicios",
+"usConnectionTitle":"Conexión",
+"usConnService":"Servicio",
+"usConnSettings":"URL / API Key"
+},
+"de":{
+"usWindowTitle":"&#9881; Externe Dienste",
+"usTabAI":"Dienste",
+"usTabWorkflow":"ComfyUI Workflow",
+"usServiceTitle":"Dienste",
+"usConnectionTitle":"Verbindung",
+"usConnService":"Dienst",
+"usConnSettings":"URL / API Key"
+}
+},
 "20260216170000_001":{
 "ja":{
 "roleAssignTitle":"&#9881; 使用APIサービス",

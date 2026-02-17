@@ -320,11 +320,8 @@ if(v!==-1)this.value=Math.round(v/8)*8;
 });
 });
 var mode=data.externalAI||apis.COMFYUI;
-if(mode===apis.A1111)changeExternalAPI($('sdWebUIButton'));
-else if(mode===apis.RUNPOD_COMFYUI)changeExternalAPI($('runpodComfyUIButton'));
-else if(mode===apis.RUNPOD_ENDPOINT)changeExternalAPI($('runpodEndpointButton'));
-else if(mode===apis.FAL_AI)changeExternalAPI($('falaiButton'));
-else changeExternalAPI($('comfyUIButton'));
+apiMode=mode;
+providerRegistry.syncFromApiMode(apiMode);
 if(data.roleAssignments){
 providerRegistry.loadRoleAssignments(data.roleAssignments);
 }
