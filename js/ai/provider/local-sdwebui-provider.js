@@ -39,7 +39,7 @@ fetchSdUpscaler();
 fetchSdAdModels();
 fetchSdModules();
 }catch(error){
-this._logger.error('fetchDiffusionInformation:',error);
+this._logger.error('fetchDiffusionInformation:',error.message||error);
 }
 }
 }

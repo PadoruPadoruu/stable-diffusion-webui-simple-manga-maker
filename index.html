@@ -1797,7 +1797,7 @@ function getElementClasses(element) {
 <tr>
 <th></th>
 <th>ComfyUI</th>
-<th>SD WebUI</th>
+<th>SD WebUI<br>(A1111/Forge)</th>
 <th>RunPod<br>ComfyUI</th>
 <th>RunPod<br>Serverless</th>
 <th>Fal.ai</th>
@@ -1810,63 +1810,90 @@ function getElementClasses(element) {
 <div class="us-right">
 <div class="us-panel-title" data-i18n="usConnectionTitle">接続先</div>
 <table class="us-conn-table">
+<colgroup>
+<col style="width:10%">
+<col style="width:12%">
+<col style="width:50%">
+<col style="width:28%">
+</colgroup>
 <thead>
 <tr>
 <th data-i18n="usConnService">サービス</th>
+<th></th>
 <th data-i18n="usConnSettings">URL / API Key</th>
 <th></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>WebUI<br>(A1111/Forge)</td>
-<td><div class="us-input-row"><span class="us-field-label">URL</span><input type="text" id="sdWebUIPageUrl" value="http://127.0.0.1:7860" placeholder="URL"></div></td>
-<td><div class="us-input-row"><button id="sdWebUIPageUrlDefaultUrl" class="us-btn-s" title="Reset">↺</button><a href="html/API_Help/sd-api-guide.html" target="_blank" class="us-btn-s" title="Help">?</a></div></td>
-</tr>
-<tr>
 <td>ComfyUI</td>
-<td><div class="us-input-row"><span class="us-field-label">URL</span><input type="text" id="comfyUIPageUrl" value="http://127.0.0.1:8188" placeholder="URL"></div></td>
-<td><div class="us-input-row"><button id="comfyUIPageUrlDefaultUrl" class="us-btn-s" title="Reset">↺</button><a href="html/API_Help/comfyui_settings.html" target="_blank" class="us-btn-s" title="Help">?</a></div></td>
+<td class="us-field-label">URL</td>
+<td><input type="text" id="comfyUIPageUrl" value="http://127.0.0.1:8188" placeholder="URL"></td>
+<td><button id="comfyUIPageUrlDefaultUrl" class="us-btn-s" data-i18n="usBtnReset">初期値</button><a href="html/API_Help/comfyui_settings.html" target="_blank" class="us-btn-s">?</a></td>
 </tr>
 <tr>
-<td>RunPod<br>ComfyUI</td>
-<td>
-<div class="us-input-row"><span class="us-field-label">URL</span><input type="text" id="runpodComfyUIUrl" value="" placeholder="https://{pod-id}-8188.proxy.runpod.net"></div>
-<div class="us-input-row"><span class="us-field-label">API Key</span><input type="password" id="runpodApiKey" value="" placeholder="API Key" autocomplete="off"></div>
-</td>
-<td>
-<div class="us-input-row"><button id="runpodComfyUIUrlClear" class="us-btn-s" title="Clear">↺</button></div>
-<div class="us-input-row"><button id="runpodApiKeyToggle" class="us-btn-s" title="Show/Hide">👁</button></div>
-</td>
+<td>SD WebUI<br>(A1111/Forge)</td>
+<td class="us-field-label">URL</td>
+<td><input type="text" id="sdWebUIPageUrl" value="http://127.0.0.1:7860" placeholder="URL"></td>
+<td><button id="sdWebUIPageUrlDefaultUrl" class="us-btn-s" data-i18n="usBtnReset">初期値</button><a href="html/API_Help/sd-api-guide.html" target="_blank" class="us-btn-s">?</a></td>
 </tr>
 <tr>
-<td>RunPod<br>Endpoint</td>
-<td>
-<div class="us-input-row"><span class="us-field-label">ID</span><input type="text" id="runpodEndpointId" value="" placeholder="Endpoint ID"></div>
-<div class="us-input-row"><span class="us-field-label">API Key</span><input type="password" id="runpodEndpointApiKey" value="" placeholder="API Key" autocomplete="off"></div>
-<input type="hidden" id="runpodEndpointTimeout" value="120">
-</td>
-<td>
-<div class="us-input-row"><button id="runpodEndpointIdClear" class="us-btn-s" title="Clear">↺</button></div>
-<div class="us-input-row"><button id="runpodEndpointApiKeyToggle" class="us-btn-s" title="Show/Hide">👁</button></div>
-</td>
+<td rowspan="2">RunPod<br>ComfyUI</td>
+<td class="us-field-label">URL</td>
+<td><input type="text" id="runpodComfyUIUrl" value="" placeholder="https://{pod-id}-8188.proxy.runpod.net"></td>
+<td><button id="runpodComfyUIUrlClear" class="us-btn-s" data-i18n="usBtnReset">初期値</button></td>
 </tr>
 <tr>
-<td>Fal.ai</td>
-<td>
-<div class="us-input-row"><span class="us-field-label">API Key</span><input type="password" id="falaiApiKey" value="" placeholder="API Key" autocomplete="off"></div>
-<div class="us-input-row"><span class="us-field-label">T2I</span><select id="falaiModelT2I" disabled><option value="">T2I</option></select></div>
-<div class="us-input-row"><span class="us-field-label">I2I</span><select id="falaiModelI2I" disabled><option value="">I2I</option></select></div>
-<div class="us-input-row"><span class="us-field-label">Upscale</span><select id="falaiModelUpscale" disabled><option value="">Upscale</option></select></div>
-<div class="us-input-row"><span class="us-field-label">RemBG</span><select id="falaiModelRembg" disabled><option value="">RemoveBG</option></select></div>
-</td>
-<td>
-<div class="us-input-row"><button id="falaiApiKeyToggle" class="us-btn-s" title="Show/Hide">👁</button></div>
-<div class="us-input-row"><button id="falaiReloadT2I" class="us-btn-s" title="Reload">↻</button></div>
-<div class="us-input-row"><button id="falaiReloadI2I" class="us-btn-s" title="Reload">↻</button></div>
-<div class="us-input-row"><button id="falaiReloadUpscale" class="us-btn-s" title="Reload">↻</button></div>
-<div class="us-input-row"><button id="falaiReloadRembg" class="us-btn-s" title="Reload">↻</button></div>
-</td>
+<td class="us-field-label">API Key</td>
+<td><input type="password" id="runpodApiKey" value="" placeholder="API Key" autocomplete="off"></td>
+<td><button id="runpodApiKeyToggle" class="us-btn-s" data-i18n="usBtnShow">表示</button></td>
+</tr>
+<tr>
+<td rowspan="3">RunPod<br>Endpoint</td>
+<td class="us-field-label">ID</td>
+<td><input type="text" id="runpodEndpointId" value="" placeholder="Endpoint ID"></td>
+<td><button id="runpodEndpointIdClear" class="us-btn-s" data-i18n="usBtnReset">初期値</button></td>
+</tr>
+<tr>
+<td class="us-field-label">API Key</td>
+<td><input type="password" id="runpodEndpointApiKey" value="" placeholder="API Key" autocomplete="off"><input type="hidden" id="runpodEndpointTimeout" value="120"></td>
+<td><button id="runpodEndpointApiKeyToggle" class="us-btn-s" data-i18n="usBtnShow">表示</button></td>
+</tr>
+<tr>
+<td class="us-field-label" data-i18n="usConcurrency">同時実行数</td>
+<td><input type="number" id="runpodEndpointConcurrency" value="1" min="1" max="10"></td>
+<td></td>
+</tr>
+<tr>
+<td rowspan="6">Fal.ai</td>
+<td class="us-field-label">API Key</td>
+<td><input type="password" id="falaiApiKey" value="" placeholder="API Key" autocomplete="off"></td>
+<td><button id="falaiApiKeyToggle" class="us-btn-s" data-i18n="usBtnShow">表示</button><button id="falaiReloadModels" class="us-btn-s" data-i18n="falaiReloadModels">再取得</button></td>
+</tr>
+<tr>
+<td class="us-field-label" data-i18n="roleText2Image">Text → Image</td>
+<td><select id="falaiModelT2I" disabled><option value="" data-i18n="falaiSelectModel">モデルを選択してください</option></select></td>
+<td><button class="us-link-btn falai-list-btn" data-select="falaiModelT2I" data-i18n="falaiModelList">モデル一覧 ↗</button><button class="us-link-btn falai-model-btn" data-select="falaiModelT2I" style="display:none" data-i18n="falaiSelectedModel">選択モデル ↗</button></td>
+</tr>
+<tr>
+<td class="us-field-label" data-i18n="roleImage2Image">Image → Image</td>
+<td><select id="falaiModelI2I" disabled><option value="" data-i18n="falaiSelectModel">モデルを選択してください</option></select></td>
+<td><button class="us-link-btn falai-list-btn" data-select="falaiModelI2I" data-i18n="falaiModelList">モデル一覧 ↗</button><button class="us-link-btn falai-model-btn" data-select="falaiModelI2I" style="display:none" data-i18n="falaiSelectedModel">選択モデル ↗</button></td>
+</tr>
+<tr>
+<td class="us-field-label" data-i18n="roleUpscaler">高解像度化</td>
+<td><select id="falaiModelUpscale" disabled><option value="" data-i18n="falaiSelectModel">モデルを選択してください</option></select></td>
+<td><button class="us-link-btn falai-list-btn" data-select="falaiModelUpscale" data-i18n="falaiModelList">モデル一覧 ↗</button><button class="us-link-btn falai-model-btn" data-select="falaiModelUpscale" style="display:none" data-i18n="falaiSelectedModel">選択モデル ↗</button></td>
+</tr>
+<tr>
+<td class="us-field-label" data-i18n="roleRemoveBG">背景削除</td>
+<td><select id="falaiModelRembg" disabled><option value="" data-i18n="falaiSelectModel">モデルを選択してください</option></select></td>
+<td><button class="us-link-btn falai-list-btn" data-select="falaiModelRembg" data-i18n="falaiModelList">モデル一覧 ↗</button><button class="us-link-btn falai-model-btn" data-select="falaiModelRembg" style="display:none" data-i18n="falaiSelectedModel">選択モデル ↗</button></td>
+</tr>
+<tr>
+<td class="us-field-label" data-i18n="usConcurrency">同時実行数</td>
+<td><input type="number" id="falaiConcurrency" value="1" min="1" max="10"></td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -1876,10 +1903,6 @@ function getElementClasses(element) {
 <div class="us-tab-content" id="usTabWorkflow">
 <div id="usWorkflowContainer" style="width:100%;height:100%;"></div>
 </div>
-</div>
-<div class="us-footer">
-<button class="role-assign-btn-cancel" onclick="unifiedSettingsWindow.close()" data-i18n="roleAssignCancel">Cancel</button>
-<button class="role-assign-btn-submit" onclick="unifiedSettingsWindow.apply()" data-i18n="roleAssignApply">Apply</button>
 </div>
 </div>
 </div>

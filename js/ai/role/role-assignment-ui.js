@@ -3,7 +3,7 @@ var roleAssignmentUI=(function(){
 var raLogger=new SimpleLogger('roleAssignUI',LogLevel.DEBUG);
 var PROVIDER_COLUMNS=[
 {id:'localComfyUI',label:'ComfyUI'},
-{id:'localSDWebUI',label:'SD WebUI'},
+{id:'localSDWebUI',label:'SD WebUI (A1111/Forge)'},
 {id:'runpodComfyUI',label:'RunPod ComfyUI'},
 {id:'runpodEndpoint',label:'RunPod Serverless'},
 {id:'falai',label:'Fal.ai'}
@@ -65,6 +65,9 @@ radio.checked=(assigned===col.id);
 radio.addEventListener('change',function(){
 if(this.checked){
 tempAssignments[row.role]=col.id;
+providerRegistry.setRoleAssignment(row.role,col.id);
+updateLayerPanel();
+debouncedSettingsSave();
 }
 });
 td.appendChild(radio);

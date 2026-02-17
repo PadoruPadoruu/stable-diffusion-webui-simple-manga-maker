@@ -54,6 +54,11 @@ total: this.getTotalCount()
 };
 }
 
+setConcurrency(n) {
+this.concurrency=n;
+this.processQueue();
+}
+
 clearQueue() {
 const clearedCount=this.queue.length;
 this.queue.forEach(taskItem=>{

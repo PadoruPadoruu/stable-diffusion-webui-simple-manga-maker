@@ -2,8 +2,7 @@
 class FalAIProvider extends AIProvider{
 constructor(){
 super('falai','Fal.ai');
-this._pollingInterval=2000;
-this._timeout=180;
+this._modelCache=null;
 }
 getSupportedRoles(){
 return[
@@ -21,7 +20,7 @@ var el=$('falaiApiKey');
 return el?el.value:'';
 }
 getEndpointUrl(){
-return'https://queue.fal.run';
+return'https://fal.run';
 }
 _getModelId(role){
 var map={
@@ -35,12 +34,25 @@ if(!id)return'';
 var el=$(id);
 return el?el.value:'';
 }
+async fetchModelsIfNeeded(){
+var apiKey=this.getApiKey();
+if(!apiKey){
+this._enableSelects(false);
+return;
+}
+if(this._modelCache){
+this._applyCache();
+return;
+}
+return this.fetchModels();
+}
 async fetchModels(){
 var apiKey=this.getApiKey();
 if(!apiKey){
 this._enableSelects(false);
 return;
 }
+this._showFetchingState();
 var queries={
 falaiModelT2I:'category=text-to-image&status=active&limit=50',
 falaiModelI2I:'category=image-to-image&status=active&limit=50',
@@ -57,14 +69,46 @@ if(!r.ok)throw new Error(r.status+'');
 return r.json();
 });
 }));
+var categoryFilter={
+falaiModelT2I:'text-to-image',
+falaiModelI2I:'image-to-image',
+falaiModelUpscale:'image-to-image',
+falaiModelRembg:'image-to-image'
+};
+var cache={};
+var hasAny=false;
 for(var i=0;i<entries.length;i++){
 var selectId=entries[i][0];
 var result=results[i];
 if(result.status==='fulfilled'&&result.value&&result.value.models){
-this._populateSelect(selectId,result.value.models);
+cache[selectId]={models:result.value.models,filter:categoryFilter[selectId]};
+this._populateSelect(selectId,result.value.models,categoryFilter[selectId]);
+hasAny=true;
 }else{
 this._populateSelect(selectId,[]);
 }
+}
+if(hasAny)this._modelCache=cache;
+}
+clearModelCache(){
+this._modelCache=null;
+}
+_showFetchingState(){
+var ids=['falaiModelT2I','falaiModelI2I','falaiModelUpscale','falaiModelRembg'];
+var msg=i18next.t('falaiFetchingModels');
+for(var i=0;i<ids.length;i++){
+var el=$(ids[i]);
+if(!el)continue;
+el.disabled=true;
+el.innerHTML='<option value="">'+msg+'</option>';
+}
+}
+_applyCache(){
+var keys=Object.keys(this._modelCache);
+for(var i=0;i<keys.length;i++){
+var selectId=keys[i];
+var cached=this._modelCache[selectId];
+this._populateSelect(selectId,cached.models,cached.filter);
 }
 }
 _enableSelects(enabled){
@@ -79,13 +123,22 @@ el.innerHTML='<option value="">'+labels[ids[i]]+'</option>';
 }
 }
 }
-_populateSelect(selectId,models){
+_populateSelect(selectId,models,filterCategory){
 var el=$(selectId);
 if(!el)return;
 var prev=el.value;
+if(!prev){
+var stored=localStorage.getItem('localSettingsData');
+if(stored){
+var data=JSON.parse(stored);
+if(data[selectId])prev=data[selectId];
+}
+}
 el.innerHTML='<option value="">-- select --</option>';
 for(var i=0;i<models.length;i++){
 var m=models[i];
+var cat=m.metadata&&m.metadata.category||'';
+if(filterCategory&&cat!==filterCategory)continue;
 var opt=document.createElement('option');
 opt.value=m.endpoint_id||'';
 opt.textContent=m.metadata&&m.metadata.display_name?m.metadata.display_name:m.endpoint_id;
@@ -95,6 +148,7 @@ if(prev){
 el.value=prev;
 }
 el.disabled=false;
+el.dispatchEvent(new Event('change'));
 }
 _authHeaders(){
 var apiKey=this.getApiKey();
@@ -126,10 +180,10 @@ labelfw.innerHTML=text;
 labelfw.style.color=color;
 }
 }
-async _submitQueue(modelId,inputData){
+async _runSync(modelId,inputData){
 var apiKey=this.getApiKey();
 if(!apiKey)throw new Error('Fal.ai API Key is not set');
-var url='https://queue.fal.run/'+modelId;
+var url='https://fal.run/'+modelId;
 var response=await fetch(url,{
 method:'POST',
 headers:this._authHeaders(),
@@ -137,56 +191,14 @@ body:JSON.stringify(inputData)
 });
 if(!response.ok){
 var errorText=await response.text();
-throw new Error('Fal.ai submit failed: '+response.status+' '+errorText);
-}
-return response.json();
-}
-async _pollStatus(modelId,requestId){
-var url='https://queue.fal.run/'+modelId+'/requests/'+requestId+'/status';
-var timeoutMs=this._timeout*1000;
-var startTime=Date.now();
-while(true){
-if(Date.now()-startTime>timeoutMs){
-throw new Error('Fal.ai job timed out after '+this._timeout+'s');
-}
-await new Promise(r=>setTimeout(r,this._pollingInterval));
-var response=await fetch(url,{
-method:'GET',
-headers:this._authHeaders()
-});
-if(!response.ok){
-throw new Error('Fal.ai status check failed: '+response.status);
-}
-var data=await response.json();
-if(data.status==='COMPLETED'){
-return this._fetchResult(modelId,requestId);
-}else if(data.status==='FAILED'){
-throw new Error('Fal.ai job failed: '+(data.error||'unknown error'));
-}
-}
-}
-async _fetchResult(modelId,requestId){
-var url='https://queue.fal.run/'+modelId+'/requests/'+requestId;
-var response=await fetch(url,{
-method:'GET',
-headers:this._authHeaders()
-});
-if(!response.ok){
-throw new Error('Fal.ai result fetch failed: '+response.status);
-}
-return response.json();
-}
-async _cancelJob(modelId,requestId){
-if(!modelId||!requestId)return;
+var err=new Error('Fal.ai failed: '+response.status+' '+errorText);
 try{
-var url='https://queue.fal.run/'+modelId+'/requests/'+requestId+'/cancel';
-await fetch(url,{
-method:'PUT',
-headers:this._authHeaders()
-});
-}catch(e){
-this._logger.error('Cancel failed:',e);
+var errorJson=JSON.parse(errorText);
+if(errorJson.detail)err.detail=errorJson.detail;
+}catch(e){}
+throw err;
 }
+return response.json();
 }
 async _imageUrlToFabric(imageUrl){
 var response=await fetch(imageUrl);
@@ -270,15 +282,8 @@ var startTime=Date.now();
 var canvasGuid=this._registerTask(layer);
 return falaiQueue.add(async()=>{
 var inputData=buildInput();
-var job=await this._submitQueue(modelId,inputData);
-var requestId=job.request_id;
-try{
-var output=await this._pollStatus(modelId,requestId);
+var output=await this._runSync(modelId,inputData);
 return this._outputToFabricImage(output);
-}catch(error){
-this._cancelJob(modelId,requestId);
-throw error;
-}
 })
 .then(async(result)=>{
 if(result){
@@ -289,8 +294,16 @@ this._placeResult(result,layer,canvasGuid,Type);
 .catch((error)=>{
 removeGenerationTask(canvasGuid);
 DashboardUI.recordFailure(Type);
-createToastError('Fal.ai Error',error.message,8000);
-this._logger.error(Type+' error:',error);
+var msg=error.message||'';
+var detail=typeof error.detail==='string'?error.detail:JSON.stringify(error.detail||'');
+var displayMsg=msg;
+if(detail.indexOf('Exhausted balance')!==-1){
+displayMsg=i18next.t('falaiBalanceExhausted');
+}else if(detail.indexOf('content_policy_violation')!==-1){
+displayMsg=i18next.t('falaiContentPolicy');
+}
+createToastError('Fal.ai',displayMsg,8000);
+this._logger.error(Type+' error:',msg);
 })
 .finally(()=>{
 removeSpinner(spinnerId);

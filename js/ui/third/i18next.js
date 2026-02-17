@@ -10,6 +10,244 @@
 // },
 //マージされるので追加日ごとにyyyyMMddHHmmss_SSSをTopKeyに入れます。個別の翻訳はKey名・翻訳文を任意に付けてください。ただし被らないように。
 const resources = {
+"20260218003000_001":{
+"ja":{
+"falaiReloadModels":"再取得",
+"falaiFetchingModels":"取得中..."
+},
+"en":{
+"falaiReloadModels":"Reload",
+"falaiFetchingModels":"Loading..."
+},
+"ko":{
+"falaiReloadModels":"다시 가져오기",
+"falaiFetchingModels":"가져오는 중..."
+},
+"fr":{
+"falaiReloadModels":"Recharger",
+"falaiFetchingModels":"Chargement..."
+},
+"zh":{
+"falaiReloadModels":"重新获取",
+"falaiFetchingModels":"获取中..."
+},
+"ru":{
+"falaiReloadModels":"Обновить",
+"falaiFetchingModels":"Загрузка..."
+},
+"es":{
+"falaiReloadModels":"Recargar",
+"falaiFetchingModels":"Cargando..."
+},
+"de":{
+"falaiReloadModels":"Neu laden",
+"falaiFetchingModels":"Laden..."
+}
+},
+"20260217210000_001":{
+"ja":{
+"usConcurrency":"同時実行数"
+},
+"en":{
+"usConcurrency":"Concurrency"
+},
+"ko":{
+"usConcurrency":"동시 실행 수"
+},
+"fr":{
+"usConcurrency":"Simultanéité"
+},
+"zh":{
+"usConcurrency":"并发数"
+},
+"ru":{
+"usConcurrency":"Параллельность"
+},
+"es":{
+"usConcurrency":"Concurrencia"
+},
+"de":{
+"usConcurrency":"Parallelität"
+}
+},
+"20260217200000_001":{
+"ja":{
+"usBtnReset":"初期値",
+"usBtnShow":"表示",
+"usBtnFetch":"取得"
+},
+"en":{
+"usBtnReset":"Reset",
+"usBtnShow":"Show",
+"usBtnFetch":"Fetch"
+},
+"ko":{
+"usBtnReset":"초기값",
+"usBtnShow":"표시",
+"usBtnFetch":"가져오기"
+},
+"fr":{
+"usBtnReset":"Réinit.",
+"usBtnShow":"Afficher",
+"usBtnFetch":"Charger"
+},
+"zh":{
+"usBtnReset":"重置",
+"usBtnShow":"显示",
+"usBtnFetch":"获取"
+},
+"ru":{
+"usBtnReset":"Сброс",
+"usBtnShow":"Показать",
+"usBtnFetch":"Загрузить"
+},
+"es":{
+"usBtnReset":"Reiniciar",
+"usBtnShow":"Mostrar",
+"usBtnFetch":"Obtener"
+},
+"de":{
+"usBtnReset":"Zurücks.",
+"usBtnShow":"Anzeigen",
+"usBtnFetch":"Laden"
+}
+},
+"20260217213500_001":{
+"ja":{
+"falaiModelList":"モデル一覧 ↗",
+"falaiSelectedModel":"選択モデル ↗"
+},
+"en":{
+"falaiModelList":"Model List ↗",
+"falaiSelectedModel":"Selected Model ↗"
+},
+"ko":{
+"falaiModelList":"모델 목록 ↗",
+"falaiSelectedModel":"선택 모델 ↗"
+},
+"fr":{
+"falaiModelList":"Liste des modèles ↗",
+"falaiSelectedModel":"Modèle sélectionné ↗"
+},
+"zh":{
+"falaiModelList":"模型列表 ↗",
+"falaiSelectedModel":"已选模型 ↗"
+},
+"ru":{
+"falaiModelList":"Список моделей ↗",
+"falaiSelectedModel":"Выбранная модель ↗"
+},
+"es":{
+"falaiModelList":"Lista de modelos ↗",
+"falaiSelectedModel":"Modelo seleccionado ↗"
+},
+"de":{
+"falaiModelList":"Modellliste ↗",
+"falaiSelectedModel":"Ausgewähltes Modell ↗"
+}
+},
+"20260218001000_001":{
+"ja":{
+"falaiContentPolicy":"プロンプトがコンテンツチェッカーに引っかかりました。プロンプトを修正してください。"
+},
+"en":{
+"falaiContentPolicy":"Prompt was flagged by the content checker. Please modify your prompt."
+},
+"ko":{
+"falaiContentPolicy":"프롬프트가 콘텐츠 검사에 걸렸습니다. 프롬프트를 수정해주세요."
+},
+"fr":{
+"falaiContentPolicy":"Le prompt a été signalé par le vérificateur de contenu. Veuillez modifier votre prompt."
+},
+"zh":{
+"falaiContentPolicy":"提示词被内容检查器标记，请修改提示词。"
+},
+"ru":{
+"falaiContentPolicy":"Промпт был отмечен проверкой контента. Измените промпт."
+},
+"es":{
+"falaiContentPolicy":"El prompt fue marcado por el verificador de contenido. Modifique su prompt."
+},
+"de":{
+"falaiContentPolicy":"Der Prompt wurde vom Inhaltsfilter markiert. Bitte ändern Sie Ihren Prompt."
+}
+},
+"20260217212100_001":{
+"ja":{
+"falaiBalanceExhausted":"Fal.aiの残高がありません。ダッシュボードでチャージしてください。"
+},
+"en":{
+"falaiBalanceExhausted":"Fal.ai balance exhausted. Please top up at the dashboard."
+},
+"ko":{
+"falaiBalanceExhausted":"Fal.ai 잔액이 소진되었습니다. 대시보드에서 충전해주세요."
+},
+"fr":{
+"falaiBalanceExhausted":"Solde Fal.ai épuisé. Veuillez recharger depuis le tableau de bord."
+},
+"zh":{
+"falaiBalanceExhausted":"Fal.ai余额已耗尽，请在控制面板中充值。"
+},
+"ru":{
+"falaiBalanceExhausted":"Баланс Fal.ai исчерпан. Пополните на панели управления."
+},
+"es":{
+"falaiBalanceExhausted":"Saldo de Fal.ai agotado. Recargue en el panel de control."
+},
+"de":{
+"falaiBalanceExhausted":"Fal.ai-Guthaben aufgebraucht. Bitte im Dashboard aufladen."
+}
+},
+"20260217190000_001":{
+"ja":{
+"generate":"AI生成",
+"rembg":"背景削除",
+"upscale":"高解像度化",
+"falaiSelectModel":"モデルを選択してください"
+},
+"en":{
+"generate":"AI Generate",
+"rembg":"Remove BG",
+"upscale":"Upscale",
+"falaiSelectModel":"Please select a model"
+},
+"ko":{
+"generate":"AI 생성",
+"rembg":"배경 제거",
+"upscale":"고해상도화",
+"falaiSelectModel":"모델을 선택해주세요"
+},
+"fr":{
+"generate":"Génération IA",
+"rembg":"Suppr. fond",
+"upscale":"Agrandir",
+"falaiSelectModel":"Sélectionnez un modèle"
+},
+"zh":{
+"generate":"AI生成",
+"rembg":"删除背景",
+"upscale":"高分辨率化",
+"falaiSelectModel":"请选择模型"
+},
+"ru":{
+"generate":"AI генерация",
+"rembg":"Удалить фон",
+"upscale":"Увеличить",
+"falaiSelectModel":"Выберите модель"
+},
+"es":{
+"generate":"Generación IA",
+"rembg":"Eliminar fondo",
+"upscale":"Ampliar",
+"falaiSelectModel":"Seleccione un modelo"
+},
+"de":{
+"generate":"KI-Generierung",
+"rembg":"Hintergrund entf.",
+"upscale":"Hochskalieren",
+"falaiSelectModel":"Bitte Modell wählen"
+}
+},
 "20260217120000_001":{
 "ja":{
 "usWindowTitle":"&#9881; 外部サービス設定",

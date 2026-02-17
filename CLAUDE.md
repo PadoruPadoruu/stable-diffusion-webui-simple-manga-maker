@@ -13,6 +13,9 @@
 - 99_doc
 - font
 ・翻訳はi18next.jsに入れる。JsonのKeyはyyyyMMddHHmmss_SSSにする。
+・UIは固定値を使うな
+
+
 
 ## コーディング規約の注意事項
 - APIレスポンスのプロパティ名（例: `response.prompt_id`）はAPI仕様に従う必要があり、camelCaseに変更してはいけない
@@ -102,7 +105,7 @@ saveStateByManual();
 ## 翻訳の追加方法
 - 翻訳は `js/ui/third/i18next.js` の `const resources` に追加する
 - 新しい日付キー（YYYYMMDD形式）でエントリを追加し、既存エントリの上に配置する
-- 全10言語（ja, en, ko, fr, zh, ru, es, pt, th, de）に対応すること
+- 全8言語（ja, en, ko, fr, zh, ru, es, de）に対応すること
 - 表示領域に留意するためなるべく短文が望ましい
 - Key:Valueは改行で区切る（1行に1つのKey:Value）
 ```javascript

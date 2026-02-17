@@ -7,6 +7,33 @@ const falaiQueue=new TaskQueue(1);
 var firstSDConnection=true;
 var firstComfyConnection=true;
 
+document.addEventListener('DOMContentLoaded',function(){
+var rpConc=$('runpodEndpointConcurrency');
+if(rpConc&&parseInt(rpConc.value)>1){
+runpodEndpointQueue.setConcurrency(parseInt(rpConc.value));
+}
+var falConc=$('falaiConcurrency');
+if(falConc&&parseInt(falConc.value)>1){
+falaiQueue.setConcurrency(parseInt(falConc.value));
+}
+});
+
+$('runpodEndpointConcurrency').addEventListener('change',function(){
+var val=parseInt(this.value)||1;
+if(val<1)val=1;
+if(val>10)val=10;
+this.value=val;
+runpodEndpointQueue.setConcurrency(val);
+});
+
+$('falaiConcurrency').addEventListener('change',function(){
+var val=parseInt(this.value)||1;
+if(val<1)val=1;
+if(val>10)val=10;
+this.value=val;
+falaiQueue.setConcurrency(val);
+});
+
 $('sdWebUIPageUrlDefaultUrl').addEventListener('click',(event)=>{
 event.stopPropagation();
 const defaultUrl='http://127.0.0.1:7860';

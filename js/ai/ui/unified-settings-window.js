@@ -8,13 +8,16 @@ if(!overlayEl)overlayEl=$('unifiedSettingsOverlay');
 overlayEl.classList.add('active');
 roleAssignmentUI.buildMatrix();
 switchTab(0);
+var falaiProvider=providerRegistry.get('falai');
+if(falaiProvider&&falaiProvider.getApiKey()){
+falaiProvider.fetchModelsIfNeeded();
+}
 }
 function close(){
 if(!overlayEl)return;
 overlayEl.classList.remove('active');
 }
 function apply(){
-roleAssignmentUI.applyAssignments();
 close();
 }
 function switchTab(idx){

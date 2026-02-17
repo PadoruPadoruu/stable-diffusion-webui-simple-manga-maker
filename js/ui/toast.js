@@ -52,9 +52,9 @@ const lineHeight=24;
 if (typeof messages==='string') {
 const messageLine=document.createElement('div');
 messageLine.className='sp-manga-line';
-messageLine.textContent=messages;
+messageLine.innerHTML=messages;
 messageContainer.appendChild(messageLine);
-toast.style.height=`${80 + lineHeight}px`;
+toast.style.height='auto';
 startProgressBar(toast,progressBarClass,time);
 } else if (Array.isArray(messages)) {
 let messageIndex=0;
@@ -79,9 +79,9 @@ showNextMessage();
 } else {
 const messageLine=document.createElement('div');
 messageLine.className='sp-manga-line';
-messageLine.textContent=messages;
+messageLine.innerHTML=messages;
 messageContainer.appendChild(messageLine);
-toast.style.height=`${80 + lineHeight}px`;
+toast.style.height='auto';
 startProgressBar(toast,progressBarClass,time);
 }
 

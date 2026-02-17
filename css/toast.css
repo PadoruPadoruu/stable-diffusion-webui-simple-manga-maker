@@ -1,8 +1,8 @@
 .toast-achievement {
   position: relative;
-  pointer-events: none;
+  pointer-events: auto;
   min-width: 180px;
-  max-width: 450px;
+  max-width: 600px;
   animation: sp-manga-slide-in 0.5s ease-out;
   transition: height 0.3s ease-in-out;
   word-wrap: break-word;
@@ -82,6 +82,7 @@
       rgba(255, 0, 0, 0.05) 10px,
       rgba(255, 0, 0, 0.05) 20px
   );
+  pointer-events: none;
  }
  
  .toast-dbd::after {
@@ -103,10 +104,15 @@
   letter-spacing: 2px;
   border-bottom: 1px solid rgba(255, 102, 102, 0.3);
   padding-bottom: 4px;
+  position: relative;
+  z-index: 1;
 }
  
  .toast-dbd .toast-message {
   font-size: 13px;
+  word-break: break-all;
+  position: relative;
+  z-index: 1;
  }
  
  .toast-progress-bar {

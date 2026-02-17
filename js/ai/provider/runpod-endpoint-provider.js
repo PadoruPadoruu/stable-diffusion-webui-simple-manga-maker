@@ -48,7 +48,7 @@ headers:this._authHeaders()
 this._updateHeartbeatLabel(response.ok);
 return response.ok;
 }catch(error){
-this._logger.error('Heartbeat error:',error);
+this._logger.error('Heartbeat error:',error.message||error);
 this._updateHeartbeatLabel(false);
 return false;
 }
@@ -211,8 +211,8 @@ replaceImageObject(layer,result,'T2I');
 .catch((error)=>{
 removeGenerationTask(canvasGuid);
 DashboardUI.recordFailure('T2I');
-createToastError('RunPod Error',error.message,8000);
-this._logger.error('T2I error:',error);
+createToastError('RunPod Error',error.message,15000);
+this._logger.error('T2I error:',error.message||error);
 })
 .finally(()=>{
 removeSpinner(spinnerId);
