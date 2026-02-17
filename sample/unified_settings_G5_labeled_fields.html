@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>G5: フィールドラベル付き</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#1a1a1a;color:#dedede;font-family:'Segoe UI',sans-serif;font-size:12px;display:flex;align-items:center;justify-content:center;height:100vh;}
+.trigger-btn{font-size:11px;padding:4px 10px;color:#ff7c7c;border:1px solid rgba(160,48,48,0.4);background:rgba(129,0,0,0.2);border-radius:4px;cursor:pointer;position:fixed;top:20px;left:20px;z-index:10;}
+.trigger-btn:hover{background:rgba(129,0,0,0.4);color:#fff;}
+.overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:100;display:none;align-items:center;justify-content:center;}
+.overlay.active{display:flex;}
+.fw{background:#212121;border:1px solid rgba(255,255,255,0.1);border-radius:8px;width:97vw;height:97vh;display:flex;flex-direction:column;box-shadow:0 8px 32px rgba(0,0,0,0.6);overflow:hidden;}
+.fw-header{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-bottom:1px solid #505050;flex-shrink:0;}
+.fw-header h2{font-size:14px;font-weight:bold;color:#dedede;margin:0;}
+.fw-close{background:none;border:none;font-size:18px;color:#888;cursor:pointer;padding:2px 6px;border-radius:4px;}
+.fw-close:hover{color:#ff7c7c;}
+.fw-top-tabs{display:flex;border-bottom:1px solid #505050;background:rgba(255,255,255,0.02);flex-shrink:0;}
+.fw-top-tab{padding:8px 20px;font-size:11px;color:#888;cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;transition:all 0.15s;}
+.fw-top-tab:hover{color:#dedede;background:rgba(255,255,255,0.04);}
+.fw-top-tab.active{color:#ff7c7c;border-bottom-color:#810000;background:rgba(129,0,0,0.1);}
+.fw-body{flex:1;overflow:hidden;}
+.tab-content{display:none;height:100%;}
+.tab-content.active{display:flex;}
+.ai-split{display:flex;flex:1;overflow:hidden;height:100%;}
+.ai-left{flex:2;min-width:0;border-right:1px solid #3a3a3a;overflow-y:auto;padding:16px;}
+.ai-right{flex:3;min-width:0;overflow-y:auto;padding:16px;}
+.panel-title{font-size:11px;font-weight:bold;color:#ff7c7c;padding:0 0 8px;}
+
+table{width:100%;border-collapse:collapse;}
+th{font-size:10px;color:#fff;font-weight:600;padding:7px 6px;text-align:center;background:rgba(255,255,255,0.04);border:1px solid #3a3a3a;}
+td{padding:7px 6px;border:1px solid #2e2e2e;font-size:11px;}
+
+.role-table th:first-child{text-align:left;color:#ff7c7c;}
+.role-table td:first-child{text-align:left;font-weight:bold;color:#dedede;background:rgba(255,255,255,0.02);white-space:nowrap;}
+.role-table td{text-align:center;}
+.role-table tr:hover td{background:rgba(255,255,255,0.04);}
+.radio-c{appearance:none;width:16px;height:16px;border:2px solid rgba(255,255,255,0.25);border-radius:50%;background:transparent;cursor:pointer;position:relative;}
+.radio-c:checked{border-color:#c0c0c0;}
+.radio-c:checked::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:8px;border-radius:50%;background:#c0c0c0;}
+.unavailable{color:rgba(255,255,255,0.15);font-size:14px;}
+
+.conn-table td:first-child{font-weight:bold;color:#dedede;white-space:nowrap;}
+.conn-table td{vertical-align:middle;}
+.conn-table .row-on td:first-child{border-left:3px solid #5cb85c;}
+.conn-table .row-off td:first-child{border-left:3px solid #ff6b6b;}
+.conn-table .row-none td:first-child{border-left:3px solid #444;}
+
+.status-text{font-size:10px;white-space:nowrap;text-align:center;}
+.status-text.on{color:#5cb85c;}
+.status-text.off{color:#ff6b6b;}
+.status-text.none{color:#666;}
+
+.input-row{display:flex;align-items:center;gap:4px;padding:1px 0;}
+.field-label{font-size:9px;color:#888;width:50px;flex-shrink:0;text-align:right;}
+.input-row input[type="text"],.input-row input[type="password"],.input-row select{flex:1;font-size:11px;padding:4px 8px;border:1px solid #505050;border-radius:4px;background:#333;color:#dedede;min-width:80px;}
+.btn-s{font-size:11px;padding:3px 8px;border:1px solid #505050;border-radius:4px;background:#505050;color:#dedede;cursor:pointer;min-width:24px;}
+.btn-s:hover{background:#666;color:#fff;}
+.note{margin-top:8px;font-size:10px;color:#888;}
+.workflow-placeholder{padding:30px 20px;text-align:center;color:#888;border:1px dashed #505050;border-radius:8px;margin:16px;}
+.fw-footer{padding:10px 16px;border-top:1px solid #505050;display:flex;justify-content:flex-end;gap:8px;flex-shrink:0;}
+.btn-cancel{padding:6px 16px;border-radius:4px;font-size:12px;cursor:pointer;background:rgba(255,255,255,0.08);color:#dedede;border:1px solid rgba(255,255,255,0.1);}
+.btn-apply{padding:6px 16px;border-radius:4px;font-size:12px;cursor:pointer;background:#810000;color:#fff;border:1px solid rgba(160,48,48,0.6);}
+.btn-apply:hover{background:#a00;}
+.desc{position:fixed;bottom:20px;left:20px;right:20px;background:#333;padding:16px;border-radius:8px;font-size:12px;color:#aaa;line-height:1.6;border:1px solid #505050;}
+.desc h3{color:#ff7c7c;font-size:13px;margin-bottom:8px;}
+</style>
+</head>
+<body>
+<button class="trigger-btn" onclick="document.querySelector('.overlay').classList.add('active')">⚙ 使用APIサービス</button>
+<div class="overlay" onclick="if(event.target===this)this.classList.remove('active')">
+<div class="fw">
+<div class="fw-header"><h2>⚙ 外部サービス設定</h2><button class="fw-close" onclick="document.querySelector('.overlay').classList.remove('active')">&times;</button></div>
+<div class="fw-top-tabs">
+<button class="fw-top-tab active" onclick="switchTop(this,0)">🎯 生成AI</button>
+<button class="fw-top-tab" onclick="switchTop(this,1)">📋 ComfyUI Workflow</button>
+</div>
+<div class="fw-body">
+<div class="tab-content active" id="tabAI">
+<div class="ai-split">
+<div class="ai-left">
+<div class="panel-title">使用サービス</div>
+<table class="role-table"><thead><tr><th>Role</th><th>ComfyUI</th><th>SD WebUI</th><th>RunPod<br>ComfyUI</th><th>RunPod<br>Serverless</th><th>Fal.ai</th></tr></thead><tbody>
+<tr><td>Text → Image</td><td><input type="radio" name="t2i" class="radio-c" checked></td><td><input type="radio" name="t2i" class="radio-c"></td><td><input type="radio" name="t2i" class="radio-c"></td><td><input type="radio" name="t2i" class="radio-c"></td><td><input type="radio" name="t2i" class="radio-c"></td></tr>
+<tr><td>Image → Image</td><td><input type="radio" name="i2i" class="radio-c" checked></td><td><input type="radio" name="i2i" class="radio-c"></td><td><input type="radio" name="i2i" class="radio-c"></td><td><input type="radio" name="i2i" class="radio-c"></td><td><input type="radio" name="i2i" class="radio-c"></td></tr>
+<tr><td>Inpaint</td><td><input type="radio" name="inp" class="radio-c" checked></td><td><input type="radio" name="inp" class="radio-c"></td><td><input type="radio" name="inp" class="radio-c"></td><td><input type="radio" name="inp" class="radio-c"></td><td class="unavailable">—</td></tr>
+<tr><td>Upscale</td><td><input type="radio" name="ups" class="radio-c" checked></td><td><input type="radio" name="ups" class="radio-c"></td><td><input type="radio" name="ups" class="radio-c"></td><td><input type="radio" name="ups" class="radio-c"></td><td><input type="radio" name="ups" class="radio-c"></td></tr>
+<tr><td>RemoveBG</td><td><input type="radio" name="rbg" class="radio-c" checked></td><td class="unavailable">—</td><td><input type="radio" name="rbg" class="radio-c"></td><td class="unavailable">—</td><td><input type="radio" name="rbg" class="radio-c"></td></tr>
+<tr><td>Angle</td><td><input type="radio" name="ang" class="radio-c" checked></td><td><input type="radio" name="ang" class="radio-c"></td><td><input type="radio" name="ang" class="radio-c"></td><td><input type="radio" name="ang" class="radio-c"></td><td><input type="radio" name="ang" class="radio-c"></td></tr>
+</tbody></table>
+<div class="note">「—」は非対応</div>
+</div>
+<div class="ai-right">
+<div class="panel-title">接続先</div>
+<table class="conn-table"><thead><tr><th>サービス</th><th>ステータス</th><th>接続先URL / API Key</th><th></th></tr></thead><tbody>
+<tr class="row-on"><td>WebUI<br>(A1111/Forge)</td><td><span class="status-text on">接続済</span></td><td><div class="input-row"><span class="field-label">URL</span><input type="text" value="http://127.0.0.1:7860"></div></td><td><div class="input-row"><button class="btn-s">↺</button><button class="btn-s">?</button></div></td></tr>
+<tr class="row-off"><td>ComfyUI</td><td><span class="status-text off">未接続</span></td><td><div class="input-row"><span class="field-label">URL</span><input type="text" value="http://127.0.0.1:8188"></div></td><td><div class="input-row"><button class="btn-s">↺</button><button class="btn-s">?</button></div></td></tr>
+<tr class="row-none"><td>RunPod<br>ComfyUI</td><td><span class="status-text none">未設定</span></td><td><div class="input-row"><span class="field-label">URL</span><input type="text" placeholder="https://{pod-id}-8188.proxy.runpod.net"></div><div class="input-row"><span class="field-label">API Key</span><input type="password" placeholder="API Key"></div></td><td><div class="input-row"><button class="btn-s">↺</button></div><div class="input-row"><button class="btn-s">👁</button></div></td></tr>
+<tr class="row-none"><td>RunPod<br>Endpoint</td><td><span class="status-text none">未設定</span></td><td><div class="input-row"><span class="field-label">ID</span><input type="text" placeholder="Endpoint ID"></div><div class="input-row"><span class="field-label">API Key</span><input type="password" placeholder="API Key"></div></td><td><div class="input-row"><button class="btn-s">↺</button></div><div class="input-row"><button class="btn-s">👁</button></div></td></tr>
+<tr class="row-none"><td>Fal.ai</td><td><span class="status-text none">未設定</span></td><td><div class="input-row"><span class="field-label">API Key</span><input type="password" placeholder="API Key"></div><div class="input-row"><span class="field-label">T2I</span><select disabled><option>T2I Model</option></select></div><div class="input-row"><span class="field-label">I2I</span><select disabled><option>I2I Model</option></select></div><div class="input-row"><span class="field-label">Upscale</span><select disabled><option>Upscale Model</option></select></div><div class="input-row"><span class="field-label">RemBG</span><select disabled><option>RemoveBG Model</option></select></div></td><td><div class="input-row"><button class="btn-s">👁</button></div><div class="input-row"><button class="btn-s">↻</button></div><div class="input-row"><button class="btn-s">↻</button></div><div class="input-row"><button class="btn-s">↻</button></div><div class="input-row"><button class="btn-s">↻</button></div></td></tr>
+</tbody></table>
+</div>
+</div>
+</div>
+<div class="tab-content" id="tabWF"><div class="workflow-placeholder"><div style="font-size:24px;margin-bottom:12px;">📋</div>ComfyUI Workflow設定がここに表示されます</div></div>
+</div>
+<div class="fw-footer"><button class="btn-cancel" onclick="document.querySelector('.overlay').classList.remove('active')">Cancel</button><button class="btn-apply">Apply</button></div>
+</div>
+</div>
+<div class="desc">
+<h3>G5: フィールドラベル付き</h3>
+<b>変更点:</b> 各入力欄の左に「URL」「API Key」「T2I」等のラベルを追加<br>
+<b>狙い:</b> placeholder頼りだと値が入ると何の欄か分からなくなる。常時表示ラベルで各フィールドの用途が明確
+</div>
+<script>
+function switchTop(el,idx){
+document.querySelectorAll('.fw-top-tab').forEach(function(t){t.classList.remove('active');});
+el.classList.add('active');
+document.querySelectorAll('.tab-content').forEach(function(c){c.classList.remove('active');});
+document.querySelectorAll('.tab-content')[idx].classList.add('active');
+}
+</script>
+</body>
+</html>
