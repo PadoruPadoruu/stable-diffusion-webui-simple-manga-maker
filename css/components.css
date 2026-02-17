@@ -6,9 +6,6 @@
  gap: 5px;
  margin: 0px;
  padding: 0px;
-}
-
-#text-area2-settings {
  max-height: 60%;
  overflow-y: auto;
 }
@@ -20,9 +17,6 @@
  gap: 0px;
  margin: 0px;
  padding: 0px;
-}
-
-#tool-settings {
  max-height: 40%;
  overflow-y: auto;
 }
@@ -186,7 +180,6 @@ font-size:12px;
  cursor: pointer;
 }
 
-button.selected,
 button.selected {
  background: var(--btn-active-bg);
  border-color: var(--btn-active-border-color);
