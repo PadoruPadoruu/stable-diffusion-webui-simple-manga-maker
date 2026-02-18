@@ -9,3 +9,6 @@
 1. `tabs_context_mcp`で`createIfEmpty:true`を指定してタブグループ作成
 2. ユーザーに手動で`file:///C:/01_work/00_Git/manga-editor-desu/index.html`を開いてもらう
 3. `tabs_context_mcp`でタブIDを取得してから操作開始
+
+## 接続できない場合
+`tabs_context_mcp`に接続できない場合はユーザーに`/claude`コマンドの実行を求める。
