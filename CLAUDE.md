@@ -6,6 +6,7 @@
 - `llm_doc/history-and-data.md` - Undo/Redo周りや画像保存の修正時。履歴スタック操作、data:URL制約
 - `llm_doc/translation.md` - UI文言を追加するとき。i18nextのキー書式と8言語の記載例
 - `llm_doc/chrome.md` - Chrome拡張連携の修正時。通信制約と接続手順
+- `llm_doc/review-checklist.md` - コード修正後の見落とし防止。頻出問題と確認回数
 
 ## 基本ルール
 - サブエージェントはOpus/Sonnet使用（Haiku禁止）
@@ -15,6 +16,7 @@
 - 文言は既存と表記統一（同義で別表記にしない）
 - UIはフレキシブル対応を行い固定幅は使わない
 - 機能修正時は関連する`llm_doc/`も更新する
+- ユーザーから修正ポイントの確認を求められた場合、見落としの可能性が高い。指摘内容を`llm_doc/review-checklist.md`に反映し回数をインクリメントする
 
 ## 除外フォルダ
 検索・読み込み対象外:
