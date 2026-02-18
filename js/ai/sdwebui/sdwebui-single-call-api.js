@@ -2,7 +2,7 @@
 async function processQueue(layer,spinnerId,fetchFunction,imageName) {
 sdwebuiLogger.debug(`Processing queue for ${imageName}`);
 try {
-const {img,responseData}=await sdQueue.add(()=>sdwebuiGenerateImage(layer,fetchFunction));
+const {img,responseData}=await sdQueue.add(()=>{setCurrentAiTask(spinnerId);return sdwebuiGenerateImage(layer,fetchFunction);});
 if (img) {
 await handleSuccessfulGeneration(img,responseData,layer,imageName);
 } else {
@@ -82,7 +82,7 @@ img ? resolve({img,responseData}) : reject(new Error('Failed to create a fabric.
 async function sdwebuiRembgProcessQueue(layer,spinnerId) {
 sdwebuiLogger.debug("Processing queue for rembg");
 try {
-const responseData=await sdQueue.add(()=>sdwebuiRemoveBackground(layer));
+const responseData=await sdQueue.add(()=>{setCurrentAiTask(spinnerId);return sdwebuiRemoveBackground(layer);});
 if (responseData&&typeof responseData==='string') {
 await handleSuccessfulRembg(responseData,layer);
 } else {

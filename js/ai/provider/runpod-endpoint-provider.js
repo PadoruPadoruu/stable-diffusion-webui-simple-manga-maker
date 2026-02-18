@@ -162,6 +162,7 @@ centerY:center.centerY,
 targetLayerGuid:targetLayerGuid
 });
 return runpodEndpointQueue.add(async()=>{
+setCurrentAiTask(spinnerId);
 var jobResult=await this._submitJob(inputData);
 var jobId=jobResult.id;
 try{

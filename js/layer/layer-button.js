@@ -52,7 +52,7 @@ button.innerHTML='<i class="material-icons">wallpaper</i>';
 
 button.onclick=function (e) {
 e.stopPropagation();
-var spinner=createSpinner(index);
+var spinner=createSpinner(getGUID(layer),'BG');
 aiRembg(layer,spinner);
 };
 
@@ -68,7 +68,7 @@ button.innerHTML='<i class="material-icons">pets</i>';
 
 button.onclick=function (e) {
 e.stopPropagation();
-var spinner=createSpinner(index);
+var spinner=createSpinner(getGUID(layer),'BG');
 sdWebUI_RembgProcessQueue(layer,spinner.id);
 };
 
@@ -100,7 +100,7 @@ var deepDooruButton=document.createElement("button");
 deepDooruButton.innerHTML="📦";
 deepDooruButton.onclick=function (e) {
 e.stopPropagation();
-var spinner=createSpinnerSuccess(index);
+var spinner=createSpinnerSuccess(getGUID(layer),'TAG');
 sdwebuiInterrogate(layer,"deepdanbooru",spinner.id);
 };
 addTooltipByElement(deepDooruButton,"deepDooruButton");
@@ -116,7 +116,7 @@ clipButton.innerHTML="📎";
 
 clipButton.onclick=function (e) {
 e.stopPropagation();
-var spinner=createSpinnerSuccess(index);
+var spinner=createSpinnerSuccess(getGUID(layer),'TAG');
 sdwebuiInterrogate(layer,"clip",spinner.id);
 };
 addTooltipByElement(clipButton,"clipButton");
@@ -158,7 +158,7 @@ var button=document.createElement("button");
 button.innerHTML='<i class="material-icons">photo_size_select_large</i>';
 button.onclick=function (e) {
 e.stopPropagation();
-var spinner=createSpinner(index);
+var spinner=createSpinner(getGUID(layer),'UP');
 aiUpscale(layer,spinner);
 };
 
@@ -201,7 +201,7 @@ runButton.id="runButton-"+index;
 runButton.innerHTML='<i class="material-icons">directions_run</i>';
 runButton.onclick=function (e) {
 e.stopPropagation();
-var spinner=createSpinner(index);
+var spinner=createSpinner(getGUID(layer),'I2I');
 I2I(layer,spinner);
 };
 
@@ -251,7 +251,7 @@ runButton.id="runButton-"+index;
 runButton.innerHTML='<i class="material-icons">directions_run</i>';
 runButton.onclick=function (e) {
 e.stopPropagation();
-var spinner=createSpinner(index);
+var spinner=createSpinner(getGUID(layer),'T2I');
 T2I(layer,spinner);
 };
 addTooltipByElement(runButton,"runButton");
@@ -260,13 +260,11 @@ buttonsDiv.appendChild(runButton);
 
 
 
-var indexAllRunDummy=10000;
 function AllRun(){
 var objescts=getPanelObjectList();
 objescts.forEach(layer=>{
-var spinner=createSpinner(indexAllRunDummy);
+var spinner=createSpinner(getGUID(layer),'T2I');
 T2I(layer,spinner);
-indexAllRunDummy++;
 });
 }
 

@@ -104,7 +104,7 @@ var denoise=parseFloat(document.getElementById('inpaint-denoise').value);
 var imageDataUrl=originalImageDataUrl;
 var layer=targetLayer;
 close();
-var spinner=createSpinner(canvasMenuIndex);
+var spinner=createSpinner(getGUID(layer),'IP');
 var spinnerId=spinner.id;
 var startTime=Date.now();
 InpaintWorkflow.generate(imageDataUrl,maskDataUrl,prompt,negative,denoise)

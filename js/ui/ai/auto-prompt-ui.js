@@ -1,5 +1,3 @@
-let promptIndex=100000;
-
 function showT2IPrompts(layer) {
 // console.log("showT2IPrompts layer.text2img_prompt:", layer.text2img_prompt);
 
@@ -66,7 +64,7 @@ $("promptRun").addEventListener("click",function () {
 if (!layer) {
 return;
 }
-var spinner=createSpinner(promptIndex);
+var spinner=createSpinner(getGUID(layer),'T2I');
 T2I(layer,spinner);
 });
 
@@ -163,7 +161,7 @@ $("promptRun").addEventListener("click",function () {
 if (layer) {
 return;
 }
-var spinner=createSpinner(promptIndex);
+var spinner=createSpinner(getGUID(activeObject),'T2I');
 T2I(activeObject,spinner);
 });
 

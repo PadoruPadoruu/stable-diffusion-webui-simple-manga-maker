@@ -179,6 +179,7 @@ return false;
 
 async function sdwebuiInterrogate(layer,model,spinnerId) {
 sdQueue.add(async ()=>{
+setCurrentAiTask(spinnerId);
 let base64Image=imageObject2Base64Image(layer);
 const requestBody={
 image: base64Image,

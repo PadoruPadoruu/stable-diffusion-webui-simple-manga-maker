@@ -281,6 +281,7 @@ async _execute(layer,spinnerId,Type,modelId,buildInput){
 var startTime=Date.now();
 var canvasGuid=this._registerTask(layer);
 return falaiQueue.add(async()=>{
+setCurrentAiTask(spinnerId);
 var inputData=buildInput();
 var output=await this._runSync(modelId,inputData);
 return this._outputToFabricImage(output);
