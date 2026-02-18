@@ -1,4 +1,9 @@
-詳細は `llm_doc/` 配下を参照。
+## llm_doc/ 詳細ドキュメント
+- `llm_doc/coding-rules.md` - コーディング規約詳細、ログ、フォーマット
+- `llm_doc/layer-structure.md` - レイヤー構造、リンク機構
+- `llm_doc/history-and-data.md` - 履歴管理、画像データ保存
+- `llm_doc/translation.md` - 翻訳の書式例
+- `llm_doc/chrome.md` - Chrome連携手順
 
 ## 基本ルール
 - サブエージェントはOpus使用（Sonnet/Haiku禁止）
