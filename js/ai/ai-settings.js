@@ -86,7 +86,7 @@ event.stopPropagation();
 var selectId=btn.getAttribute('data-select');
 var el=$(selectId);
 if(el&&el.value){
-window.open('https://fal.ai/models/'+el.value,'_blank');
+window.open('https://fal.ai/models/'+el.value.split('/').map(encodeURIComponent).join('/'),'_blank');
 }
 });
 });
