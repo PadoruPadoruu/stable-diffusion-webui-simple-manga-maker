@@ -45,3 +45,68 @@ saveStateByManual();
 - `blob:` URLはセッション限りのため保存禁止
 - 保存時`convertImageMapBlobUrls()`で`blob:`→`data:`に変換済み
 - オブジェクト（2D配列等）は`JSON.stringify()`で文字列化して保存
+
+## パラメータ保存
+
+### ストレージ使い分け
+| バックエンド | 用途 |
+|-------------|------|
+| `localStorage` | アプリ設定、basePrompt、サイドバーツール値（軽量・同期アクセス） |
+| `localforage`(IndexedDB) | auto-save、フォント、ワークフロー、統計（大容量・非同期） |
+
+### アプリ設定（project-management.js）
+`localStorage`キー`localSettingsData`に全設定を一括JSON保存。
+
+- `SETTINGS_SCHEMA` … UI要素IDとデフォルト値の定義（API URL、キャンバス、パネル色、吹き出し、テキスト等）
+- `BASEPROMPT_SCHEMA` … AI生成パラメータ（prompt, negative, seed, cfg, width, height, sampler, steps, model, hr_*）
+- `roleAssignments` … プロバイダのロール割り当て
+
+```javascript
+saveSettingsLocalStrage(silent)  // 全UIから値を収集→localStorage保存
+loadSettingsLocalStrage()        // localStorage→UI要素に復元
+```
+
+### 設定の自動保存
+`initSettingsAutoSave()`でUI要素のinput/changeイベントを監視。500msデバウンスで自動保存（`settingsAutoSaveCheckbox`がON時のみ）。
+
+### サイドバーツール値（sidebar-ui.js）
+localStorageキー別にMap保存。500msデバウンス。
+- `sidebarValues` … 汎用ツール設定
+- `penValues` … ブラシ設定
+- `effectValues` … エフェクト設定
+
+### AI生成パラメータの階層
+1. **basePrompt**（グローバル）… `core/settings.js`にデフォルト定義。UI変更で即時反映（`base-event-listener.js`）
+2. **per-layer**（オブジェクト属性）… `t2iInit`/`i2iInit`のデフォルト。`-2`=base使用、`-1`=base使用
+3. **保存時** … `canvas.toJSON(commonProperties)`でオブジェクト属性としてシリアライズ
+
+### commonProperties（settings.js）
+`canvas.toJSON()`で保存されるカスタムプロパティ一覧:
+- レイヤー制御: `excludeFromLayerPanel`, `isPanel`, `isIcon`, `customType`, `selectable`
+- AI生成: `text2img_prompt`, `text2img_negative`, `text2img_seed`, `text2img_width`, `text2img_height`, `text2img_samplingMethod`, `text2img_samplingSteps`
+- GUID連携: `guids`, `guid`, `canvasGuid`
+- 吹き出し: `isSpeechBubble`, `speechBubbleGrid`, `speechBubbleScale`等
+- 位置復元: `initial`, `clipPath.initial`, `baseScaleX`, `baseScaleY`, `lastLeft`, `lastTop`
+
+### プロジェクトファイル（project-compression.js）
+LZ4圧縮で以下を保存:
+- `text2img_basePrompt.json` … basePromptのスナップショット
+- `state_XXXXXX.json` … キャンバス状態（`customToJSON()`出力）
+- `canvas_info.json` … キャンバスサイズ
+- `HASH.img` … 画像データ（ハッシュで重複排除）
+- `preview-image.jpeg` … プレビュー
+
+### auto-save（auto-save.js）
+`AutoSaveManager`がlocalforage(`autoSaveStorage`)に定期保存。
+- デフォルト60秒間隔（10-600秒で設定可能）
+- ページごとに圧縮blobとメタデータを保存
+- 起動時に`checkRecovery()`で復旧ダイアログ表示
+
+### その他のlocalforageストア
+| インスタンス名 | 用途 |
+|---------------|------|
+| `fm-fontStorage` | ユーザーフォント（buffer, URL） |
+| `workflowStorage` | ComfyUIカスタムワークフロー |
+| `objectInfoStorage` | ComfyUIノード定義キャッシュ |
+| `MangaEditor_Performance` | 生成時間統計 |
+| `MangaEditor_PromptFrequency` | タグ頻度分析 |
