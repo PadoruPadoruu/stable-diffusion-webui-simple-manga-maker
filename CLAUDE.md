@@ -1,11 +1,11 @@
-- `llm_doc/project-structure.md` - ディレクトリ構成、グローバル変数、モジュール間通信
-- `llm_doc/ui-patterns.md` - UIユーティリティ、イベント委譲、モーダル、CSS変数、i18n
-- `llm_doc/ai-system.md` - AIプロバイダ、TaskQueue、ロール割り当て
-- `llm_doc/layer-structure.md` - レイヤー構造、リンク機構、AIタスク進捗管理
-- `llm_doc/coding-rules.md` - コーディング規約、ログ、フォーマット
-- `llm_doc/history-and-data.md` - 履歴管理、画像データ保存
-- `llm_doc/translation.md` - 翻訳の書式例
-- `llm_doc/chrome.md` - Chrome連携手順
+- `llm_doc/project-structure.md` - ファイルの場所が分からないとき。ディレクトリ構成、グローバル変数、script読み込み順
+- `llm_doc/ui-patterns.md` - UI部品の追加・修正時。EventDelegator、Toast、モーダル、CSS変数、i18n、永続化の使い方
+- `llm_doc/ai-system.md` - AI画像生成の修正時。プロバイダ構成、TaskQueue、ロール割り当て、ComfyUIワークフロー
+- `llm_doc/layer-structure.md` - レイヤーやキャンバスオブジェクトの操作時。GUID連携、リンク機構、AIタスク進捗管理
+- `llm_doc/coding-rules.md` - コードを書く前に確認。命名規則、ログ出力、npm run format の挙動
+- `llm_doc/history-and-data.md` - Undo/Redo周りや画像保存の修正時。履歴スタック操作、data:URL制約
+- `llm_doc/translation.md` - UI文言を追加するとき。i18nextのキー書式と8言語の記載例
+- `llm_doc/chrome.md` - Chrome拡張連携の修正時。通信制約と接続手順
 
 ## 基本ルール
 - サブエージェントはOpus/Sonnet使用（Haiku禁止）
