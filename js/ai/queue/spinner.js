@@ -1,156 +1,49 @@
-// AI進捗表示（スピナー、キュー待ち数、サンプリングステップ、キャンセルボタン）
+// AI進捗表示（レイヤー上インジケータ、キャンセル）
 var spinnerLogger=new SimpleLogger('spinner',LogLevel.DEBUG);
 
 var aiProgressState={
-spinners:{},
-stepValue:0,
-stepMax:0,
-currentPromptId:null
+currentPromptId:null,
+currentTaskId:null
 };
 
-function removeSpinner(spinnerId){
-var target=aiProgressState.spinners[spinnerId];
-if(target&&target.container){
-target.container.remove();
-delete aiProgressState.spinners[spinnerId];
-}else{
-var el=$(spinnerId);
-if(el){
-var parent=el.closest('.ai-progress-item');
-if(parent){
-parent.remove();
-}else{
-el.remove();
-}
-delete aiProgressState.spinners[spinnerId];
-}
-}
-resetAiStepProgress();
-updateAiProgressDisplay();
+function createSpinner(layerGuid,taskType){
+return registerAiTask(layerGuid,taskType);
 }
 
-function createSpinner(index){
-var container=createSpinnerContainer(index,'text-danger');
-return container.spinnerEl;
+function createSpinnerSuccess(layerGuid,taskType){
+return registerAiTask(layerGuid,taskType);
 }
 
-function createSpinnerSuccess(index){
-var container=createSpinnerContainer(index,'text-success');
-return container.spinnerEl;
-}
-
-function createSpinnerContainer(index,colorClass){
-var container=document.createElement('span');
-container.className='ai-progress-item';
-container.style.display='inline-flex';
-container.style.alignItems='center';
-container.style.marginLeft='2px';
-
-var spinner=document.createElement('span');
-spinner.id='spinner-'+index;
-spinner.className='spinner-border '+colorClass+' ms-1 spinner-border-sm';
-
-var cancelBtn=document.createElement('span');
-cancelBtn.className='ai-cancel-btn';
-cancelBtn.textContent='\u2715';
-cancelBtn.style.cursor='pointer';
-cancelBtn.style.marginLeft='1px';
-cancelBtn.style.fontSize='9px';
-cancelBtn.style.color='#ff6b6b';
-cancelBtn.style.fontWeight='bold';
-cancelBtn.title=getText('aiCancelTask');
-cancelBtn.onclick=function(e){
-e.stopPropagation();
-cancelAiTask(spinner.id);
-};
-
-container.appendChild(spinner);
-container.appendChild(cancelBtn);
-
-var areaHeader=document.querySelector("#layer-panel .area-header");
-areaHeader.appendChild(container);
-
-aiProgressState.spinners[spinner.id]={
-container:container,
-spinnerEl:spinner,
-cancelBtn:cancelBtn
-};
-
-updateAiProgressDisplay();
-return{container:container,spinnerEl:spinner};
-}
-
-function updateAiProgressDisplay(){
-var progressEl=document.getElementById('ai-progress-info');
-var spinnerCount=Object.keys(aiProgressState.spinners).length;
-if(spinnerCount===0){
-if(progressEl){
-progressEl.remove();
-}
-aiProgressState.stepValue=0;
-aiProgressState.stepMax=0;
+function removeSpinner(taskId){
+removeAiTask(taskId);
+if(aiProgressState.currentTaskId===taskId){
 aiProgressState.currentPromptId=null;
-return;
-}
-
-if(!progressEl){
-progressEl=document.createElement('span');
-progressEl.id='ai-progress-info';
-progressEl.style.fontSize='10px';
-progressEl.style.marginLeft='4px';
-progressEl.style.color='var(--text-color-B)';
-var areaHeader=document.querySelector("#layer-panel .area-header");
-var firstSpinnerContainer=areaHeader.querySelector('.ai-progress-item');
-if(firstSpinnerContainer){
-areaHeader.insertBefore(progressEl,firstSpinnerContainer);
-}else{
-areaHeader.appendChild(progressEl);
+aiProgressState.currentTaskId=null;
 }
 }
 
-var waitingCount=0;
-if(typeof comfyuiQueue!=='undefined'){
-waitingCount+=comfyuiQueue.getWaitingCount();
-}
-if(typeof sdQueue!=='undefined'){
-waitingCount+=sdQueue.getWaitingCount();
-}
-if(typeof runpodEndpointQueue!=='undefined'){
-waitingCount+=runpodEndpointQueue.getWaitingCount();
-}
-if(typeof falaiQueue!=='undefined'){
-waitingCount+=falaiQueue.getWaitingCount();
-}
-
-var text='';
-if(waitingCount>0){
-text+='\u00d7'+waitingCount;
-}
-if(aiProgressState.stepMax>0){
-if(text.length>0){
-text+=' : ';
-}
-text+=aiProgressState.stepValue+'/'+aiProgressState.stepMax;
-}
-progressEl.textContent=text;
+function setCurrentAiTask(taskId){
+aiProgressState.currentTaskId=taskId;
+updateAiTaskStatus(taskId,'running');
 }
 
 function updateAiStepProgress(value,max,promptId){
-aiProgressState.stepValue=value;
-aiProgressState.stepMax=max;
 aiProgressState.currentPromptId=promptId;
-updateAiProgressDisplay();
+if(aiProgressState.currentTaskId){
+updateAiTaskProgress(aiProgressState.currentTaskId,value,max);
+}
 }
 
 function resetAiStepProgress(){
-aiProgressState.stepValue=0;
-aiProgressState.stepMax=0;
+if(aiProgressState.currentTaskId){
+updateAiTaskProgress(aiProgressState.currentTaskId,0,0);
+}
 aiProgressState.currentPromptId=null;
-updateAiProgressDisplay();
+aiProgressState.currentTaskId=null;
 }
 
-function cancelAiTask(spinnerId){
-spinnerLogger.debug("cancelAiTask: "+spinnerId);
+function cancelAiTask(taskId){
+spinnerLogger.debug("cancelAiTask:"+taskId);
 if(typeof comfyuiQueue!=='undefined'&&aiProgressState.currentPromptId){
 comfyuiCancelPrompt(aiProgressState.currentPromptId);
 }
@@ -166,14 +59,54 @@ runpodEndpointQueue.clearQueue();
 if(typeof falaiQueue!=='undefined'){
 falaiQueue.clearQueue();
 }
-var keys=Object.keys(aiProgressState.spinners);
-for(var i=0;i<keys.length;i++){
-var entry=aiProgressState.spinners[keys[i]];
-if(entry&&entry.container){
-entry.container.remove();
+clearAllAiTasks();
+aiProgressState.currentPromptId=null;
+aiProgressState.currentTaskId=null;
 }
+
+function updateAiProgressDisplay(){
 }
-aiProgressState.spinners={};
-resetAiStepProgress();
-updateAiProgressDisplay();
+
+function renderAiTaskIndicators(detailsDiv,layerGuid){
+var currentCanvasGuid=getCanvasGUID();
+var tasks=getAiTasksForLayer(layerGuid,currentCanvasGuid);
+if(tasks.length===0)return;
+var container=document.createElement('div');
+container.className='ai-task-indicators';
+for(var i=0;i<tasks.length;i++){
+var task=tasks[i];
+var indicator=document.createElement('div');
+indicator.className='ai-task-indicator';
+indicator.setAttribute('data-ai-task-id',task.taskId);
+if(task.status==='running'){
+indicator.classList.add('ai-task-running');
+}else{
+indicator.classList.add('ai-task-waiting');
+}
+var dot=document.createElement('span');
+dot.className='ai-task-dot';
+dot.textContent=task.status==='running'?'\u25CF':'\u25CB';
+indicator.appendChild(dot);
+var text=document.createElement('span');
+text.className='ai-task-text';
+var label=task.order+'.'+task.taskType;
+if(task.status==='running'&&task.stepMax>0){
+label+='('+task.stepValue+'/'+task.stepMax+')';
+}
+text.textContent=label;
+indicator.appendChild(text);
+var cancelBtn=document.createElement('span');
+cancelBtn.className='ai-task-cancel';
+cancelBtn.textContent='\u2715';
+cancelBtn.title=getText('aiCancelTask');
+cancelBtn.setAttribute('data-task-id',task.taskId);
+cancelBtn.onclick=function(e){
+e.stopPropagation();
+var tid=this.getAttribute('data-task-id');
+cancelAiTask(tid);
+};
+indicator.appendChild(cancelBtn);
+container.appendChild(indicator);
+}
+detailsDiv.appendChild(container);
 }

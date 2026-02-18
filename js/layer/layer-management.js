@@ -163,6 +163,10 @@ detailsDiv.style.alignItems="center";
 
 detailsDiv.appendChild(nameTextArea);
 
+if(layer.guid){
+renderAiTaskIndicators(detailsDiv,layer.guid);
+}
+
 putViewButton(buttonsDiv,layer,index);
 putMoveLockButton(buttonsDiv,layer,index);
 putDeleteButton(buttonsDiv,layer,index);
@@ -185,7 +189,7 @@ var actionBar=document.createElement("div");
 actionBar.className="layer-action-bar";
 if(isPanel(layer)){
 putActionButton(actionBar,"directions_run","actAiGenerate",function(){
-var spinner=createSpinner(index);T2I(layer,spinner);
+var spinner=createSpinner(getGUID(layer),'T2I');T2I(layer,spinner);
 },AI_ROLES.Image2Image);
 putActionButton(actionBar,"recycling","actSeedApply",function(){
 if(layer.tempSeed){layer.text2img_seed=layer.tempSeed;createToast("Recycling Seed",layer.text2img_seed);}else{createToastError("Nothing Seed","");}
@@ -197,22 +201,22 @@ imageObject2DataURLByCrop(layer).then(function(croppedDataURL){if(croppedDataURL
 }
 if(isImage(layer)){
 putActionButton(actionBar,"directions_run","actAiGenerate",function(){
-var spinner=createSpinner(index);I2I(layer,spinner);
+var spinner=createSpinner(getGUID(layer),'I2I');I2I(layer,spinner);
 },AI_ROLES.Text2Image);
 putActionButton(actionBar,"photo_size_select_large","actUpscale",function(){
-var spinner=createSpinner(index);aiUpscale(layer,spinner);
+var spinner=createSpinner(getGUID(layer),'UP');aiUpscale(layer,spinner);
 },AI_ROLES.Upscaler);
 putActionButton(actionBar,"wallpaper","actRemoveBg",function(){
-var spinner=createSpinner(index);aiRembg(layer,spinner);
+var spinner=createSpinner(getGUID(layer),'BG');aiRembg(layer,spinner);
 },AI_ROLES.RemoveBG);
 putActionButton(actionBar,"3d_rotation","actAngleGen",function(){
 openAngleEditor(layer);
 },AI_ROLES.I2I_Angle);
 putActionButton(actionBar,"inventory","actDeepDanbooru",function(){
-var spinner=createSpinnerSuccess(index);sdwebuiInterrogate(layer,"deepdanbooru",spinner.id);
+var spinner=createSpinnerSuccess(getGUID(layer),'TAG');sdwebuiInterrogate(layer,"deepdanbooru",spinner.id);
 },AI_ROLES.Image2Prompt_DEEPDOORU);
 putActionButton(actionBar,"link","actClip",function(){
-var spinner=createSpinnerSuccess(index);sdwebuiInterrogate(layer,"clip",spinner.id);
+var spinner=createSpinnerSuccess(getGUID(layer),'TAG');sdwebuiInterrogate(layer,"clip",spinner.id);
 },AI_ROLES.Image2Prompt_CLIP);
 putActionBarSeparator(actionBar);
 putActionButton(actionBar,"text_snippet","actPromptApply",function(){

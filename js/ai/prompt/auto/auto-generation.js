@@ -32,7 +32,7 @@ const promises=[];
 let panelList=getPanelObjectList();
 
 panelList.forEach((panel,panelIndex)=>{
-var spinner=createSpinner(canvasMenuIndex);
+var spinner=createSpinner(getGUID(panel),'T2I');
 promises.push(T2I(panel,spinner));
 });
 

@@ -2,7 +2,6 @@
 const languageSelector=$('fabricjs-language-selector');
 let lastClickType=null;
 let objectMenu=null;
-let canvasMenuIndex=100000;
 
 var menuIconMap={
 "visibleOn":"visibility",
@@ -526,11 +525,11 @@ moveLockChange(activeObject);
 break;
 
 case 'rembg':
-var spinner=createSpinner(canvasMenuIndex);
+var spinner=createSpinner(getGUID(activeObject),'BG');
 aiRembg(activeObject,spinner);
 break;
 case 'upscale':
-var spinner=createSpinner(canvasMenuIndex);
+var spinner=createSpinner(getGUID(activeObject),'UP');
 aiUpscale(activeObject,spinner);
 break;
 case 'inpaint':
@@ -541,10 +540,10 @@ openAngleEditor(activeObject);
 break;
 case 'generate':
 if(isPanel(activeObject)){
-var spinner=createSpinner(canvasMenuIndex);
+var spinner=createSpinner(getGUID(activeObject),'T2I');
 T2I(activeObject,spinner);
 }else if(isImage(activeObject)){
-var spinner=createSpinner(canvasMenuIndex);
+var spinner=createSpinner(getGUID(activeObject),'I2I');
 I2I(activeObject,spinner);
 }
 break;

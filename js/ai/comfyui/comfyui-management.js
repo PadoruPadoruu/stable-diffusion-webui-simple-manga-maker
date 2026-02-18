@@ -262,6 +262,7 @@ targetLayerGuid:targetLayerGuid
 });
 
 return comfyuiQueue.add(async ()=>{
+setCurrentAiTask(spinnerId);
 const result=await comfyui_put_queue_v2(workflow);
 if (!result||result.error) return result;
 return new Promise((resolve,reject)=>{
