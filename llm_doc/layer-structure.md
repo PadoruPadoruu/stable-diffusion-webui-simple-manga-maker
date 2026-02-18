@@ -43,3 +43,27 @@
 ## 画像置き換え時の注意
 - `layer.relatedPoly`で親Polygonを取得してから新画像を配置
 - 元画像は`saveHistory=false`を設定してから削除（履歴に残さない）
+
+## AIタスク進捗管理
+`generation-task-manager.js`の`aiTaskMap`でAIタスク状態をグローバル管理する。
+`updateLayerPanel()`がDOM全再構築するため、状態をグローバルに保持し毎回再描画する。
+
+### aiTaskMapのデータ構造
+```javascript
+{taskId, canvasGuid, layerGuid, taskType, status, order, stepValue, stepMax}
+```
+- `taskType`: T2I, I2I, UP, BG, IP, ANG, TAG
+- `status`: waiting → running
+
+### ライフサイクル
+1. `registerAiTask(layerGuid, taskType)` → タスク登録（status:waiting）
+2. `setCurrentAiTask(taskId)` → 実行開始（status:running）、各プロバイダのqueue.add()内で呼ぶ
+3. `updateAiTaskProgress(taskId, value, max)` → ステップ進捗更新
+4. `removeAiTask(taskId)` → 完了/キャンセル時に削除、`.finally()`で呼ぶ
+
+### レイヤーパネル描画
+`executeUpdate()`内で`renderAiTaskIndicators(detailsDiv, layerGuid)`を呼び出し。
+進捗更新は`refreshAiTaskIndicator(taskId)`でDOM直接更新（全再構築を避ける）。
+
+### ページ切り替え対応
+`aiTaskMap`に`canvasGuid`を保持。`getAiTasksForLayer()`で現在のキャンバスのタスクのみ取得。
