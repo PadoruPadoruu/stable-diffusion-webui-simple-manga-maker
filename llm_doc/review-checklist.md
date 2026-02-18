@@ -24,7 +24,5 @@
 | 13 | format | npm run formatで崩れるスペースを入れていないか | 0 |
 | 14 | GUID | 新規オブジェクトにguidを付与しているか | 0 |
 | 15 | イベント | EventDelegatorのパターンに従っているか（直接addEventListenerしていないか） | 0 |
-| 16 | 性能 | Fabric.jsイベント(object:modified等)ハンドラ内で重い処理を同期実行していないか | 1 |
-| 17 | 性能 | canvas.renderAll()が不要な箇所やループ内で繰り返し呼ばれていないか | 1 |
-| 18 | 履歴 | ループやcanvas.add/remove連続呼び出しでsaveStateByManual()が都度発火しないか。複数操作はchangeDoNotSaveHistory()で囲み最後に1回だけ保存 | 1 |
-| 19 | 性能 | forループ等でオブジェクトのプロパティを連続変更する際、毎回canvas.renderAll()を呼ばず最後に1回だけ呼んでいるか | 1 |
+| 16 | 履歴 | ループやcanvas.add/remove連続呼び出しでsaveStateByManual()が都度発火しないか。都度発火すると操作1回分に対して大量の履歴スナップショットが生成され、Undo/Redoが壊れメモリを圧迫する。複数操作はchangeDoNotSaveHistory()で囲み最後に1回だけ保存 | 1 |
+| 17 | 性能 | forループ等でオブジェクトのプロパティを連続変更する際、毎回canvas.renderAll()を呼んでいないか。都度呼ぶとオブジェクト数×ループ回数分の再描画が走りUIがフリーズする。ループ外で最後に1回だけ呼ぶ | 1 |
