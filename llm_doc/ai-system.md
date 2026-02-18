@@ -8,7 +8,6 @@ ai-management.js（ルーター）
 │   ├─ local-sdwebui-provider.js
 │   ├─ local-comfyui-provider.js
 │   ├─ runpod-comfyui-provider.js
-│   ├─ runpod-endpoint-provider.js
 │   ├─ falai-provider.js
 │   └─ provider-registry.js（プロバイダ登録・ロール割り当て）
 ├─ queue/
@@ -19,6 +18,10 @@ ai-management.js（ルーター）
 ├─ inpainting/（マスクエディタ、ワークフロー）
 ├─ angle/（カメラアングルエディタ、Three.js使用）
 ├─ role/（ロール割り当てUI）
+├─ ui/
+│   ├─ unified-settings-window.js（APIサービス設定）
+│   ├─ model-settings-window.js（モデル・ワークフロー設定フローティングウインドウ）
+│   └─ ai-ui-util.js
 └─ prompt/auto/（自動プロンプト生成）
 ```
 
@@ -43,7 +46,6 @@ Promise-based並行実行。プロバイダ別にキューが分かれる。
 |--------|------|--------|
 | `sdQueue` | SD WebUI | 1 |
 | `comfyuiQueue` | ComfyUI | 1 |
-| `runpodEndpointQueue` | RunPod Endpoint | 1-10 |
 | `falaiQueue` | Fal AI | 1-10 |
 
 ## ロール割り当て（provider-registry.js）
@@ -54,7 +56,19 @@ Promise-based並行実行。プロバイダ別にキューが分かれる。
 → `layer-structure.md`のAIタスク進捗管理セクション参照
 
 ## ComfyUI v2ワークフロー
-- `comfyui-workflow-repository.js` でワークフロー保存/読み込み
-- `comfyui-workflow-editor.js` でビジュアルエディタ
-- `comfyui-object-info-repository.js` でノード情報キャッシュ
+- `comfyui-workflow-repository.js` でワークフロー保存/読み込み（ファクトリパターン）
+  - `createWorkflowRepository(providerKey)` でプロバイダー別インスタンス生成
+  - `comfyUIWorkflowRepo_local` / `comfyUIWorkflowRepo_runpod`
+  - `comfyUIWorkflowRepository` は `comfyUIWorkflowRepo_local` のエイリアス
+- `comfyui-object-info-repository.js` でノード情報キャッシュ（同様のファクトリパターン）
+  - `objectInfoRepo_local` / `objectInfoRepo_runpod`
+- `comfyui-workflow-editor.js` でビジュアルエディタ（オプションで providerKey, workflowRepo, objectInfoRepo, provider, containerEl を受け取る）
 - デフォルトワークフロー: t2i, inpaint, angle, upscale, rembg
+
+## モデル設定フローティングウインドウ（model-settings-window.js）
+3タブ構成：
+1. **ComfyUI Workflow** — Local ComfyUIのワークフロー管理（ObjectInfo: comfyUIPageUrl）
+2. **RunPod ComfyUI Workflow** — RunPod ComfyUIの独立ワークフロー管理（ObjectInfo: runpodComfyUIUrl）
+3. **SD WebUI** — モデル・サンプラー等のSD WebUI固有コントロール
+
+各タブは遅延初期化。ComfyUIタブはそれぞれ独立した `ComfyUIWorkflowEditor` + `ComfyUIWorkflowWindow` インスタンスを持つ。

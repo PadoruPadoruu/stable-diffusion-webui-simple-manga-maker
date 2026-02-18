@@ -5,7 +5,6 @@ var PROVIDER_COLUMNS=[
 {id:'localComfyUI',label:'ComfyUI'},
 {id:'localSDWebUI',label:'SD WebUI (A1111/Forge)'},
 {id:'runpodComfyUI',label:'RunPod ComfyUI'},
-{id:'runpodEndpoint',label:'RunPod Serverless'},
 {id:'falai',label:'Fal.ai'}
 ];
 var ROLE_ROWS=[
@@ -66,6 +65,7 @@ radio.addEventListener('change',function(){
 if(this.checked){
 tempAssignments[row.role]=col.id;
 providerRegistry.setRoleAssignment(row.role,col.id);
+updateWorkflowType();
 updateLayerPanel();
 debouncedSettingsSave();
 }

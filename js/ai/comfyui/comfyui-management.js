@@ -197,18 +197,22 @@ if(extraData){
 Object.assign(requestData,extraData);
 }
 
+var repo=(_comfyUIExecProvider&&_comfyUIExecProvider.id==='runpodComfyUI')
+? comfyUIWorkflowRepo_runpod
+: comfyUIWorkflowRepo_local;
+
 if (Type=='T2I') {
-selectedWorkflow=await comfyUIWorkflowRepository.getEnabledWorkflowByType("T2I");
+selectedWorkflow=await repo.getEnabledWorkflowByType("T2I");
 } else if(Type=='I2I') {
-selectedWorkflow=await comfyUIWorkflowRepository.getEnabledWorkflowByType("I2I");
+selectedWorkflow=await repo.getEnabledWorkflowByType("I2I");
 } else if(Type=='Rembg') {
-selectedWorkflow=await comfyUIWorkflowRepository.getEnabledWorkflowByType("REMBG");
+selectedWorkflow=await repo.getEnabledWorkflowByType("REMBG");
 } else if(Type=='Upscaler') {
-selectedWorkflow=await comfyUIWorkflowRepository.getEnabledWorkflowByType("Upscaler");
+selectedWorkflow=await repo.getEnabledWorkflowByType("Upscaler");
 } else if(Type=='Inpaint') {
-selectedWorkflow=await comfyUIWorkflowRepository.getEnabledWorkflowByType("Inpaint");
+selectedWorkflow=await repo.getEnabledWorkflowByType("Inpaint");
 } else if(Type=='I2I_Angle') {
-selectedWorkflow=await comfyUIWorkflowRepository.getEnabledWorkflowByType("I2I_Angle");
+selectedWorkflow=await repo.getEnabledWorkflowByType("I2I_Angle");
 } else{
 removeSpinner(spinnerId);
 return;
@@ -261,7 +265,7 @@ centerY:center.centerY,
 targetLayerGuid:targetLayerGuid
 });
 
-return comfyuiQueue.add(async ()=>{
+var p=comfyuiQueue.add(async ()=>{
 setCurrentAiTask(spinnerId);
 const result=await comfyui_put_queue_v2(workflow);
 if (!result||result.error) return result;
@@ -271,7 +275,9 @@ if (img) resolve(img);
 else reject(new Error("Failed to create fabric.Image"));
 });
 });
-})
+});
+updateAiTaskCancelInfo(spinnerId,{queueName:'comfyui',queueItemId:p._queueItemId});
+return p
 .then(async (result)=>{
 if (result&&result.error) {
 createToastError("Generation Error",result.message);
@@ -305,6 +311,10 @@ throw new Error("Unexpected error: No result returned from comfyui_put_queue_v2"
 })
 .catch((error)=>{
 removeGenerationTask(canvasGuid);
+if(error.message==='Queue cancelled'||error.message==='Task cancelled'){
+comfyuiLogger.debug("Generation cancelled by user");
+return;
+}
 DashboardUI.recordFailure(Type);
 let help=getText("comfyUI_workflowErrorHelp");
 createToastError("Generation Error",[error.message,help],8000);

@@ -1,8 +1,11 @@
 class ComfyUIWorkflowWindow {
-constructor() {
+constructor(options) {
+options=options||{};
 this.element=null;
 this.x=0;
 this.y=0;
+this.editorRef=options.editorRef||null;
+this.provider=options.provider||null;
 }
 
 buildContentHTML(){
@@ -60,24 +63,33 @@ document.body.appendChild(overlay);
 }
 
 setupTestGenerateListener(){
+var self=this;
 var comfyUIFwGenerateButton=this.element.querySelector("#comfyUIFwGenerateButton");
 var testGenerateText=getText("comfyUI_testGenerate");
 comfyUIFwGenerateButton.addEventListener("click",async function(){
-var tabId=comfyUIWorkflowEditor.activeTabId;
+var editor=self.editorRef||comfyUIWorkflowEditor;
+if(!editor)return;
+var tabId=editor.activeTabId;
 if(!tabId)return;
-var tab=comfyUIWorkflowEditor.tabs.get(tabId);
+var tab=editor.tabs.get(tabId);
 if(!tab)return;
 comfyUIFwGenerateButton.disabled=true;
 comfyUIFwGenerateButton.innerHTML='<span class="spinner-border spinner-border-sm text-light"></span>';
 try{
-var result=await comfyui_put_queue_v2(tab.workflow);
+async function doGenerate(){return await comfyui_put_queue_v2(tab.workflow);}
+var result;
+if(self.provider){
+result=await comfyUIExecWithProvider(self.provider,doGenerate);
+}else{
+result=await doGenerate();
+}
 if(result&&result.error){
 if(typeof ComfyUIGuide!=='undefined'){
 ComfyUIGuide.showGenerationErrorGuide(result.message);
 }
 }else if(result){
-var generatedImage=document.querySelector("#generatedImage");
-var placeholder=document.querySelector("#generatedImagePlaceholder");
+var generatedImage=self.element.querySelector("#generatedImage");
+var placeholder=self.element.querySelector("#generatedImagePlaceholder");
 if(generatedImage){
 generatedImage.src=result;
 generatedImage.style.display="block";

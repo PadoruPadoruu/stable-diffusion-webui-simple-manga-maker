@@ -3,16 +3,32 @@ constructor(concurrency) {
 this.concurrency=concurrency;
 this.queue=[];
 this.activeCount=0;
+this._nextItemId=0;
 }
 
 add(task) {
-return new Promise((resolve,reject)=>{
+var itemId=++this._nextItemId;
+var p=new Promise((resolve,reject)=>{
 this.queue.push({
+id:itemId,
 execute:()=>task().then(resolve).catch(reject),
 reject:reject
 });
 this.processQueue();
 });
+p._queueItemId=itemId;
+return p;
+}
+
+removeItem(itemId) {
+var idx=this.queue.findIndex(function(item){return item.id===itemId;});
+if(idx===-1) return false;
+var item=this.queue.splice(idx,1)[0];
+try{
+item.reject(new Error('Task cancelled'));
+}catch(e){}
+logger.debug("Queue item removed: "+itemId);
+return true;
 }
 
 async processQueue() {

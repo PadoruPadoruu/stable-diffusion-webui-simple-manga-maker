@@ -42,26 +42,40 @@ aiProgressState.currentPromptId=null;
 aiProgressState.currentTaskId=null;
 }
 
+function _getQueueByName(name){
+if(name==='comfyui'&&typeof comfyuiQueue!=='undefined')return comfyuiQueue;
+if(name==='sd'&&typeof sdQueue!=='undefined')return sdQueue;
+if(name==='falai'&&typeof falaiQueue!=='undefined')return falaiQueue;
+return null;
+}
+
 function cancelAiTask(taskId){
 spinnerLogger.debug("cancelAiTask:"+taskId);
-if(typeof comfyuiQueue!=='undefined'&&aiProgressState.currentPromptId){
-comfyuiCancelPrompt(aiProgressState.currentPromptId);
+var task=getAiTask(taskId);
+if(!task){
+spinnerLogger.debug("cancelAiTask: task not found, removing spinner only");
+removeAiTask(taskId);
+return;
 }
-if(typeof comfyuiQueue!=='undefined'){
-comfyuiQueue.clearQueue();
+
+var queue=task.queueName?_getQueueByName(task.queueName):null;
+
+if(task.status==='waiting'&&queue&&task.queueItemId){
+queue.removeItem(task.queueItemId);
+}else if(task.status==='running'){
+if(task.queueName==='comfyui'||task.queueName===undefined){
+var pid=task.promptId||aiProgressState.currentPromptId;
+if(pid&&typeof comfyuiCancelPrompt==='function'){
+comfyuiCancelPrompt(pid);
 }
-if(typeof sdQueue!=='undefined'){
-sdQueue.clearQueue();
 }
-if(typeof runpodEndpointQueue!=='undefined'){
-runpodEndpointQueue.clearQueue();
 }
-if(typeof falaiQueue!=='undefined'){
-falaiQueue.clearQueue();
-}
-clearAllAiTasks();
+
+removeAiTask(taskId);
+if(aiProgressState.currentTaskId===taskId){
 aiProgressState.currentPromptId=null;
 aiProgressState.currentTaskId=null;
+}
 }
 
 function updateAiProgressDisplay(){
@@ -85,13 +99,12 @@ indicator.classList.add('ai-task-waiting');
 }
 var dot=document.createElement('span');
 dot.className='ai-task-dot';
-dot.textContent=task.status==='running'?'\u25CF':'\u25CB';
 indicator.appendChild(dot);
 var text=document.createElement('span');
 text.className='ai-task-text';
-var label=task.order+'.'+task.taskType;
+var label=task.order+'. '+task.taskType;
 if(task.status==='running'&&task.stepMax>0){
-label+='('+task.stepValue+'/'+task.stepMax+')';
+label+=' '+task.stepValue+'/'+task.stepMax;
 }
 text.textContent=label;
 indicator.appendChild(text);

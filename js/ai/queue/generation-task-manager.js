@@ -22,12 +22,47 @@ updateLayerPanel();
 return{id:taskId};
 }
 
+function getAiTask(taskId){
+return aiTaskMap.get(taskId)||null;
+}
+
+function updateAiTaskCancelInfo(taskId,info){
+var task=aiTaskMap.get(taskId);
+if(!task)return;
+if(info.queueName!==undefined)task.queueName=info.queueName;
+if(info.queueItemId!==undefined)task.queueItemId=info.queueItemId;
+if(info.promptId!==undefined)task.promptId=info.promptId;
+if(info.jobId!==undefined)task.jobId=info.jobId;
+generationTaskLogger.debug("updateAiTaskCancelInfo",taskId,info);
+}
+
 function removeAiTask(taskId){
 if(aiTaskMap.has(taskId)){
 aiTaskMap.delete(taskId);
+renumberAiTasks();
 generationTaskLogger.debug("removeAiTask",taskId);
 updateLayerPanel();
 }
+}
+
+function renumberAiTasks(){
+var tasks=[];
+aiTaskMap.forEach(function(task){tasks.push(task);});
+tasks.sort(function(a,b){return a.order-b.order;});
+for(var i=0;i<tasks.length;i++){
+tasks[i].order=i+1;
+}
+aiTaskOrderCounter=tasks.length;
+}
+
+function getAiTaskDisplayOrder(taskId){
+var task=aiTaskMap.get(taskId);
+if(!task)return 0;
+var tasks=getAiTasksForLayer(task.layerGuid,task.canvasGuid);
+for(var i=0;i<tasks.length;i++){
+if(tasks[i].taskId===taskId)return i+1;
+}
+return task.order;
 }
 
 function updateAiTaskStatus(taskId,status){
@@ -73,15 +108,11 @@ if(task.status==='running'){
 el.classList.remove('ai-task-waiting');
 el.classList.add('ai-task-running');
 }
-var dotEl=el.querySelector('.ai-task-dot');
-if(dotEl){
-dotEl.textContent=task.status==='running'?'\u25CF':'\u25CB';
-}
 var textEl=el.querySelector('.ai-task-text');
 if(textEl){
-var text=task.order+'.'+task.taskType;
+var text=task.order+'. '+task.taskType;
 if(task.status==='running'&&task.stepMax>0){
-text+='('+task.stepValue+'/'+task.stepMax+')';
+text+=' '+task.stepValue+'/'+task.stepMax;
 }
 textEl.textContent=text;
 }

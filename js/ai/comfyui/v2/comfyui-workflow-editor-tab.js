@@ -120,7 +120,7 @@ async saveWorkflow() {
 comfyuiLogger.debug("saveWorkflow() start");
 const cleanWorkflow={...this.workflow};
 
-await comfyUIWorkflowRepository
+await this.editor.workflowRepo
 .saveWorkflow(
 this.type||"T2I",
 this.id,

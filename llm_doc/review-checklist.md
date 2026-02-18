@@ -19,10 +19,11 @@
 | 8 | UI | 既存の表示・表記と統一されているか | 0 |
 | 9 | fallback | エラー時にfallback値で動作を続行していないか（fallback禁止） | 0 |
 | 10 | file:// | file://プロトコルで動作するか（fetch等HTTP前提APIを使っていないか） | 0 |
-| 11 | ログ | console.logではなくSimpleLoggerを使っているか | 0 |
+| 11 | ログ | console.logではなくSimpleLoggerを使っているか。デバッグ時もlogger.trace等を使いログレベル変更で対応する | 1 |
 | 12 | 命名 | 変数名がcamelCaseか、APIレスポンスのキーを変換していないか | 0 |
 | 13 | format | npm run formatで崩れるスペースを入れていないか | 0 |
 | 14 | GUID | 新規オブジェクトにguidを付与しているか | 0 |
 | 15 | イベント | EventDelegatorのパターンに従っているか（直接addEventListenerしていないか） | 0 |
 | 16 | 履歴 | ループやcanvas.add/remove連続呼び出しでsaveStateByManual()が都度発火しないか。都度発火すると大量の履歴スナップショットが生成され、メモリの圧迫・履歴保存による画面の固まり・Undo/Redoで無意味な操作が発生する。複数操作はchangeDoNotSaveHistory()で囲み最後に1回だけ保存 | 1 |
 | 17 | 性能 | forループ等でオブジェクトのプロパティを連続変更する際、毎回canvas.renderAll()を呼んでいないか。都度呼ぶとオブジェクト数×ループ回数分の再描画が走りUIがフリーズする。ループ外で最後に1回だけ呼ぶ | 1 |
+| 18 | ログ | Errorオブジェクトを文字列化する際にJSON.stringifyを使っていないか。Errorのmessage/name/stackは非列挙プロパティのためJSON.stringifyでは`{}`になる。`instanceof Error`で判定し`error.name + error.message`等で展開する | 1 |

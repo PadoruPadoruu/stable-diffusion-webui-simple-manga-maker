@@ -105,9 +105,12 @@ if(args.length>1&&isValidMethodName(args[args.length-1])){
 methodName=args[args.length-1];
 messageArgs=args.slice(0,args.length-1);
 }
-const message=messageArgs.map(arg=>
-typeof arg==='object' ? JSON.stringify(arg) : String(arg)
-).join(' ');
+const message=messageArgs.map(arg=>{
+if(arg instanceof Error){
+return `${arg.name}: ${arg.message}`;
+}
+return typeof arg==='object' ? JSON.stringify(arg) : String(arg);
+}).join(' ');
 const formatted=formatMessage(levelName,message,methodName);
 if(withStack){
 const stackTrace=getFullStackTrace();
@@ -160,8 +163,8 @@ default:return 'unknown';
 };
 }
 
-const logger=SimpleLogger('main',LogLevel.INFO);
-const workflowLogger=SimpleLogger('workflow',LogLevel.INFO);
+const logger=SimpleLogger('main',LogLevel.TRACE);
+const workflowLogger=SimpleLogger('workflow',LogLevel.TRACE);
 const eventLogger=SimpleLogger('event',LogLevel.INFO);
 const comfyuiLogger=SimpleLogger('comfyui',LogLevel.INFO);
 const sdwebuiLogger=SimpleLogger('sdwebui',LogLevel.INFO);

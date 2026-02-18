@@ -1,32 +1,46 @@
 class ComfyUIWorkflowEditor {
-constructor() {
+constructor(options) {
+options=options||{};
+this.providerKey=options.providerKey||'local';
+this.workflowRepo=options.workflowRepo||comfyUIWorkflowRepository;
+this.objectInfoRepo=options.objectInfoRepo||objectInfoRepository;
+this.provider=options.provider||null;
+this.containerEl=options.containerEl||document;
 this.tabs=new Map();
 this.nodeTypes=null;
 this.activeTabId=null;
 }
 
 async updateObjectInfoAndWorkflows() {
+var self=this;
+async function doUpdate(){
 try {
 const response=await comfyuiFetch(comfyUIUrls.objectInfoOnly);
 if (!response.ok) {
 throw new Error(`ObjectInfo取得失敗: ステータス ${response.status}`);
 }
 
-this.nodeTypes=await response.json();
-await objectInfoRepository.saveObjectInfo(this.nodeTypes);
+self.nodeTypes=await response.json();
+await self.objectInfoRepo.saveObjectInfo(self.nodeTypes);
 comfyuiLogger.debug("updateObjectInfoAndWorkflows --------------",);
 
-this.tabs.forEach((tab)=>{
+self.tabs.forEach((tab)=>{
 tab.renderNodes();
 });
 } catch (error) {
 comfyuiLogger.error("ObjectInfoとWorkflowの更新中にエラー:",error);
 }
 }
+if (this.provider) {
+await comfyUIExecWithProvider(this.provider,doUpdate);
+} else {
+await doUpdate();
+}
+}
 
 
 async initialize() {
-this.nodeTypes=await objectInfoRepository.getObjectInfo();
+this.nodeTypes=await this.objectInfoRepo.getObjectInfo();
 // if (!this.nodeTypes) {
 //   console.info("set default ObjectInfo");
 //   this.nodeTypes = defaultObjectInfo;
@@ -36,7 +50,7 @@ this.setupFileInput();
 this.setupTabEvents();
 
 await this.addDefaultWorkflows();
-const workflows=await comfyUIWorkflowRepository.getAllWorkflows();
+const workflows=await this.workflowRepo.getAllWorkflows();
 
 let enabledTabId=null;
 let firstTabId=null;
@@ -105,11 +119,11 @@ this.updateObjectInfoAndWorkflows();
 
 async addDefaultWorkflows() {
 for (const workflow of comfyuiDefaultWorkflows) {
-const exists=await comfyUIWorkflowRepository.existsByName(workflow.name);
+const exists=await this.workflowRepo.existsByName(workflow.name);
 if (!exists) {
 const id=`workflow-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
-await comfyUIWorkflowRepository.saveWorkflow(
+await this.workflowRepo.saveWorkflow(
 workflow.type,
 id,
 workflow.name,
@@ -121,8 +135,8 @@ workflow.enabled
 }
 
 setupFileInput() {
-document
-.getElementById("workflowFile")
+this.containerEl
+.querySelector("#workflowFile")
 .addEventListener("change",async (e)=>{
 const files=Array.from(e.target.files);
 for (const file of files) {
@@ -134,7 +148,7 @@ this.renderTabs();
 }
 
 renderTabs() {
-const tabList=document.getElementById("tabList");
+const tabList=this.containerEl.querySelector("#tabList");
 tabList.innerHTML="";
 const groupedTabs=this.groupTabsByType();
 Object.keys(groupedTabs).forEach((type)=>{
@@ -156,7 +170,7 @@ const text=await file.text();
 const workflow=JSON.parse(text);
 
 const tab=new ComfyUIWorkflowTab(file,workflow,this,id,type,enabled);
-const tabContent=document.getElementById("tabContentContainer");
+const tabContent=this.containerEl.querySelector("#tabContentContainer");
 tabContent.appendChild(tab.createContent());
 this.tabs.set(tab.id,tab);
 this.activateTab(tab.id);
@@ -188,7 +202,7 @@ this.renderTabs();
 }
 
 setupTabEvents() {
-document.getElementById("tabList").addEventListener("click",(e)=>{
+this.containerEl.querySelector("#tabList").addEventListener("click",(e)=>{
 const tabButton=e.target.closest(".comfui-tab-button");
 if (!tabButton) return;
 
@@ -225,7 +239,7 @@ return;
 
 try {
 if (tabId) {
-const result=await comfyUIWorkflowRepository.deleteWorkflow(tabId);
+const result=await this.workflowRepo.deleteWorkflow(tabId);
 if (!result) {
 comfyuiLogger.error(`Workflow delete is fail. ${tabId}`);
 return;
@@ -255,9 +269,8 @@ return this.nodeTypes?.[className]||null;
 
 let comfyUIWorkflowEditor;
 document.addEventListener("DOMContentLoaded",async ()=>{
-if (!comfyUIWorkflowEditor) {
-comfyUIWorkflowEditor=new ComfyUIWorkflowEditor();
-await comfyUIWorkflowEditor.addDefaultWorkflows();
-comfyUIWorkflowEditor=null;
-}
+var localEditor=new ComfyUIWorkflowEditor({providerKey:'local',workflowRepo:comfyUIWorkflowRepo_local,objectInfoRepo:objectInfoRepo_local});
+await localEditor.addDefaultWorkflows();
+var runpodEditor=new ComfyUIWorkflowEditor({providerKey:'runpod',workflowRepo:comfyUIWorkflowRepo_runpod,objectInfoRepo:objectInfoRepo_runpod});
+await runpodEditor.addDefaultWorkflows();
 });

@@ -221,6 +221,10 @@ var response=await comfyui_queue_prompt_v2(fixedWorkflow);
 if (!response) return null;
 processingPrompt=true;
 var promptId=response.prompt_id;
+aiProgressState.currentPromptId=promptId;
+if(aiProgressState.currentTaskId){
+updateAiTaskCancelInfo(aiProgressState.currentTaskId,{promptId:promptId});
+}
 await comfyui_track_prompt_progress_v2(promptId);
 
 response=await comfyui_get_history_v2(promptId);

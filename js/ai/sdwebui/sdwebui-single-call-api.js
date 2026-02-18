@@ -2,14 +2,20 @@
 async function processQueue(layer,spinnerId,fetchFunction,imageName) {
 sdwebuiLogger.debug(`Processing queue for ${imageName}`);
 try {
-const {img,responseData}=await sdQueue.add(()=>{setCurrentAiTask(spinnerId);return sdwebuiGenerateImage(layer,fetchFunction);});
+var p=sdQueue.add(()=>{setCurrentAiTask(spinnerId);return sdwebuiGenerateImage(layer,fetchFunction);});
+updateAiTaskCancelInfo(spinnerId,{queueName:'sd',queueItemId:p._queueItemId});
+const {img,responseData}=await p;
 if (img) {
 await handleSuccessfulGeneration(img,responseData,layer,imageName);
 } else {
 createToastError("Generation error","");
 }
 } catch (error) {
+if(error.message==='Queue cancelled'||error.message==='Task cancelled'){
+sdwebuiLogger.debug("Generation cancelled by user");
+}else{
 sdwebuiLogger.error("processQueue",error);
+}
 } finally {
 removeSpinner(spinnerId);
 }
@@ -82,14 +88,20 @@ img ? resolve({img,responseData}) : reject(new Error('Failed to create a fabric.
 async function sdwebuiRembgProcessQueue(layer,spinnerId) {
 sdwebuiLogger.debug("Processing queue for rembg");
 try {
-const responseData=await sdQueue.add(()=>{setCurrentAiTask(spinnerId);return sdwebuiRemoveBackground(layer);});
+var p2=sdQueue.add(()=>{setCurrentAiTask(spinnerId);return sdwebuiRemoveBackground(layer);});
+updateAiTaskCancelInfo(spinnerId,{queueName:'sd',queueItemId:p2._queueItemId});
+const responseData=await p2;
 if (responseData&&typeof responseData==='string') {
 await handleSuccessfulRembg(responseData,layer);
 } else {
 createToastError("Invalid background removal response","");
 }
 } catch (error) {
+if(error.message==='Queue cancelled'||error.message==='Task cancelled'){
+sdwebuiLogger.debug("Rembg cancelled by user");
+}else{
 sdwebuiLogger.error("sdwebuiRembgProcessQueue",error);
+}
 } finally {
 removeSpinner(spinnerId);
 }

@@ -1,13 +1,4 @@
-const comfyUIWorkflowRepository={
-store: null,
-
-init() {
-this.store=localforage.createInstance({
-name: "workflowStorage",
-storeName: "userWorkflows",
-});
-},
-
+var comfyUIWorkflowRepositoryProto={
 async saveWorkflow(type,id,name,workflowJson,enabled=false) {
 const timestamp=new Date().toISOString();
 
@@ -174,4 +165,35 @@ return false;
 },
 };
 
-comfyUIWorkflowRepository.init();
+function createWorkflowRepository(providerKey) {
+var repo=Object.create(comfyUIWorkflowRepositoryProto);
+repo.store=localforage.createInstance({
+name: "workflowStorage_"+providerKey,
+storeName: "userWorkflows",
+});
+return repo;
+}
+
+var comfyUIWorkflowRepo_local=createWorkflowRepository('local');
+var comfyUIWorkflowRepo_runpod=createWorkflowRepository('runpod');
+var comfyUIWorkflowRepository=comfyUIWorkflowRepo_local;
+
+(function migrateWorkflowStorage() {
+if (localStorage.getItem('workflowMigrated_v1')) return;
+var oldStore=localforage.createInstance({
+name: "workflowStorage",
+storeName: "userWorkflows",
+});
+oldStore.length().then(function(count) {
+if (count===0) {
+localStorage.setItem('workflowMigrated_v1','true');
+return;
+}
+oldStore.iterate(function(value,key) {
+comfyUIWorkflowRepo_local.store.setItem(key,value);
+}).then(function() {
+localStorage.setItem('workflowMigrated_v1','true');
+comfyuiLogger.info("Workflow storage migration completed");
+});
+});
+})();

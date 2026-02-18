@@ -3,7 +3,6 @@ const apis={
 A1111: "A1111",
 COMFYUI: "comfyui",
 RUNPOD_COMFYUI: "runpodComfyUI",
-RUNPOD_ENDPOINT: "runpodEndpoint",
 FAL_AI: "falai"
 };
 
@@ -205,10 +204,6 @@ sdWebUIPageUrl:{id:'sdWebUIPageUrl',default:'http://127.0.0.1:7860'},
 comfyUIPageUrl:{id:'comfyUIPageUrl',default:'http://127.0.0.1:8188'},
 runpodComfyUIUrl:{id:'runpodComfyUIUrl',default:''},
 runpodApiKey:{id:'runpodApiKey',default:''},
-runpodEndpointId:{id:'runpodEndpointId',default:''},
-runpodEndpointApiKey:{id:'runpodEndpointApiKey',default:''},
-runpodEndpointTimeout:{id:'runpodEndpointTimeout',default:'120'},
-runpodEndpointConcurrency:{id:'runpodEndpointConcurrency',default:'1'},
 falaiApiKey:{id:'falaiApiKey',default:''},
 falaiModelT2I:{id:'falaiModelT2I',default:''},
 falaiModelI2I:{id:'falaiModelI2I',default:''},
@@ -327,6 +322,7 @@ providerRegistry.syncFromApiMode(apiMode);
 if(data.roleAssignments){
 providerRegistry.loadRoleAssignments(data.roleAssignments);
 }
+updateWorkflowType();
 }
 
 function saveSettingsLocalStrage(silent){

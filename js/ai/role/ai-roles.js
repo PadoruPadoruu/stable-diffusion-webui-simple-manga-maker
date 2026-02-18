@@ -41,9 +41,6 @@ AI_ROLES.Image2Image,
 AI_ROLES.Inpaint,
 AI_ROLES.I2I_Angle
 ],
-RUNPOD_ENDPOINT: [
-AI_ROLES.Text2Image
-],
 FAL_AI: [
 AI_ROLES.Text2Image,
 AI_ROLES.Image2Image,

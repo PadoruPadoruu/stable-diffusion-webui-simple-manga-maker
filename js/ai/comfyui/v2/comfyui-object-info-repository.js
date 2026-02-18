@@ -1,13 +1,4 @@
-const objectInfoRepository={
-store: null,
-
-init() {
-this.store=localforage.createInstance({
-name: "objectInfoStorage",
-storeName: "comfyObjectInfo",
-});
-},
-
+var objectInfoRepositoryProto={
 async saveObjectInfo(objectInfo) {
 if (!objectInfo||Object.keys(objectInfo).length===0) {
 comfyuiLogger.error("有効なObjectInfoが指定されていません");
@@ -47,4 +38,15 @@ return null;
 },
 };
 
-objectInfoRepository.init();
+function createObjectInfoRepository(providerKey) {
+var repo=Object.create(objectInfoRepositoryProto);
+repo.store=localforage.createInstance({
+name: "objectInfoStorage_"+providerKey,
+storeName: "comfyObjectInfo",
+});
+return repo;
+}
+
+var objectInfoRepo_local=createObjectInfoRepository('local');
+var objectInfoRepo_runpod=createObjectInfoRepository('runpod');
+var objectInfoRepository=objectInfoRepo_local;

@@ -10,6 +10,40 @@
 // },
 //マージされるので追加日ごとにyyyyMMddHHmmss_SSSをTopKeyに入れます。個別の翻訳はKey名・翻訳文を任意に付けてください。ただし被らないように。
 const resources = {
+"20260218220000_001":{
+"ja":{
+"modelSettingsButton":"&#128295; 使用モデル",
+"modelSettingsTitle":"&#128295; 使用モデル・ワークフロー設定"
+},
+"en":{
+"modelSettingsButton":"&#128295; Models",
+"modelSettingsTitle":"&#128295; Model & Workflow Settings"
+},
+"ko":{
+"modelSettingsButton":"&#128295; 모델 사용",
+"modelSettingsTitle":"&#128295; 모델 & 워크플로 설정"
+},
+"fr":{
+"modelSettingsButton":"&#128295; Modèles",
+"modelSettingsTitle":"&#128295; Paramètres Modèles & Workflows"
+},
+"zh":{
+"modelSettingsButton":"&#128295; 使用模型",
+"modelSettingsTitle":"&#128295; 模型与工作流设置"
+},
+"ru":{
+"modelSettingsButton":"&#128295; Модели",
+"modelSettingsTitle":"&#128295; Настройки моделей и рабочих процессов"
+},
+"es":{
+"modelSettingsButton":"&#128295; Modelos",
+"modelSettingsTitle":"&#128295; Config. Modelos y Flujos"
+},
+"de":{
+"modelSettingsButton":"&#128295; Modelle",
+"modelSettingsTitle":"&#128295; Modell- & Workflow-Einstellungen"
+}
+},
 "20260218003000_001":{
 "ja":{
 "falaiReloadModels":"再取得",

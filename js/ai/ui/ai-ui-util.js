@@ -21,11 +21,6 @@ if(showToast)createToast("API CHANGE!","RunPod ComfyUI",2000);
 $('apiSettingsUrlHelpe').innerHTML='';
 firstComfyConnection=true;
 socket=null;
-} else if (selectedValue==="runpodEndpointButton") {
-apiMode=apis.RUNPOD_ENDPOINT;
-providerRegistry.syncFromApiMode(apiMode);
-if(showToast)createToast("API CHANGE!","RunPod Endpoint",2000);
-$('apiSettingsUrlHelpe').innerHTML='';
 } else if (selectedValue==="falaiButton") {
 apiMode=apis.FAL_AI;
 providerRegistry.syncFromApiMode(apiMode);
@@ -48,128 +43,53 @@ if($("basePrompt_cfg_scale").value>3){
 $("basePrompt_cfg_scale").value=1.5;
 }
 }
+modelSettingsWindow.updateSdWebuiVisibility();
 }
 
 
 function changeWorkflowType(button) {
 changeSelected(button);
 updateWorkflowType();
+modelSettingsWindow.updateSdWebuiVisibility();
 }
 function isComfyUIMode(groupValue){
 return groupValue==="comfyUIButton"||groupValue==="runpodComfyUIButton";
 }
+function getExternalApiGroupFromRoles(){
+var t2i=providerRegistry.getRoleAssignment(AI_ROLES.Text2Image);
+var i2i=providerRegistry.getRoleAssignment(AI_ROLES.Image2Image);
+var primary=t2i&&t2i!=='default'?t2i:i2i;
+if(!primary||primary==='default')primary='localComfyUI';
+var map={
+localComfyUI:'comfyUIButton',
+localSDWebUI:'sdWebUIButton',
+runpodComfyUI:'runpodComfyUIButton',
+falai:'falaiButton'
+};
+return map[primary]||'comfyUIButton';
+}
 function updateWorkflowType() {
-const externalApiGroup=getSelectedValueByGroup("externalApiGroup");
-const generateModelGroup=getSelectedValueByGroup("generateModelGroup");
-const generateWorkflow=getSelectedValueByGroup("generateWorkflow");
+const externalApiGroup=getExternalApiGroupFromRoles();
+
+showById("prompt-A");
+showById("prompt-E");
+showById("prompt-F");
 
 if (externalApiGroup==="falaiButton"){
 hideById("comfyUIWorkflowId");
-hideById("manualSelectWorkflowId");
-hideById("manualSelectModelId");
-hideById("clipDropdownControl");
-hideById("vaeDropdownControl");
-showById("prompt-A");
 showById("negativeAreaId");
-hideById("prompt-B");
-hideById("prompt-C");
-hideById("prompt-D");
-showById("prompt-E");
-showById("prompt-F");
-hideById("prompt-G");
-hideById("prompt-H");
-hideById("prompt-I");
-hideById("prompt-J");
-hideById("prompt-K");
-hideById("checSD_WebUI_Announce");
-return;
-}
-if (externalApiGroup==="runpodEndpointButton"){
-hideById("comfyUIWorkflowId");
-hideById("manualSelectWorkflowId");
-hideById("manualSelectModelId");
-hideById("clipDropdownControl");
-hideById("vaeDropdownControl");
-showById("prompt-A");
-showById("negativeAreaId");
-hideById("prompt-B");
-hideById("prompt-C");
-hideById("prompt-D");
-showById("prompt-E");
-showById("prompt-F");
-hideById("prompt-G");
-hideById("prompt-H");
-hideById("prompt-I");
-hideById("prompt-J");
-hideById("prompt-K");
-hideById("checSD_WebUI_Announce");
 return;
 }
 if (isComfyUIMode(externalApiGroup)){
 showById("comfyUIWorkflowId");
-hideById("manualSelectWorkflowId");
-hideById("manualSelectModelId");
-hideById("clipDropdownControl");
-hideById("vaeDropdownControl");
-showById("prompt-A");
 showById("negativeAreaId");
-hideById("prompt-B");
-hideById("prompt-C");
-hideById("prompt-D");
-showById("prompt-E");
-showById("prompt-F");
-hideById("prompt-G");
-hideById("prompt-H");
-hideById("prompt-I");
-hideById("prompt-J");
-hideById("prompt-K");
-hideById("checSD_WebUI_Announce");
 return;
-}else{
+}
 hideById("comfyUIWorkflowId");
-showById("manualSelectWorkflowId");
-showById("manualSelectModelId");
-showById("prompt-A");
-showById("negativeAreaId");
-showById("prompt-B");
-showById("prompt-C");
-showById("prompt-D");
-showById("prompt-E");
-showById("prompt-F");
-showById("prompt-G");
-showById("prompt-H");
-showById("prompt-I");
-showById("prompt-J");
-showById("prompt-K");
-showById("checSD_WebUI_Announce");
-}
-
-if (generateModelGroup==="SD") {
-hideById("manualSelectWorkflowId");
-showById("negativeAreaId");
-} else if (generateModelGroup==="Flux") {
-showById("manualSelectWorkflowId");
+const generateModelGroup=getSelectedValueByGroup("generateModelGroup");
+if (generateModelGroup==="Flux") {
 hideById("negativeAreaId");
+} else {
+showById("negativeAreaId");
 }
-
-if (isComfyUIMode(externalApiGroup)){
-showById("manualSelectModelId");
-if(generateModelGroup==="Flux"&&generateWorkflow==="Diffution"){
-showById("clipDropdownControl");
-showById("vaeDropdownControl");
-return;
-}
-}else if(externalApiGroup==="sdWebUIButton"){
-showById("manualSelectModelId");
-hideById("manualSelectWorkflowId");
-showById("clipDropdownControl");
-hideById("vaeDropdownControl");
-hideById("manualSelectWorkflowId");
-return;
-}
-
-showById("manualSelectModelId");
-hideById("clipDropdownControl");
-hideById("vaeDropdownControl");
-return;
 }

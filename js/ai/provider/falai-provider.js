@@ -280,12 +280,14 @@ replaceImageObject(layer,result,Type);
 async _execute(layer,spinnerId,Type,modelId,buildInput){
 var startTime=Date.now();
 var canvasGuid=this._registerTask(layer);
-return falaiQueue.add(async()=>{
+var p=falaiQueue.add(async()=>{
 setCurrentAiTask(spinnerId);
 var inputData=buildInput();
 var output=await this._runSync(modelId,inputData);
 return this._outputToFabricImage(output);
-})
+});
+updateAiTaskCancelInfo(spinnerId,{queueName:'falai',queueItemId:p._queueItemId});
+return p
 .then(async(result)=>{
 if(result){
 DashboardUI.recordGeneration(Type,Date.now()-startTime,'',modelId);
@@ -294,6 +296,10 @@ this._placeResult(result,layer,canvasGuid,Type);
 })
 .catch((error)=>{
 removeGenerationTask(canvasGuid);
+if(error.message==='Queue cancelled'||error.message==='Task cancelled'){
+this._logger.debug("Generation cancelled by user");
+return;
+}
 DashboardUI.recordFailure(Type);
 var msg=error.message||'';
 var detail=typeof error.detail==='string'?error.detail:JSON.stringify(error.detail||'');

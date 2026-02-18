@@ -178,7 +178,7 @@ return false;
 
 
 async function sdwebuiInterrogate(layer,model,spinnerId) {
-sdQueue.add(async ()=>{
+var p=sdQueue.add(async ()=>{
 setCurrentAiTask(spinnerId);
 let base64Image=imageObject2Base64Image(layer);
 const requestBody={
@@ -201,8 +201,9 @@ return null;
 
 const result=await response.json();
 return result;
-})
-.then(async (result)=>{
+});
+updateAiTaskCancelInfo(spinnerId,{queueName:'sd',queueItemId:p._queueItemId});
+p.then(async (result)=>{
 if (result) {
 createToast("Interrogate Success. "+model,result.caption);
 if (layer.text2img_prompt) {

@@ -50,6 +50,10 @@ return null;
 inpaintWorkflowLogger.debug("Inpaint generation complete");
 return result;
 }catch(error){
+if(error.message==='Queue cancelled'||error.message==='Task cancelled'){
+inpaintWorkflowLogger.debug("Inpaint cancelled by user");
+return null;
+}
 inpaintWorkflowLogger.error("Inpaint generation error:",error);
 var help=getText("comfyUI_workflowErrorHelp");
 createToastError("Inpaint Error",[error.message,help],8000);

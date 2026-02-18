@@ -1,29 +1,16 @@
 // AI機能の中央ルーター: プロバイダーレジストリ経由でディスパッチ
 const sdQueue=new TaskQueue(1);
 const comfyuiQueue=new TaskQueue(1);
-const runpodEndpointQueue=new TaskQueue(1);
 const falaiQueue=new TaskQueue(1);
 
 var firstSDConnection=true;
 var firstComfyConnection=true;
 
 document.addEventListener('DOMContentLoaded',function(){
-var rpConc=$('runpodEndpointConcurrency');
-if(rpConc&&parseInt(rpConc.value)>1){
-runpodEndpointQueue.setConcurrency(parseInt(rpConc.value));
-}
 var falConc=$('falaiConcurrency');
 if(falConc&&parseInt(falConc.value)>1){
 falaiQueue.setConcurrency(parseInt(falConc.value));
 }
-});
-
-$('runpodEndpointConcurrency').addEventListener('change',function(){
-var val=parseInt(this.value)||1;
-if(val<1)val=1;
-if(val>10)val=10;
-this.value=val;
-runpodEndpointQueue.setConcurrency(val);
 });
 
 $('falaiConcurrency').addEventListener('change',function(){
@@ -59,10 +46,6 @@ const comfyuiQueueStatus=comfyuiQueue.getStatus();
 if(comfyuiQueueStatus.total>0){
 return true;
 }
-const rpQueueStatus=runpodEndpointQueue.getStatus();
-if(rpQueueStatus.total>0){
-return true;
-}
 const falQueueStatus=falaiQueue.getStatus();
 if(falQueueStatus.total>0){
 return true;
@@ -73,10 +56,9 @@ return false;
 function clearAllQueues() {
 const sdCleared=sdQueue.clearQueue();
 const comfyCleared=comfyuiQueue.clearQueue();
-const rpCleared=runpodEndpointQueue.clearQueue();
 const falCleared=falaiQueue.clearQueue();
-logger.info(`All queues cleared: SD=${sdCleared}, ComfyUI=${comfyCleared}, RP=${rpCleared}, Fal=${falCleared}`);
-return sdCleared+comfyCleared+rpCleared+falCleared;
+logger.info(`All queues cleared: SD=${sdCleared}, ComfyUI=${comfyCleared}, Fal=${falCleared}`);
+return sdCleared+comfyCleared+falCleared;
 }
 
 
