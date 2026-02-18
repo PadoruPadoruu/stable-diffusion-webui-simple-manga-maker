@@ -1,4 +1,3 @@
-## llm_doc/ 詳細ドキュメント
 - `llm_doc/coding-rules.md` - コーディング規約詳細、ログ、フォーマット
 - `llm_doc/layer-structure.md` - レイヤー構造、リンク機構
 - `llm_doc/history-and-data.md` - 履歴管理、画像データ保存
