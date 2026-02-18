@@ -26,5 +26,5 @@
 | 15 | イベント | EventDelegatorのパターンに従っているか（直接addEventListenerしていないか） | 0 |
 | 16 | 性能 | Fabric.jsイベント(object:modified等)ハンドラ内で重い処理を同期実行していないか | 1 |
 | 17 | 性能 | canvas.renderAll()が不要な箇所やループ内で繰り返し呼ばれていないか | 1 |
-| 18 | 履歴 | saveStateByManual()がイベント連鎖で過剰に発火しないか（changeDoNotSaveHistoryで抑制） | 1 |
-| 19 | 性能 | レイヤー操作やオブジェクト一括変更時にrequestRenderAll等でバッチ描画しているか | 1 |
+| 18 | 履歴 | ループやcanvas.add/remove連続呼び出しでsaveStateByManual()が都度発火しないか。複数操作はchangeDoNotSaveHistory()で囲み最後に1回だけ保存 | 1 |
+| 19 | 性能 | forループ等でオブジェクトのプロパティを連続変更する際、毎回canvas.renderAll()を呼ばず最後に1回だけ呼んでいるか | 1 |
