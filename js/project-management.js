@@ -203,7 +203,6 @@ canvasMarginFromPanel:{id:'marginFromPanel',default:20},
 sdWebUIPageUrl:{id:'sdWebUIPageUrl',default:'http://127.0.0.1:7860'},
 comfyUIPageUrl:{id:'comfyUIPageUrl',default:'http://127.0.0.1:8188'},
 runpodComfyUIUrl:{id:'runpodComfyUIUrl',default:''},
-runpodApiKey:{id:'runpodApiKey',default:''},
 falaiApiKey:{id:'falaiApiKey',default:''},
 falaiModelT2I:{id:'falaiModelT2I',default:''},
 falaiModelI2I:{id:'falaiModelI2I',default:''},
@@ -343,8 +342,47 @@ localStorage.setItem('localSettingsData',JSON.stringify(data));
 }
 
 function resetAllSettings(){
-var msg=getText('settingsResetConfirm')||'All settings and cache will be deleted. Continue?';
-if(!confirm(msg))return;
+var items=[
+getText('settingsResetItem1')||'API connection settings (URLs, API keys)',
+getText('settingsResetItem2')||'AI image generation settings (prompts, models, etc.)',
+getText('settingsResetItem3')||'Drawing tool & canvas settings',
+getText('settingsResetItem4')||'Custom prompt sets',
+getText('settingsResetItem5')||'UI settings (language, theme, sidebar, etc.)',
+getText('settingsResetItem6')||'Tutorial progress'
+];
+var overlay=document.createElement('div');
+overlay.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);display:flex;justify-content:center;align-items:center;z-index:var(--z-modal)';
+var dialog=document.createElement('div');
+dialog.style.cssText='background:var(--color-base);color:var(--color-text-primary);border-radius:8px;padding:24px;max-width:420px;width:90%;box-shadow:0 4px 24px rgba(0,0,0,0.5)';
+var title=document.createElement('div');
+title.style.cssText='font-size:16px;font-weight:bold;margin-bottom:12px';
+title.textContent=getText('settingsResetConfirmTitle')||'The following data will be deleted:';
+dialog.appendChild(title);
+var list=document.createElement('ul');
+list.style.cssText='margin:0 0 16px 0;padding-left:20px;line-height:1.8';
+items.forEach(function(item){
+var li=document.createElement('li');
+li.textContent=item;
+list.appendChild(li);
+});
+dialog.appendChild(list);
+var btnRow=document.createElement('div');
+btnRow.style.cssText='display:flex;justify-content:flex-end;gap:8px';
+var cancelBtn=document.createElement('button');
+cancelBtn.textContent=getText('settingsResetCancel')||'Cancel';
+cancelBtn.style.cssText='padding:6px 16px;border:1px solid var(--color-text-secondary);border-radius:4px;background:var(--color-secondary);color:var(--color-text-primary);cursor:pointer';
+var okBtn=document.createElement('button');
+okBtn.textContent=getText('settingsResetOk')||'Reset';
+okBtn.style.cssText='padding:6px 16px;border:none;border-radius:4px;background:var(--color-accent);color:#fff;cursor:pointer';
+btnRow.appendChild(cancelBtn);
+btnRow.appendChild(okBtn);
+dialog.appendChild(btnRow);
+overlay.appendChild(dialog);
+document.body.appendChild(overlay);
+cancelBtn.addEventListener('click',function(){overlay.remove();});
+overlay.addEventListener('click',function(e){if(e.target===overlay)overlay.remove();});
+okBtn.addEventListener('click',function(){
+overlay.remove();
 localStorage.clear();
 sessionStorage.clear();
 if('caches' in window){
@@ -354,6 +392,7 @@ names.forEach(function(name){caches.delete(name);});
 }
 createToast('Settings Reset',['Clearing all data...','Reloading...'],1500);
 setTimeout(function(){location.reload();},1500);
+});
 }
 
 document.addEventListener('DOMContentLoaded',function() {

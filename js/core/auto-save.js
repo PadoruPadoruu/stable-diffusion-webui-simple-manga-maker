@@ -1,6 +1,5 @@
 // 自動保存機能：IndexedDBへの定期保存と起動時の復元
 var AutoSaveManager=(function(){
-var autoSaveLogger=new SimpleLogger('autoSave',LogLevel.INFO);
 var store=localforage.createInstance({name:'autoSaveStorage',storeName:'projectAutoSave'});
 var timerId=null;
 var isSaving=false;

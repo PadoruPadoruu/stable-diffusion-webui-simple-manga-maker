@@ -1,7 +1,7 @@
 // RunPod ComfyUIプロバイダー: クラウド上のComfyUIに認証付きHTTPS接続
 class RunPodComfyUIProvider extends AIProvider{
 constructor(){
-super('runpodComfyUI','RunPod');
+super('runpodComfyUI','ComfyUI (RunPod)');
 }
 getSupportedRoles(){
 return[
@@ -14,11 +14,10 @@ AI_ROLES.I2I_Angle
 ];
 }
 needsApiKey(){
-return true;
+return false;
 }
 getApiKey(){
-var el=$('runpodApiKey');
-return el?el.value:'';
+return '';
 }
 getEndpointUrl(){
 return $('runpodComfyUIUrl').value;

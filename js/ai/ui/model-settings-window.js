@@ -1,5 +1,4 @@
 var modelSettingsWindow=(function(){
-var msLogger=new SimpleLogger('modelSettings',LogLevel.DEBUG);
 var overlayEl=null;
 var localEditor=null;
 var localWindow=null;
@@ -59,6 +58,14 @@ containerEl:container
 localWindow.editorRef=localEditor;
 localEditor.initialize();
 comfyUIWorkflowEditor=localEditor;
+comfyui_monitorConnection_v2();
+setTimeout(function(){
+if(typeof ComfyUIGuide!=='undefined'){
+comfyui_apiHeartbeat_v2().then(function(isOnline){
+ComfyUIGuide.showSetupGuide(isOnline);
+});
+}
+},300);
 }
 
 function initRunpodTab(){
@@ -76,6 +83,33 @@ containerEl:container
 });
 runpodWindow.editorRef=runpodEditor;
 runpodEditor.initialize();
+monitorRunpodConnection(runpodProvider,container,runpodEditor);
+}
+async function monitorRunpodConnection(provider,container,editor){
+var label=container.querySelector('.comfui-connection-label');
+var rpOnline=false;
+while(true){
+var online=false;
+try{
+var result=await comfyUIExecWithProvider(provider,async function(){
+var resp=await comfyuiFetch(comfyUIUrls.settings,{method:"GET",headers:{"Content-Type":"application/json",accept:"application/json"}});
+return resp.ok;
+});
+online=!!result;
+}catch(e){online=false;}
+if(label){
+label.innerHTML=provider.name+(online?' ON':' OFF');
+label.style.color=online?'green':'red';
+}
+if(online!==rpOnline){
+rpOnline=online;
+if(online){
+editor.updateObjectInfoAndWorkflows();
+}
+}
+var interval=online?15000:5000;
+await new Promise(function(r){setTimeout(r,interval);});
+}
 }
 
 function moveEl(id,target){

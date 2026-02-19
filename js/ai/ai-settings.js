@@ -27,11 +27,6 @@ $('runpodComfyUIUrlClear').addEventListener('click',function(event){
 event.stopPropagation();
 $('runpodComfyUIUrl').value='';
 });
-$('runpodApiKeyToggle').addEventListener('click',function(event){
-event.stopPropagation();
-var input=$('runpodApiKey');
-input.type=input.type==='password'?'text':'password';
-});
 $('falaiApiKeyToggle').addEventListener('click',function(event){
 event.stopPropagation();
 var input=$('falaiApiKey');

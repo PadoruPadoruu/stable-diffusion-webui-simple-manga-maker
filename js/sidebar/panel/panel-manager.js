@@ -539,7 +539,6 @@ var strokeColorValue=$("panelStrokeColor").value;
 var opacityValue=$("panelOpacity").value;
 const opacity=opacityValue/100;
 var fillValue=$("panelFillColor").value;
-var _dbgLogger=new SimpleLogger('DBG-panel',LogLevel.DEBUG);
 _dbgLogger.debug("[panelAllChange] inputs: sw="+strokeWidthValue+" stroke="+strokeColorValue+" fill="+fillValue+" opacity="+opacityValue);
 canvas.getObjects().forEach(function (obj) {
 if (isPanel(obj)) {

@@ -1,5 +1,4 @@
 // アングル変更エディタ（モーダルオーバーレイ）
-var angleLogger=new SimpleLogger('angle',LogLevel.DEBUG);
 
 var AngleEditor=(function(){
 var isOpen=false;

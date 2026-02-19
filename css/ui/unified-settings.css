@@ -47,3 +47,4 @@
 #msSDWebuiContainer .textarea-control{margin:0;}
 #msSDWebuiContainer .textarea-control label{display:block;font-size:10px;color:#888;margin-bottom:2px;}
 #msSDWebuiContainer .textarea-control textarea{width:100%;box-sizing:border-box;font-size:11px;padding:5px 8px;border:1px solid var(--color-tertiary);border-radius:4px;background:var(--color-secondary);color:var(--color-text-secondary);}
+#unifiedSettingsOverlay>.us-window{width:70vw;height:70vh;}

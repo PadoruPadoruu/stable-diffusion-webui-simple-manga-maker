@@ -1,4 +1,3 @@
-var generationTaskLogger=new SimpleLogger('generationTask',LogLevel.DEBUG);
 var generationTaskMap=new Map();
 
 var aiTaskMap=new Map();

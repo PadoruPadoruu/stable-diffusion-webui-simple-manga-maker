@@ -30,7 +30,7 @@ return `
 
  <div class="comfui-right-sidebar">
 <div id="apiSettingsUrlHelpe">
- <label id="ExternalService_Heartbeat_Label_fw">Connection:</label>
+ <label class="comfui-connection-label">Connection:</label>
 </div>
 <button id="comfyUIFwGenerateButton" class="comfui-sidebar-button">${testGenerate}</button>
 <div id="generatedImageContainer" class="comfui-generated-image-container">
@@ -74,7 +74,13 @@ if(!tabId)return;
 var tab=editor.tabs.get(tabId);
 if(!tab)return;
 comfyUIFwGenerateButton.disabled=true;
-comfyUIFwGenerateButton.innerHTML='<span class="spinner-border spinner-border-sm text-light"></span>';
+comfyUIFwGenerateButton.innerHTML='<span class="spinner-border spinner-border-sm text-light"></span> <span class="comfyui-test-progress"></span>';
+var progressSpan=comfyUIFwGenerateButton.querySelector('.comfyui-test-progress');
+aiProgressState.onStepProgress=function(value,max){
+if(progressSpan&&max>0){
+progressSpan.textContent=value+'/'+max;
+}
+};
 try{
 async function doGenerate(){return await comfyui_put_queue_v2(tab.workflow);}
 var result;
@@ -99,6 +105,7 @@ placeholder.style.display="none";
 }
 }
 }finally{
+aiProgressState.onStepProgress=null;
 comfyUIFwGenerateButton.disabled=false;
 comfyUIFwGenerateButton.textContent=testGenerateText;
 }

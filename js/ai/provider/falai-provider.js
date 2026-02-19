@@ -159,22 +159,38 @@ return{
 };
 }
 async heartbeat(){
-if(!this.getApiKey()){
+var apiKey=this.getApiKey();
+if(!apiKey){
+this._verifiedApiKey=null;
 this._updateLabel(false);
 return false;
 }
+if(this._verifiedApiKey===apiKey){
 this._updateLabel(true);
 return true;
 }
+try{
+var response=await fetch('https://api.fal.ai/v1/models?limit=1',{
+headers:{'Authorization':'Key '+apiKey}
+});
+if(response.ok){
+this._verifiedApiKey=apiKey;
+this._updateLabel(true);
+return true;
+}
+this._verifiedApiKey=null;
+this._updateLabel(false);
+return false;
+}catch(e){
+this._verifiedApiKey=null;
+this._updateLabel(false);
+return false;
+}
+}
 _updateLabel(isOn){
-var label=$('ExternalService_Heartbeat_Label');
 var labelfw=$('ExternalService_Heartbeat_Label_fw');
 var text=this.name+(isOn?' ON':' OFF');
 var color=isOn?'green':'red';
-if(label){
-label.innerHTML=text;
-label.style.color=color;
-}
 if(labelfw){
 labelfw.innerHTML=text;
 labelfw.style.color=color;

@@ -1,5 +1,4 @@
 // event-delegator.js - document-level event delegation utility
-var delegatorLogger=new SimpleLogger('delegator',LogLevel.DEBUG);
 
 var EventDelegator={
 _handlers:{},

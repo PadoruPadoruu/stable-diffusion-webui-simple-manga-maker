@@ -1,9 +1,9 @@
 // AI進捗表示（レイヤー上インジケータ、キャンセル）
-var spinnerLogger=new SimpleLogger('spinner',LogLevel.DEBUG);
 
 var aiProgressState={
 currentPromptId:null,
-currentTaskId:null
+currentTaskId:null,
+onStepProgress:null
 };
 
 function createSpinner(layerGuid,taskType){
@@ -31,6 +31,9 @@ function updateAiStepProgress(value,max,promptId){
 aiProgressState.currentPromptId=promptId;
 if(aiProgressState.currentTaskId){
 updateAiTaskProgress(aiProgressState.currentTaskId,value,max);
+}
+if(aiProgressState.onStepProgress){
+aiProgressState.onStepProgress(value,max);
 }
 }
 

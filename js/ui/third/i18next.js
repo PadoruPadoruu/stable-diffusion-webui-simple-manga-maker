@@ -12,35 +12,35 @@
 const resources = {
 "20260218220000_001":{
 "ja":{
-"modelSettingsButton":"&#128295; 使用モデル",
+"modelSettingsButton":"&#128295; 使用モデル・ワークフロー",
 "modelSettingsTitle":"&#128295; 使用モデル・ワークフロー設定"
 },
 "en":{
-"modelSettingsButton":"&#128295; Models",
+"modelSettingsButton":"&#128295; Models & Workflows",
 "modelSettingsTitle":"&#128295; Model & Workflow Settings"
 },
 "ko":{
-"modelSettingsButton":"&#128295; 모델 사용",
+"modelSettingsButton":"&#128295; 모델 & 워크플로",
 "modelSettingsTitle":"&#128295; 모델 & 워크플로 설정"
 },
 "fr":{
-"modelSettingsButton":"&#128295; Modèles",
+"modelSettingsButton":"&#128295; Modèles & Workflows",
 "modelSettingsTitle":"&#128295; Paramètres Modèles & Workflows"
 },
 "zh":{
-"modelSettingsButton":"&#128295; 使用模型",
+"modelSettingsButton":"&#128295; 模型与工作流",
 "modelSettingsTitle":"&#128295; 模型与工作流设置"
 },
 "ru":{
-"modelSettingsButton":"&#128295; Модели",
+"modelSettingsButton":"&#128295; Модели и процессы",
 "modelSettingsTitle":"&#128295; Настройки моделей и рабочих процессов"
 },
 "es":{
-"modelSettingsButton":"&#128295; Modelos",
+"modelSettingsButton":"&#128295; Modelos y Flujos",
 "modelSettingsTitle":"&#128295; Config. Modelos y Flujos"
 },
 "de":{
-"modelSettingsButton":"&#128295; Modelle",
+"modelSettingsButton":"&#128295; Modelle & Workflows",
 "modelSettingsTitle":"&#128295; Modell- & Workflow-Einstellungen"
 }
 },
@@ -284,83 +284,91 @@ const resources = {
 },
 "20260217120000_001":{
 "ja":{
-"usWindowTitle":"&#9881; 外部サービス設定",
+"usWindowTitle":"&#9881; 生成AI設定",
 "usTabAI":"使用サービス",
 "usTabWorkflow":"ComfyUI Workflow",
 "usServiceTitle":"使用サービス",
 "usConnectionTitle":"接続先",
 "usConnService":"サービス",
-"usConnSettings":"URL / API Key"
+"usConnSettings":"URL / API Key",
+"usDashboard":"Web ↗"
 },
 "en":{
-"usWindowTitle":"&#9881; External Services",
+"usWindowTitle":"&#9881; Generative AI Settings",
 "usTabAI":"Services",
 "usTabWorkflow":"ComfyUI Workflow",
 "usServiceTitle":"Services",
 "usConnectionTitle":"Connection",
 "usConnService":"Service",
-"usConnSettings":"URL / API Key"
+"usConnSettings":"URL / API Key",
+"usDashboard":"Web ↗"
 },
 "ko":{
-"usWindowTitle":"&#9881; 외부 서비스 설정",
+"usWindowTitle":"&#9881; 생성 AI 설정",
 "usTabAI":"사용 서비스",
 "usTabWorkflow":"ComfyUI Workflow",
 "usServiceTitle":"사용 서비스",
 "usConnectionTitle":"접속처",
 "usConnService":"서비스",
-"usConnSettings":"URL / API Key"
+"usConnSettings":"URL / API Key",
+"usDashboard":"Web ↗"
 },
 "fr":{
-"usWindowTitle":"&#9881; Services Externes",
+"usWindowTitle":"&#9881; Paramètres IA générative",
 "usTabAI":"Services",
 "usTabWorkflow":"ComfyUI Workflow",
 "usServiceTitle":"Services",
 "usConnectionTitle":"Connexion",
 "usConnService":"Service",
-"usConnSettings":"URL / API Key"
+"usConnSettings":"URL / API Key",
+"usDashboard":"Web ↗"
 },
 "zh":{
-"usWindowTitle":"&#9881; 外部服务设置",
+"usWindowTitle":"&#9881; 生成AI设置",
 "usTabAI":"使用服务",
 "usTabWorkflow":"ComfyUI Workflow",
 "usServiceTitle":"使用服务",
 "usConnectionTitle":"连接",
 "usConnService":"服务",
-"usConnSettings":"URL / API Key"
+"usConnSettings":"URL / API Key",
+"usDashboard":"Web ↗"
 },
 "ru":{
-"usWindowTitle":"&#9881; Внешние сервисы",
+"usWindowTitle":"&#9881; Настройки генеративного ИИ",
 "usTabAI":"Сервисы",
 "usTabWorkflow":"ComfyUI Workflow",
 "usServiceTitle":"Сервисы",
 "usConnectionTitle":"Подключение",
 "usConnService":"Сервис",
-"usConnSettings":"URL / API Key"
+"usConnSettings":"URL / API Key",
+"usDashboard":"Web ↗"
 },
 "es":{
-"usWindowTitle":"&#9881; Servicios Externos",
+"usWindowTitle":"&#9881; Configuración de IA generativa",
 "usTabAI":"Servicios",
 "usTabWorkflow":"ComfyUI Workflow",
 "usServiceTitle":"Servicios",
 "usConnectionTitle":"Conexión",
 "usConnService":"Servicio",
-"usConnSettings":"URL / API Key"
+"usConnSettings":"URL / API Key",
+"usDashboard":"Web ↗"
 },
 "de":{
-"usWindowTitle":"&#9881; Externe Dienste",
+"usWindowTitle":"&#9881; Generative KI-Einstellungen",
 "usTabAI":"Dienste",
 "usTabWorkflow":"ComfyUI Workflow",
 "usServiceTitle":"Dienste",
 "usConnectionTitle":"Verbindung",
 "usConnService":"Dienst",
-"usConnSettings":"URL / API Key"
+"usConnSettings":"URL / API Key",
+"usDashboard":"Web ↗"
 }
 },
 "20260216170000_001":{
 "ja":{
-"roleAssignTitle":"&#9881; 使用APIサービス",
-"roleAssignButton":"&#9881; 使用APIサービス",
-"roleAssignNote":"「—」は非対応のプロバイダーです",
+"roleAssignTitle":"&#9881; 生成AI設定",
+"roleAssignButton":"&#9881; 生成AI設定",
+"roleAssignNote":"「—」は非対応のサービスです",
 "roleAssignCancel":"キャンセル",
 "roleAssignApply":"適用",
 "roleText2Image":"Text → Image",
@@ -368,12 +376,14 @@ const resources = {
 "roleInpaint":"Inpaint",
 "roleUpscaler":"高解像度化",
 "roleRemoveBG":"背景削除",
-"roleAngle":"Image → Image Angle"
+"roleAngle":"Image → Image Angle",
+"roleInterrogateCLIP":"CLIP",
+"roleInterrogateDEEPDOORU":"DEEPDOORU"
 },
 "en":{
-"roleAssignTitle":"&#9881; API Services",
-"roleAssignButton":"&#9881; API Services",
-"roleAssignNote":"\"—\" indicates an unsupported provider",
+"roleAssignTitle":"&#9881; AI Settings",
+"roleAssignButton":"&#9881; AI Settings",
+"roleAssignNote":"\"—\" indicates an unsupported service",
 "roleAssignCancel":"Cancel",
 "roleAssignApply":"Apply",
 "roleText2Image":"Text → Image",
@@ -381,12 +391,14 @@ const resources = {
 "roleInpaint":"Inpaint",
 "roleUpscaler":"Upscale",
 "roleRemoveBG":"Remove BG",
-"roleAngle":"Image → Image Angle"
+"roleAngle":"Image → Image Angle",
+"roleInterrogateCLIP":"CLIP",
+"roleInterrogateDEEPDOORU":"DEEPDOORU"
 },
 "ko":{
-"roleAssignTitle":"&#9881; API 서비스",
-"roleAssignButton":"&#9881; API 서비스",
-"roleAssignNote":"「—」는 미지원 프로바이더입니다",
+"roleAssignTitle":"&#9881; AI 설정",
+"roleAssignButton":"&#9881; AI 설정",
+"roleAssignNote":"「—」는 미지원 서비스입니다",
 "roleAssignCancel":"취소",
 "roleAssignApply":"적용",
 "roleText2Image":"Text → Image",
@@ -394,12 +406,14 @@ const resources = {
 "roleInpaint":"Inpaint",
 "roleUpscaler":"고해상도화",
 "roleRemoveBG":"배경 제거",
-"roleAngle":"Image → Image Angle"
+"roleAngle":"Image → Image Angle",
+"roleInterrogateCLIP":"CLIP",
+"roleInterrogateDEEPDOORU":"DEEPDOORU"
 },
 "fr":{
-"roleAssignTitle":"&#9881; Services API",
-"roleAssignButton":"&#9881; Services API",
-"roleAssignNote":"「—」= fournisseur non pris en charge",
+"roleAssignTitle":"&#9881; Paramètres IA",
+"roleAssignButton":"&#9881; Paramètres IA",
+"roleAssignNote":"「—」= service non pris en charge",
 "roleAssignCancel":"Annuler",
 "roleAssignApply":"Appliquer",
 "roleText2Image":"Text → Image",
@@ -407,12 +421,14 @@ const resources = {
 "roleInpaint":"Inpaint",
 "roleUpscaler":"Agrandir",
 "roleRemoveBG":"Suppr. fond",
-"roleAngle":"Image → Image Angle"
+"roleAngle":"Image → Image Angle",
+"roleInterrogateCLIP":"CLIP",
+"roleInterrogateDEEPDOORU":"DEEPDOORU"
 },
 "zh":{
-"roleAssignTitle":"&#9881; API服务",
-"roleAssignButton":"&#9881; API服务",
-"roleAssignNote":"「—」表示不支持的提供者",
+"roleAssignTitle":"&#9881; AI设置",
+"roleAssignButton":"&#9881; AI设置",
+"roleAssignNote":"「—」表示不支持的服务",
 "roleAssignCancel":"取消",
 "roleAssignApply":"应用",
 "roleText2Image":"Text → Image",
@@ -420,12 +436,14 @@ const resources = {
 "roleInpaint":"Inpaint",
 "roleUpscaler":"高分辨率化",
 "roleRemoveBG":"删除背景",
-"roleAngle":"Image → Image Angle"
+"roleAngle":"Image → Image Angle",
+"roleInterrogateCLIP":"CLIP",
+"roleInterrogateDEEPDOORU":"DEEPDOORU"
 },
 "ru":{
-"roleAssignTitle":"&#9881; API сервисы",
-"roleAssignButton":"&#9881; API сервисы",
-"roleAssignNote":"「—」= провайдер не поддерживается",
+"roleAssignTitle":"&#9881; Настройки ИИ",
+"roleAssignButton":"&#9881; Настройки ИИ",
+"roleAssignNote":"「—」= сервис не поддерживается",
 "roleAssignCancel":"Отмена",
 "roleAssignApply":"Применить",
 "roleText2Image":"Text → Image",
@@ -433,12 +451,14 @@ const resources = {
 "roleInpaint":"Inpaint",
 "roleUpscaler":"Увеличить",
 "roleRemoveBG":"Удалить фон",
-"roleAngle":"Image → Image Angle"
+"roleAngle":"Image → Image Angle",
+"roleInterrogateCLIP":"CLIP",
+"roleInterrogateDEEPDOORU":"DEEPDOORU"
 },
 "es":{
-"roleAssignTitle":"&#9881; Servicios API",
-"roleAssignButton":"&#9881; Servicios API",
-"roleAssignNote":"「—」= proveedor no soportado",
+"roleAssignTitle":"&#9881; Config. IA",
+"roleAssignButton":"&#9881; Config. IA",
+"roleAssignNote":"「—」= servicio no soportado",
 "roleAssignCancel":"Cancelar",
 "roleAssignApply":"Aplicar",
 "roleText2Image":"Text → Image",
@@ -446,12 +466,14 @@ const resources = {
 "roleInpaint":"Inpaint",
 "roleUpscaler":"Ampliar",
 "roleRemoveBG":"Eliminar fondo",
-"roleAngle":"Image → Image Angle"
+"roleAngle":"Image → Image Angle",
+"roleInterrogateCLIP":"CLIP",
+"roleInterrogateDEEPDOORU":"DEEPDOORU"
 },
 "de":{
-"roleAssignTitle":"&#9881; API-Dienste",
-"roleAssignButton":"&#9881; API-Dienste",
-"roleAssignNote":"「—」= Anbieter nicht unterstützt",
+"roleAssignTitle":"&#9881; KI-Einstellungen",
+"roleAssignButton":"&#9881; KI-Einstellungen",
+"roleAssignNote":"「—」= Dienst nicht unterstützt",
 "roleAssignCancel":"Abbrechen",
 "roleAssignApply":"Anwenden",
 "roleText2Image":"Text → Image",
@@ -459,7 +481,9 @@ const resources = {
 "roleInpaint":"Inpaint",
 "roleUpscaler":"Hochskalieren",
 "roleRemoveBG":"Hintergrund entf.",
-"roleAngle":"Image → Image Angle"
+"roleAngle":"Image → Image Angle",
+"roleInterrogateCLIP":"CLIP",
+"roleInterrogateDEEPDOORU":"DEEPDOORU"
 }
 },
 "20260216160000_001":{
@@ -1955,35 +1979,35 @@ const resources = {
 "20260214155000_001": {
 "ja":{
 "20260214155000_001":"自動保存",
-"20260214155000_002":"外部サービス"
+"20260214155000_002":"生成AI設定"
 },
 "en":{
 "20260214155000_001":"Auto Save",
-"20260214155000_002":"External Services"
+"20260214155000_002":"Generative AI Settings"
 },
 "ko":{
 "20260214155000_001":"자동 저장",
-"20260214155000_002":"외부 서비스"
+"20260214155000_002":"생성 AI 설정"
 },
 "fr":{
 "20260214155000_001":"Sauvegarde auto",
-"20260214155000_002":"Services externes"
+"20260214155000_002":"Paramètres IA générative"
 },
 "zh":{
 "20260214155000_001":"自动保存",
-"20260214155000_002":"外部服务"
+"20260214155000_002":"生成AI设置"
 },
 "ru":{
 "20260214155000_001":"Автосохранение",
-"20260214155000_002":"Внешние сервисы"
+"20260214155000_002":"Настройки генеративного ИИ"
 },
 "es":{
 "20260214155000_001":"Autoguardado",
-"20260214155000_002":"Servicios externos"
+"20260214155000_002":"Configuración de IA generativa"
 },
 "de":{
 "20260214155000_001":"Autospeichern",
-"20260214155000_002":"Externe Dienste"
+"20260214155000_002":"Generative KI-Einstellungen"
 }
 },
 "20260212_191212_001": {
@@ -3117,6 +3141,8 @@ const resources = {
 "inpaintNoMask":"マスク領域を描画してください",
 "settingsMenu":"設定",
 "settingsAutoSave":"設定値自動保存",
+"aiCheck":"AI接続確認",
+"connectionStatus":"接続状態",
 "autoSave":"プロジェクト自動保存",
 "autoSaveSeconds":"秒",
 "autoSaveComplete":"自動保存完了",
@@ -3139,6 +3165,8 @@ const resources = {
 "inpaintNoMask":"Please draw a mask area first",
 "settingsMenu":"Settings",
 "settingsAutoSave":"Settings Auto Save",
+"aiCheck":"AI Connection Check",
+"connectionStatus":"Connection Status",
 "autoSave":"Project Auto Save",
 "autoSaveSeconds":"sec",
 "autoSaveComplete":"Auto-saved",
@@ -3161,6 +3189,8 @@ const resources = {
 "inpaintNoMask":"마스크 영역을 먼저 그려주세요",
 "settingsMenu":"설정",
 "settingsAutoSave":"설정 자동 저장",
+"aiCheck":"AI 연결 확인",
+"connectionStatus":"연결 상태",
 "autoSave":"프로젝트 자동 저장",
 "autoSaveSeconds":"초",
 "autoSaveComplete":"자동 저장 완료",
@@ -3183,6 +3213,8 @@ const resources = {
 "inpaintNoMask":"Veuillez dessiner une zone de masque",
 "settingsMenu":"Paramètres",
 "settingsAutoSave":"Sauvegarde auto des paramètres",
+"aiCheck":"Vérification connexion IA",
+"connectionStatus":"État de connexion",
 "autoSave":"Sauvegarde auto du projet",
 "autoSaveSeconds":"sec",
 "autoSaveComplete":"Sauvegardé",
@@ -3205,6 +3237,8 @@ const resources = {
 "inpaintNoMask":"请先绘制蒙版区域",
 "settingsMenu":"设置",
 "settingsAutoSave":"设置自动保存",
+"aiCheck":"AI连接检查",
+"connectionStatus":"连接状态",
 "autoSave":"项目自动保存",
 "autoSaveSeconds":"秒",
 "autoSaveComplete":"已自动保存",
@@ -3227,6 +3261,8 @@ const resources = {
 "inpaintNoMask":"Сначала нарисуйте область маски",
 "settingsMenu":"Настройки",
 "settingsAutoSave":"Автосохранение настроек",
+"aiCheck":"Проверка подключения ИИ",
+"connectionStatus":"Состояние подключения",
 "autoSave":"Автосохранение проекта",
 "autoSaveSeconds":"сек",
 "autoSaveComplete":"Автосохранено",
@@ -3249,6 +3285,8 @@ const resources = {
 "inpaintNoMask":"Dibuje primero un área de máscara",
 "settingsMenu":"Ajustes",
 "settingsAutoSave":"Autoguardado de ajustes",
+"aiCheck":"Verificación conexión IA",
+"connectionStatus":"Estado de conexión",
 "autoSave":"Autoguardado del proyecto",
 "autoSaveSeconds":"sec",
 "autoSaveComplete":"Autoguardado",
@@ -3271,6 +3309,8 @@ const resources = {
 "inpaintNoMask":"Bitte zuerst einen Maskenbereich zeichnen",
 "settingsMenu":"Einstellungen",
 "settingsAutoSave":"Einstellungen automatisch speichern",
+"aiCheck":"KI-Verbindungsprüfung",
+"connectionStatus":"Verbindungsstatus",
 "autoSave":"Projekt automatisch speichern",
 "autoSaveSeconds":"Sek",
 "autoSaveComplete":"Automatisch gespeichert",
@@ -3608,8 +3648,16 @@ const resources = {
 },
 "20260115": {
 "ja":{"unverifiedNode":"未確認",
-"settingsReset":"設定を初期化",
-"settingsResetConfirm":"すべての設定とキャッシュを削除します。続行しますか？",
+"settingsReset":"すべての設定をリセット",
+"settingsResetConfirmTitle":"以下のデータがすべて削除されます：",
+"settingsResetItem1":"API接続設定（URL・APIキー）",
+"settingsResetItem2":"AI画像生成設定（プロンプト・モデル等）",
+"settingsResetItem3":"描画ツール・キャンバス設定",
+"settingsResetItem4":"カスタムプロンプトセット",
+"settingsResetItem5":"UI設定（言語・テーマ・サイドバー等）",
+"settingsResetItem6":"チュートリアル進捗",
+"settingsResetCancel":"キャンセル",
+"settingsResetOk":"リセット",
 "tutorialWelcomeTitle":"はじめての漫画作成",
 "tutorialWelcomeBody":"5ステップで基本操作を学びましょう",
 "tutorialStart":"始める",
@@ -3649,8 +3697,16 @@ const resources = {
 "comfyGuideGenErrorStep2":"モデルがWorkflowと一致しているか確認",
 "comfyGuideGenErrorExample":"例: SDXL用WorkflowにFluxモデルを設定するとエラーになります",
 "comfyGuideGenErrorStep3":"Workflowの設定値を見直してください"},
-"en":{"settingsReset":"Reset Settings",
-"settingsResetConfirm":"All settings and cache will be deleted. Continue?",
+"en":{"settingsReset":"Reset All Settings",
+"settingsResetConfirmTitle":"The following data will be deleted:",
+"settingsResetItem1":"API connection settings (URLs, API keys)",
+"settingsResetItem2":"AI image generation settings (prompts, models, etc.)",
+"settingsResetItem3":"Drawing tool & canvas settings",
+"settingsResetItem4":"Custom prompt sets",
+"settingsResetItem5":"UI settings (language, theme, sidebar, etc.)",
+"settingsResetItem6":"Tutorial progress",
+"settingsResetCancel":"Cancel",
+"settingsResetOk":"Reset",
 "tutorialWelcomeTitle":"Create Your First Manga",
 "tutorialWelcomeBody":"Learn basics in 5 steps",
 "tutorialStart":"Start",
@@ -3690,8 +3746,16 @@ const resources = {
 "comfyGuideGenErrorStep2":"Verify model matches workflow",
 "comfyGuideGenErrorExample":"Example: Using Flux model with SDXL workflow causes errors",
 "comfyGuideGenErrorStep3":"Review workflow settings"},
-"ko":{"settingsReset":"설정 초기화",
-"settingsResetConfirm":"모든 설정과 캐시가 삭제됩니다. 계속하시겠습니까?",
+"ko":{"settingsReset":"모든 설정 초기화",
+"settingsResetConfirmTitle":"다음 데이터가 모두 삭제됩니다:",
+"settingsResetItem1":"API 연결 설정 (URL, API 키)",
+"settingsResetItem2":"AI 이미지 생성 설정 (프롬프트, 모델 등)",
+"settingsResetItem3":"그리기 도구 및 캔버스 설정",
+"settingsResetItem4":"커스텀 프롬프트 세트",
+"settingsResetItem5":"UI 설정 (언어, 테마, 사이드바 등)",
+"settingsResetItem6":"튜토리얼 진행 상황",
+"settingsResetCancel":"취소",
+"settingsResetOk":"초기화",
 "tutorialWelcomeTitle":"첫 만화 만들기",
 "tutorialWelcomeBody":"5단계로 기본을 배워봅시다",
 "tutorialStart":"시작",
@@ -3731,8 +3795,16 @@ const resources = {
 "comfyGuideGenErrorStep2":"모델이 워크플로우와 일치하는지 확인",
 "comfyGuideGenErrorExample":"예: SDXL 워크플로우에 Flux 모델 사용 시 오류 발생",
 "comfyGuideGenErrorStep3":"워크플로우 설정 검토"},
-"fr":{"settingsReset":"Réinit. paramètres",
-"settingsResetConfirm":"Tous les paramètres et le cache seront supprimés. Continuer?",
+"fr":{"settingsReset":"Tout réinitialiser",
+"settingsResetConfirmTitle":"Les données suivantes seront supprimées :",
+"settingsResetItem1":"Paramètres de connexion API (URL, clés API)",
+"settingsResetItem2":"Paramètres de génération d'images IA (prompts, modèles, etc.)",
+"settingsResetItem3":"Paramètres d'outils de dessin et de canevas",
+"settingsResetItem4":"Jeux de prompts personnalisés",
+"settingsResetItem5":"Paramètres d'interface (langue, thème, barre latérale, etc.)",
+"settingsResetItem6":"Progression du tutoriel",
+"settingsResetCancel":"Annuler",
+"settingsResetOk":"Réinitialiser",
 "tutorialWelcomeTitle":"Créez votre manga",
 "tutorialWelcomeBody":"Apprenez les bases en 5 étapes",
 "tutorialStart":"Démarrer",
@@ -3772,8 +3844,16 @@ const resources = {
 "comfyGuideGenErrorStep2":"Vérifiez le modèle correspond au workflow",
 "comfyGuideGenErrorExample":"Ex: Utiliser Flux avec workflow SDXL cause des erreurs",
 "comfyGuideGenErrorStep3":"Vérifiez les paramètres du workflow"},
-"zh":{"settingsReset":"重置设置",
-"settingsResetConfirm":"将删除所有设置和缓存。继续吗？",
+"zh":{"settingsReset":"重置所有设置",
+"settingsResetConfirmTitle":"以下数据将被全部删除：",
+"settingsResetItem1":"API连接设置（URL、API密钥）",
+"settingsResetItem2":"AI图像生成设置（提示词、模型等）",
+"settingsResetItem3":"绘图工具和画布设置",
+"settingsResetItem4":"自定义提示词集",
+"settingsResetItem5":"界面设置（语言、主题、侧边栏等）",
+"settingsResetItem6":"教程进度",
+"settingsResetCancel":"取消",
+"settingsResetOk":"重置",
 "tutorialWelcomeTitle":"创建您的第一部漫画",
 "tutorialWelcomeBody":"5步学会基本操作",
 "tutorialStart":"开始",
@@ -3813,8 +3893,16 @@ const resources = {
 "comfyGuideGenErrorStep2":"确认模型与工作流匹配",
 "comfyGuideGenErrorExample":"例如：SDXL工作流使用Flux模型会报错",
 "comfyGuideGenErrorStep3":"检查工作流设置"},
-"ru":{"settingsReset":"Сброс настроек",
-"settingsResetConfirm":"Все настройки и кэш будут удалены. Продолжить?",
+"ru":{"settingsReset":"Сбросить все настройки",
+"settingsResetConfirmTitle":"Следующие данные будут удалены:",
+"settingsResetItem1":"Настройки подключения API (URL, ключи API)",
+"settingsResetItem2":"Настройки генерации изображений ИИ (промпты, модели и т.д.)",
+"settingsResetItem3":"Настройки инструментов рисования и холста",
+"settingsResetItem4":"Пользовательские наборы промптов",
+"settingsResetItem5":"Настройки интерфейса (язык, тема, боковая панель и т.д.)",
+"settingsResetItem6":"Прогресс обучения",
+"settingsResetCancel":"Отмена",
+"settingsResetOk":"Сбросить",
 "tutorialWelcomeTitle":"Создайте первую мангу",
 "tutorialWelcomeBody":"Изучите основы за 5 шагов",
 "tutorialStart":"Начать",
@@ -3854,8 +3942,16 @@ const resources = {
 "comfyGuideGenErrorStep2":"Проверьте соответствие модели",
 "comfyGuideGenErrorExample":"Пример: Flux с SDXL workflow вызывает ошибки",
 "comfyGuideGenErrorStep3":"Проверьте настройки workflow"},
-"es":{"settingsReset":"Restablecer",
-"settingsResetConfirm":"Se eliminarán todos los ajustes y caché. ¿Continuar?",
+"es":{"settingsReset":"Restablecer todo",
+"settingsResetConfirmTitle":"Se eliminarán los siguientes datos:",
+"settingsResetItem1":"Configuración de conexión API (URLs, claves API)",
+"settingsResetItem2":"Configuración de generación de imágenes IA (prompts, modelos, etc.)",
+"settingsResetItem3":"Configuración de herramientas de dibujo y lienzo",
+"settingsResetItem4":"Conjuntos de prompts personalizados",
+"settingsResetItem5":"Configuración de interfaz (idioma, tema, barra lateral, etc.)",
+"settingsResetItem6":"Progreso del tutorial",
+"settingsResetCancel":"Cancelar",
+"settingsResetOk":"Restablecer",
 "tutorialWelcomeTitle":"Crea tu primer manga",
 "tutorialWelcomeBody":"Aprende lo básico en 5 pasos",
 "tutorialStart":"Empezar",
@@ -3895,8 +3991,16 @@ const resources = {
 "comfyGuideGenErrorStep2":"Verifica que el modelo coincida",
 "comfyGuideGenErrorExample":"Ej: Usar Flux con workflow SDXL causa errores",
 "comfyGuideGenErrorStep3":"Revisa la configuración del workflow"},
-"de":{"settingsReset":"Zurücksetzen",
-"settingsResetConfirm":"Alle Einstellungen und Cache werden gelöscht. Fortfahren?",
+"de":{"settingsReset":"Alles zurücksetzen",
+"settingsResetConfirmTitle":"Folgende Daten werden gelöscht:",
+"settingsResetItem1":"API-Verbindungseinstellungen (URLs, API-Schlüssel)",
+"settingsResetItem2":"KI-Bildgenerierungseinstellungen (Prompts, Modelle usw.)",
+"settingsResetItem3":"Zeichenwerkzeug- und Leinwandeinstellungen",
+"settingsResetItem4":"Benutzerdefinierte Prompt-Sets",
+"settingsResetItem5":"UI-Einstellungen (Sprache, Theme, Seitenleiste usw.)",
+"settingsResetItem6":"Tutorial-Fortschritt",
+"settingsResetCancel":"Abbrechen",
+"settingsResetOk":"Zurücksetzen",
 "tutorialWelcomeTitle":"Erstellen Sie Ihren ersten Manga",
 "tutorialWelcomeBody":"Lernen Sie die Grundlagen in 5 Schritten",
 "tutorialStart":"Start",

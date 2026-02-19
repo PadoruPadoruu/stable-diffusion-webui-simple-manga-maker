@@ -41,7 +41,7 @@ const enabled=this.enabled===true;
 
 button.innerHTML=`
 <label class="comfui-custom-radio">
-<input type="radio" name="enabled-${currentType}" data-type="${currentType}" class="comfui-tab-enabled-radio" ${
+<input type="radio" name="enabled-${this.editor.providerKey}-${currentType}" data-type="${currentType}" class="comfui-tab-enabled-radio" ${
 enabled ? "checked" : ""
 }>
 <span class="comfui-custom-radio-label"></span>
@@ -70,7 +70,7 @@ const radioBtn=button.querySelector(".comfui-tab-enabled-radio");
 radioBtn.addEventListener("click",async (e)=>{
 e.stopPropagation();
 
-document
+this.editor.containerEl
 .querySelectorAll(
 `.comfui-tab-enabled-radio[data-type="${currentType}"]`
 )

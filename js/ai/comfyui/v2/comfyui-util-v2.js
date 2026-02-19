@@ -1,7 +1,8 @@
 async function comfyui_apiHeartbeat_v2() {
-const label=$("ExternalService_Heartbeat_Label");
-const labelfw=$("ExternalService_Heartbeat_Label_fw");
+var labelfwContainer=$('msLocalContainer');
+var labelfw=labelfwContainer?labelfwContainer.querySelector('.comfui-connection-label'):null;
 var pName=providerRegistry.getActive()?providerRegistry.getActive().name:'ComfyUI';
+var tag=getComfyUIProviderTag();
 
 try {
 const response=await comfyuiFetch(comfyUIUrls.settings,{
@@ -13,35 +14,26 @@ accept: "application/json",
 });
 
 if (response.ok) {
-if (label) {
-label.innerHTML=pName+" ON";
-label.style.color="green";
-}
 if (labelfw) {
 labelfw.innerHTML=pName+" ON";
 labelfw.style.color="green";
 }
 
 if (firstComfyConnection) {
+comfyuiLogger.info('['+tag+'] 接続成功');
 getDiffusionInformation();
 firstComfyConnection=false;
 }
 return true;
 } else {
-if (label) {
-label.innerHTML=pName+" OFF";
-label.style.color="red";
-}
+comfyuiLogger.debug('['+tag+'] 接続失敗: HTTP '+response.status);
 if (labelfw) {
 labelfw.innerHTML=pName+" OFF";
 labelfw.style.color="red";
 }
 }
 } catch (error) {
-if (label) {
-label.innerHTML=pName+" OFF";
-label.style.color="red";
-}
+comfyuiLogger.debug('['+tag+'] 接続エラー: '+error.message);
 if (labelfw) {
 labelfw.innerHTML=pName+" OFF";
 labelfw.style.color="red";
@@ -147,7 +139,7 @@ workflow[nodeId].inputs[inputName]=uploadResult.name;
 }
 }
 } catch (error) {
-comfyuiLogger.error("ファイルアップロードエラー:",error);
+comfyuiLogger.error('['+getComfyUIProviderTag()+'] ファイルアップロードエラー:',error);
 }
 }
 
@@ -169,7 +161,7 @@ throw new Error(`HTTPエラー! ステータス: ${response.status}`);
 const blob=await response.blob();
 return URL.createObjectURL(blob);
 } catch (error) {
-comfyuiLogger.error("画像取得エラー:",error);
+comfyuiLogger.error('['+getComfyUIProviderTag()+'] 画像取得エラー:',error);
 return null;
 }
 }
@@ -177,7 +169,7 @@ return null;
 async function comfyui_fixWorkflowTypes_v2(workflow) {
 const objectInfo=await objectInfoRepository.getObjectInfo();
 if (!objectInfo) {
-comfyuiLogger.warn("ObjectInfo not available, skipping type fix");
+comfyuiLogger.warn('['+getComfyUIProviderTag()+'] ObjectInfo not available, skipping type fix');
 return workflow;
 }
 const fixed=JSON.parse(JSON.stringify(workflow));
@@ -215,6 +207,8 @@ async function comfyui_put_queue_v2(workflow) {
 const builder=new ComfyUIWorkflowBuilder(workflow);
 builder.replaceDatePlaceholders();
 const fixedWorkflow=await comfyui_fixWorkflowTypes_v2(builder.build());
+var tag=getComfyUIProviderTag();
+comfyuiLogger.info('['+tag+'] プロンプト送信開始');
 logger.trace("comfyui_put_queue_v2 fixedWorkflow",fixedWorkflow);
 
 var response=await comfyui_queue_prompt_v2(fixedWorkflow);
@@ -256,6 +250,7 @@ resolve(img);
 }
 
 async function comfyui_get_image_v2(imageDataToReceive) {
+var tag=getComfyUIProviderTag();
 try {
 const params=new URLSearchParams({
 filename: imageDataToReceive.filename,
@@ -263,7 +258,7 @@ subfolder: imageDataToReceive.subfolder,
 type: imageDataToReceive.type,
 });
 const response=await comfyuiFetch(comfyUIUrls.view+"?"+params.toString());
-comfyuiLogger.debug("画像データをサーバーから取得しました。",
+comfyuiLogger.debug('['+tag+'] 画像データ取得:',
 imageDataToReceive.filename,
 imageDataToReceive.subfolder,
 imageDataToReceive.type,);
@@ -274,11 +269,11 @@ throw new Error(`HTTPエラー! ステータス: ${response.status}`);
 
 const blob=await response.blob();
 const imageSrc=URL.createObjectURL(blob);
-comfyuiLogger.debug("画像ソース:",imageSrc);
+comfyuiLogger.debug('['+tag+'] 画像ソース:',imageSrc);
 
 return imageSrc;
 } catch (error) {
-comfyuiLogger.error("画像取得エラー:",error);
+comfyuiLogger.error('['+tag+'] 画像取得エラー:',error);
 return null;
 }
 }
@@ -323,6 +318,7 @@ return null;
 }
 
 async function comfyui_queue_prompt_v2(prompt) {
+var tag=getComfyUIProviderTag();
 try {
 const p={prompt: prompt,client_id: comfyUIuuid};
 const response=await comfyuiFetch(comfyUIUrls.prompt,{
@@ -336,6 +332,7 @@ body: JSON.stringify(p),
 
 if (!response.ok) {
 const errorText=await response.text();
+comfyuiLogger.error('['+tag+'] プロンプト送信失敗: HTTP '+response.status);
 createToastError(
 `HTTP error! status: ${response.status}, message: ${errorText}`
 );
@@ -343,6 +340,7 @@ return null;
 }
 
 const responseData=await response.json();
+comfyuiLogger.info('['+tag+'] プロンプト送信成功: promptId='+responseData.prompt_id);
 return responseData;
 } catch (error) {
 let errorMessage="Text2Image Error. ";
@@ -354,15 +352,16 @@ errorMessage+=error.message;
 errorMessage+="check COMFYUI!";
 }
 
-comfyuiLogger.error("Error details:",error);
+comfyuiLogger.error('['+tag+'] '+errorMessage,error);
 createToastError(errorMessage);
 return null;
 }
 }
 
 async function comfyui_get_history_v2(promptId) {
+var tag=getComfyUIProviderTag();
 comfyuiLogger.debug(
-"comfyui_get_history_v2関数が呼び出されました。プロンプトID:",
+'['+tag+'] comfyui_get_history_v2 プロンプトID:',
 promptId
 );
 try {
@@ -372,22 +371,23 @@ headers: {
 accept: "application/json",
 },
 });
-comfyuiLogger.debug("サーバーに履歴データをリクエストしました。");
+comfyuiLogger.debug('['+tag+'] 履歴データ取得完了');
 const data=await response.json();
-comfyuiLogger.debug("履歴データ:",data);
+comfyuiLogger.debug('['+tag+'] 履歴データ:',data);
 return data;
 } catch (error) {
-comfyuiLogger.error("Text2Imageエラー:",error);
+comfyuiLogger.error('['+tag+'] Text2Imageエラー:',error);
 createToastError("Text2Image Error.","check COMFYUI!");
 return null;
 }
 }
 
 async function comfyui_track_prompt_progress_v2(promptId) {
-if (!socket) comfyuiConnect();
+if (!comfyuiGetSocket()) comfyuiConnect();
+var ws=comfyuiGetSocket();
 
 return new Promise((resolve,reject)=>{
-socket.onmessage=(event)=>{
+ws.onmessage=(event)=>{
 if (event.data instanceof Blob) {
 //skip
 } else {
@@ -411,13 +411,13 @@ resolve("Stop message received with matching promptId");
 }
 }
 };
-socket.onerror=(error)=>{
+ws.onerror=(error)=>{
 if(typeof resetAiStepProgress==='function'){
 resetAiStepProgress();
 }
 reject(`WebSocket error: ${error}`);
 };
-socket.onclose=()=>{
+ws.onclose=()=>{
 if(typeof resetAiStepProgress==='function'){
 resetAiStepProgress();
 }

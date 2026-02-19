@@ -1,5 +1,4 @@
 var unifiedSettingsWindow=(function(){
-var usLogger=new SimpleLogger('unifiedSettings',LogLevel.DEBUG);
 var overlayEl=null;
 function open(){
 if(!overlayEl)overlayEl=$('unifiedSettingsOverlay');

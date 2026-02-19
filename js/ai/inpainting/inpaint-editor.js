@@ -1,5 +1,4 @@
 // Inpaintエディタ（モーダルオーバーレイ）
-var inpaintLogger=new SimpleLogger('inpaint',LogLevel.DEBUG);
 
 var InpaintEditor=(function(){
 var isOpen=false;

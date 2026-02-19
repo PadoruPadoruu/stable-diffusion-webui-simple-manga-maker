@@ -1,5 +1,4 @@
 // ダッシュボードUIコンポーネント（モーダル表示）
-var dashboardLogger=new SimpleLogger('dashboard',LogLevel.DEBUG);
 var DashboardUI=(function(){
 var isInitialized=false;
 var isOpen=false;

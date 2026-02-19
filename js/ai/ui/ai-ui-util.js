@@ -20,7 +20,6 @@ providerRegistry.syncFromApiMode(apiMode);
 if(showToast)createToast("API CHANGE!","RunPod ComfyUI",2000);
 $('apiSettingsUrlHelpe').innerHTML='';
 firstComfyConnection=true;
-socket=null;
 } else if (selectedValue==="falaiButton") {
 apiMode=apis.FAL_AI;
 providerRegistry.syncFromApiMode(apiMode);

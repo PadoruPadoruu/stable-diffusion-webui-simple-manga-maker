@@ -27,3 +27,4 @@
 | 16 | 履歴 | ループやcanvas.add/remove連続呼び出しでsaveStateByManual()が都度発火しないか。都度発火すると大量の履歴スナップショットが生成され、メモリの圧迫・履歴保存による画面の固まり・Undo/Redoで無意味な操作が発生する。複数操作はchangeDoNotSaveHistory()で囲み最後に1回だけ保存 | 1 |
 | 17 | 性能 | forループ等でオブジェクトのプロパティを連続変更する際、毎回canvas.renderAll()を呼んでいないか。都度呼ぶとオブジェクト数×ループ回数分の再描画が走りUIがフリーズする。ループ外で最後に1回だけ呼ぶ | 1 |
 | 18 | ログ | Errorオブジェクトを文字列化する際にJSON.stringifyを使っていないか。Errorのmessage/name/stackは非列挙プロパティのためJSON.stringifyでは`{}`になる。`instanceof Error`で判定し`error.name + error.message`等で展開する | 1 |
+| 19 | ログ | 各ファイルで`new SimpleLogger()`していないか。ロガーは`js/core/logger.js`に集約定義し、各ファイルではグローバル変数として参照する | 1 |

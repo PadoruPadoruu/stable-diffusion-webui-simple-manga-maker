@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>接続ステータス表示 デザイン案</title>
+<style>
+  body {
+    background: #1a1a1a;
+    color: #fff;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    padding: 20px;
+    margin: 0;
+  }
+  h1 { font-size: 18px; color: #ff9532; margin-top: 40px; }
+  h2 { font-size: 14px; color: #ff7c7c; margin-top: 30px; }
+  .description { font-size: 12px; color: #aaa; margin-bottom: 12px; }
+
+  /* ========================================
+     サイドバー風コンテナ（実際のサイドバー幅を模倣）
+     ======================================== */
+  .sidebar-mock {
+    width: 260px;
+    background: #212121;
+    border: 1px solid #505050;
+    border-radius: 4px;
+    padding: 8px;
+    margin: 10px 0 30px 0;
+  }
+
+  /* ボタン行（既存のUIを模倣） */
+  .sidebar-mock .button-row {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+  }
+  .sidebar-mock .role-assign-trigger {
+    font-size: 11px;
+    padding: 1px 6px;
+    color: #ff7c7c;
+    border: 1px solid rgba(160,48,48,0.4);
+    background: rgba(129,0,0,0.2);
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  /* AI Check チェックボックス行 */
+  .sidebar-mock .check-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #dedede;
+    margin-bottom: 4px;
+  }
+
+  /* ========================================
+     現状: 単一ラベル
+     ======================================== */
+  .current-label {
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  /* ========================================
+     案A: 複数プロバイダー縦並び
+     ======================================== */
+  .status-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 11px;
+  }
+  .status-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .status-dot.on { background: #4caf50; box-shadow: 0 0 4px #4caf50; }
+  .status-dot.off { background: #f44336; box-shadow: 0 0 4px rgba(244,67,54,0.5); }
+  .status-name { color: #dedede; }
+  .status-state { font-weight: bold; }
+  .status-state.on { color: #4caf50; }
+  .status-state.off { color: #f44336; }
+
+  /* ========================================
+     案B: コンパクト横並び
+     ======================================== */
+  .status-inline {
+    display: flex;
+    gap: 8px;
+    font-size: 11px;
+    flex-wrap: wrap;
+  }
+  .status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 1px 5px;
+    border-radius: 3px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+  }
+  .status-chip.on { border-color: rgba(76,175,80,0.4); }
+  .status-chip.off { border-color: rgba(244,67,54,0.3); }
+
+  /* ========================================
+     比較テーブル
+     ======================================== */
+  .comparison { margin-top: 40px; }
+  .comparison table {
+    border-collapse: collapse;
+    font-size: 12px;
+    width: 100%;
+    max-width: 700px;
+  }
+  .comparison th, .comparison td {
+    border: 1px solid #505050;
+    padding: 6px 10px;
+    text-align: left;
+  }
+  .comparison th { background: #333; color: #ff7c7c; }
+  .comparison td { background: #2a2a2a; }
+  .good { color: #4caf50; }
+  .bad { color: #f44336; }
+
+  /* セクション区切り */
+  hr { border: none; border-top: 1px solid #505050; margin: 30px 0; }
+</style>
+</head>
+<body>
+
+<h1>接続ステータス表示の改善 — デザイン案</h1>
+
+<!-- ==================== 現状 ==================== -->
+<hr>
+<h1>現状の表示</h1>
+<p class="description">
+  activeプロバイダー1つの状態しか表示されない。<br>
+  "ComfyUI ON" がLocalなのかRunPodなのか区別できない。
+</p>
+
+<h2>activeがLocal ComfyUIの場合</h2>
+<div class="sidebar-mock">
+  <div class="button-row">
+    <button class="role-assign-trigger">&#9881; 使用APIサービス</button>
+    <button class="role-assign-trigger">&#128295; 使用モデル</button>
+  </div>
+  <div class="check-row">
+    <label><input type="checkbox" checked> AI Check</label>
+    <span class="current-label" style="color: green;">ComfyUI ON</span>
+  </div>
+</div>
+
+<h2>activeがRunPodの場合</h2>
+<div class="sidebar-mock">
+  <div class="button-row">
+    <button class="role-assign-trigger">&#9881; 使用APIサービス</button>
+    <button class="role-assign-trigger">&#128295; 使用モデル</button>
+  </div>
+  <div class="check-row">
+    <label><input type="checkbox" checked> AI Check</label>
+    <span class="current-label" style="color: green;">RunPod ON</span>
+  </div>
+</div>
+
+<p class="description" style="color: #f44336;">
+  問題: T2I=Local、Inpaint=RunPod のように混在設定の場合、片方しか見えない。<br>
+  "RunPod" だけでは ComfyUI なのか分かりにくい。
+</p>
+
+<!-- ==================== 案A ==================== -->
+<hr>
+<h1>案A: 縦並びリスト表示</h1>
+<p class="description">
+  ロール割り当てで使用中のプロバイダーを全て縦に並べて表示。<br>
+  ドット + プロバイダー名(種別) + ON/OFF で状態が一目瞭然。<br>
+  未使用プロバイダーは非表示。
+</p>
+
+<h2>Local + RunPod 両方使用中</h2>
+<div class="sidebar-mock">
+  <div class="button-row">
+    <button class="role-assign-trigger">&#9881; 使用APIサービス</button>
+    <button class="role-assign-trigger">&#128295; 使用モデル</button>
+  </div>
+  <div class="check-row">
+    <label><input type="checkbox" checked> AI Check</label>
+  </div>
+  <div class="status-list">
+    <div class="status-item">
+      <span class="status-dot on"></span>
+      <span class="status-name">ComfyUI (Local)</span>
+      <span class="status-state on">ON</span>
+    </div>
+    <div class="status-item">
+      <span class="status-dot off"></span>
+      <span class="status-name">ComfyUI (RunPod)</span>
+      <span class="status-state off">OFF</span>
+    </div>
+  </div>
+</div>
+
+<h2>Local のみ使用</h2>
+<div class="sidebar-mock">
+  <div class="button-row">
+    <button class="role-assign-trigger">&#9881; 使用APIサービス</button>
+    <button class="role-assign-trigger">&#128295; 使用モデル</button>
+  </div>
+  <div class="check-row">
+    <label><input type="checkbox" checked> AI Check</label>
+  </div>
+  <div class="status-list">
+    <div class="status-item">
+      <span class="status-dot on"></span>
+      <span class="status-name">ComfyUI (Local)</span>
+      <span class="status-state on">ON</span>
+    </div>
+  </div>
+</div>
+
+<h2>SD WebUI + Fal.ai（他プロバイダー混在）</h2>
+<div class="sidebar-mock">
+  <div class="button-row">
+    <button class="role-assign-trigger">&#9881; 使用APIサービス</button>
+    <button class="role-assign-trigger">&#128295; 使用モデル</button>
+  </div>
+  <div class="check-row">
+    <label><input type="checkbox" checked> AI Check</label>
+  </div>
+  <div class="status-list">
+    <div class="status-item">
+      <span class="status-dot on"></span>
+      <span class="status-name">SD WebUI</span>
+      <span class="status-state on">ON</span>
+    </div>
+    <div class="status-item">
+      <span class="status-dot on"></span>
+      <span class="status-name">Fal.ai</span>
+      <span class="status-state on">ON</span>
+    </div>
+  </div>
+</div>
+
+<h2>全プロバイダー使用中（最大ケース）</h2>
+<div class="sidebar-mock">
+  <div class="button-row">
+    <button class="role-assign-trigger">&#9881; 使用APIサービス</button>
+    <button class="role-assign-trigger">&#128295; 使用モデル</button>
+  </div>
+  <div class="check-row">
+    <label><input type="checkbox" checked> AI Check</label>
+  </div>
+  <div class="status-list">
+    <div class="status-item">
+      <span class="status-dot on"></span>
+      <span class="status-name">ComfyUI (Local)</span>
+      <span class="status-state on">ON</span>
+    </div>
+    <div class="status-item">
+      <span class="status-dot off"></span>
+      <span class="status-name">ComfyUI (RunPod)</span>
+      <span class="status-state off">OFF</span>
+    </div>
+    <div class="status-item">
+      <span class="status-dot on"></span>
+      <span class="status-name">SD WebUI</span>
+      <span class="status-state on">ON</span>
+    </div>
+    <div class="status-item">
+      <span class="status-dot on"></span>
+      <span class="status-name">Fal.ai</span>
+      <span class="status-state on">ON</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ==================== 案B ==================== -->
+<hr>
+<h1>案B: チップ横並び表示</h1>
+<p class="description">
+  省スペース。チップ風のバッジで横に並べる。<br>
+  ボーダー色で ON/OFF を表現。折り返し対応。
+</p>
+
+<h2>Local + RunPod 両方使用中</h2>
+<div class="sidebar-mock">
+  <div class="button-row">
+    <button class="role-assign-trigger">&#9881; 使用APIサービス</button>
+    <button class="role-assign-trigger">&#128295; 使用モデル</button>
+  </div>
+  <div class="check-row">
+    <label><input type="checkbox" checked> AI Check</label>
+  </div>
+  <div class="status-inline">
+    <span class="status-chip on">
+      <span class="status-dot on"></span>
+      <span class="status-name">ComfyUI (Local)</span>
+    </span>
+    <span class="status-chip off">
+      <span class="status-dot off"></span>
+      <span class="status-name">ComfyUI (RunPod)</span>
+    </span>
+  </div>
+</div>
+
+<h2>Local のみ使用</h2>
+<div class="sidebar-mock">
+  <div class="button-row">
+    <button class="role-assign-trigger">&#9881; 使用APIサービス</button>
+    <button class="role-assign-trigger">&#128295; 使用モデル</button>
+  </div>
+  <div class="check-row">
+    <label><input type="checkbox" checked> AI Check</label>
+  </div>
+  <div class="status-inline">
+    <span class="status-chip on">
+      <span class="status-dot on"></span>
+      <span class="status-name">ComfyUI (Local)</span>
+    </span>
+  </div>
+</div>
+
+<h2>全プロバイダー使用中（折り返しケース）</h2>
+<div class="sidebar-mock">
+  <div class="button-row">
+    <button class="role-assign-trigger">&#9881; 使用APIサービス</button>
+    <button class="role-assign-trigger">&#128295; 使用モデル</button>
+  </div>
+  <div class="check-row">
+    <label><input type="checkbox" checked> AI Check</label>
+  </div>
+  <div class="status-inline">
+    <span class="status-chip on">
+      <span class="status-dot on"></span>
+      <span class="status-name">ComfyUI (Local)</span>
+    </span>
+    <span class="status-chip off">
+      <span class="status-dot off"></span>
+      <span class="status-name">ComfyUI (RunPod)</span>
+    </span>
+    <span class="status-chip on">
+      <span class="status-dot on"></span>
+      <span class="status-name">SD WebUI</span>
+    </span>
+    <span class="status-chip on">
+      <span class="status-dot on"></span>
+      <span class="status-name">Fal.ai</span>
+    </span>
+  </div>
+</div>
+
+
+<!-- ==================== 比較 ==================== -->
+<hr>
+<div class="comparison">
+<h1>案の比較</h1>
+<table>
+  <tr>
+    <th></th>
+    <th>現状</th>
+    <th>案A（縦並び）</th>
+    <th>案B（チップ横並び）</th>
+  </tr>
+  <tr>
+    <td>複数プロバイダー表示</td>
+    <td class="bad">1つだけ</td>
+    <td class="good">全表示</td>
+    <td class="good">全表示</td>
+  </tr>
+  <tr>
+    <td>Local/RunPod 区別</td>
+    <td class="bad">不可</td>
+    <td class="good">明確</td>
+    <td class="good">明確</td>
+  </tr>
+  <tr>
+    <td>省スペース</td>
+    <td class="good">最小</td>
+    <td>中程度（縦に伸びる）</td>
+    <td class="good">コンパクト</td>
+  </tr>
+  <tr>
+    <td>視認性</td>
+    <td>低い</td>
+    <td class="good">高い（一覧性）</td>
+    <td>中程度</td>
+  </tr>
+  <tr>
+    <td>実装コスト</td>
+    <td>—</td>
+    <td>低い</td>
+    <td>低い</td>
+  </tr>
+</table>
+</div>
+
+<hr>
+<h1>実装方針メモ</h1>
+<div class="description" style="font-size: 13px; line-height: 1.6; max-width: 700px;">
+  <p><strong>表示対象の判定:</strong> ロール割り当て (providerRegistry.getAllRoleAssignments()) で使用中のプロバイダーIDを収集。<br>
+  割り当てが無い場合は activeProvider のみ表示。</p>
+
+  <p><strong>heartbeat の変更:</strong> 現在は active プロバイダー1つだけ heartbeat する。<br>
+  → 使用中の全プロバイダーに対して個別に heartbeat を実行し、各ラベルを更新。</p>
+
+  <p><strong>プロバイダー表示名の変更:</strong></p>
+  <ul>
+    <li>LocalComfyUIProvider.name: "ComfyUI" → "ComfyUI (Local)"</li>
+    <li>RunPodComfyUIProvider.name: "RunPod" → "ComfyUI (RunPod)"</li>
+    <li>SD WebUI, Fal.ai: 変更なし</li>
+  </ul>
+
+  <p><strong>HTMLの変更:</strong> ExternalService_Heartbeat_Label を単一 label → コンテナ div に変更。<br>
+  JS側で使用中プロバイダーごとの status-item を動的生成。</p>
+</div>
+
+</body>
+</html>

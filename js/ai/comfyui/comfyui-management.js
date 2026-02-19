@@ -12,9 +12,9 @@ _comfyUIExecProvider=null;
 function getComfyUIServerAddress(){
 var provider=_comfyUIExecProvider||providerRegistry.getActive();
 if(provider&&provider.getEndpointUrl()){
-return provider.getEndpointUrl();
+return provider.getEndpointUrl().replace(/\/+$/,'');
 }
-return $('comfyUIPageUrl').value;
+return $('comfyUIPageUrl').value.replace(/\/+$/,'');
 }
 
 function getComfyUIAuthHeaders(){
@@ -28,12 +28,22 @@ return{Authorization:'Bearer '+apiKey};
 return{};
 }
 
+function getComfyUIProviderTag(){
+var provider=_comfyUIExecProvider||providerRegistry.getActive();
+if(provider){
+return provider.name||provider.id;
+}
+return 'ComfyUI';
+}
+
 function comfyuiFetch(url,options){
 options=options||{};
 var authHeaders=getComfyUIAuthHeaders();
 if(Object.keys(authHeaders).length>0){
 options.headers=Object.assign({},options.headers||{},authHeaders);
 }
+var tag=getComfyUIProviderTag();
+comfyuiLogger.debug('['+tag+'] fetch: '+url);
 return fetch(url,options);
 }
 
@@ -88,32 +98,44 @@ return endpoints[key]||'';
 
 let reader=new FileReader();
 
-var socket=null;
+var comfyuiSockets=new Map();
 const comfyUIuuid=crypto.randomUUID();
 var selectedWorkflow=null;
 var processingPrompt=false;
 var workflowFileLoad="";
 
+function getComfyUISocketKey(){
+var provider=_comfyUIExecProvider||providerRegistry.getActive();
+return provider?provider.id:'local';
+}
+
+function comfyuiGetSocket(){
+return comfyuiSockets.get(getComfyUISocketKey())||null;
+}
+
 function comfyuiConnect() {
+var key=getComfyUISocketKey();
 try {
 var wsUrl=comfyUIUrls.ws+'?clientId='+comfyUIuuid;
 var authHeaders=getComfyUIAuthHeaders();
 if(authHeaders.Authorization){
 wsUrl+='&token='+encodeURIComponent(authHeaders.Authorization.replace('Bearer ',''));
 }
-socket=new WebSocket(wsUrl);
-socket.addEventListener("open",(event)=>{
-comfyuiLogger.info("ComfyUIへの接続に成功しました。");
+var ws=new WebSocket(wsUrl);
+comfyuiSockets.set(key,ws);
+ws.addEventListener("open",(event)=>{
+var tag=getComfyUIProviderTag();
+comfyuiLogger.info('['+tag+'] WebSocket接続成功');
 });
-socket.addEventListener("close",(event)=>{
-socket=null;
+ws.addEventListener("close",(event)=>{
+comfyuiSockets.delete(key);
 });
-socket.addEventListener("error",(event)=>{
-socket=null;
+ws.addEventListener("error",(event)=>{
+comfyuiSockets.delete(key);
 });
 return;
 } catch (error) {
-socket=null;
+comfyuiSockets.delete(key);
 }
 }
 
@@ -128,14 +150,15 @@ method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({delete:[promptId]})
 });
-comfyuiLogger.debug("Cancelled prompt: "+promptId);
+var tag=getComfyUIProviderTag();
+comfyuiLogger.info('['+tag+'] Cancelled prompt: '+promptId);
 }catch(error){
-comfyuiLogger.error("Cancel prompt error:",error);
+var tag=getComfyUIProviderTag();
+comfyuiLogger.error('['+tag+'] Cancel prompt error:',error);
 }
 }
 
 async function comfyuiApiHeartbeat() {
-const label=$("ExternalService_Heartbeat_Label");
 const labelfw=$("ExternalService_Heartbeat_Label_fw");
 
 try {
@@ -149,10 +172,6 @@ accept: "application/json",
 });
 
 if (response.ok) {
-if (label) {
-label.innerHTML=providerName+" ON";
-label.style.color="green";
-}
 if (labelfw) {
 labelfw.innerHTML=providerName+" ON";
 labelfw.style.color="green";
@@ -164,20 +183,12 @@ firstComfyConnection=false;
 }
 return true;
 } else {
-if (label) {
-label.innerHTML=providerName+" OFF";
-label.style.color="red";
-}
 if (labelfw) {
 labelfw.innerHTML=providerName+" OFF";
 labelfw.style.color="red";
 }
 }
 } catch (error) {
-if (label) {
-label.innerHTML=providerName+" OFF";
-label.style.color="red";
-}
 if (labelfw) {
 labelfw.innerHTML=providerName+" OFF";
 labelfw.style.color="red";
@@ -188,7 +199,7 @@ return false;
 
 async function comfyuiHandleProcessQueue(layer,spinnerId,Type='T2I',extraData) {
 var startTime=Date.now();
-if (!socket) comfyuiConnect();
+if (!comfyuiGetSocket()) comfyuiConnect();
 var requestData=baseRequestData(layer);
 if (basePrompt.text2img_model!=""){
 requestData["model"]=basePrompt.text2img_model;

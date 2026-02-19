@@ -1,7 +1,7 @@
 // ローカルComfyUIプロバイダー: 既存のComfyUI関数をAIProviderインターフェースでラップ
 class LocalComfyUIProvider extends AIProvider{
 constructor(){
-super('localComfyUI','ComfyUI');
+super('localComfyUI','ComfyUI (Local)');
 }
 getSupportedRoles(){
 return[

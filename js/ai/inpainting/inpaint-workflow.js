@@ -1,10 +1,9 @@
 // Inpaintワークフロー連携
-var inpaintWorkflowLogger=new SimpleLogger('inpaintWorkflow',LogLevel.DEBUG);
 
 var InpaintWorkflow=(function(){
 
 async function generate(imageDataUrl,maskDataUrl,prompt,negativePrompt,denoise){
-if(!socket) comfyuiConnect();
+if(!comfyuiGetSocket()) comfyuiConnect();
 
 var selectedWorkflow=await comfyUIWorkflowRepository.getEnabledWorkflowByType("Inpaint");
 if(!selectedWorkflow){

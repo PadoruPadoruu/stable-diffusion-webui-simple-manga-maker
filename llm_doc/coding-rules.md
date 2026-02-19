@@ -11,9 +11,10 @@
 
 ## ログ
 - `console.log`禁止 → `js/core/logger.js`のSimpleLoggerを使用
-- 各モジュールでロガーを作成: `var log=new SimpleLogger('module',LogLevel.DEBUG);`
-- レベル: TRACE, DEBUG, INFO, WARN, ERROR, SILENT
-- 使用例: `log.debug("msg");`, `log.error("msg");`
+- ロガーは`js/core/logger.js`に集約定義（各ファイルで`new SimpleLogger()`しない）
+- 新規ロガー追加時は`logger.js`末尾に`const xxxLogger=SimpleLogger('xxx',LogLevel.WARN);`を追加
+- レベル: TRACE, DEBUG, INFO, WARN, ERROR, SILENT（デフォルトWARN）
+- 使用例: `logger.debug("msg");`, `comfyuiLogger.error("msg");`
 
 ## フォーマットスクリプト
 ```bash

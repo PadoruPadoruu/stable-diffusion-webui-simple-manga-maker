@@ -1,5 +1,4 @@
 // focus-trap.js - モーダル用フォーカストラップユーティリティ
-var focusTrapLogger=new SimpleLogger('focusTrap',LogLevel.DEBUG);
 var FocusTrap={
 _activeTraps:[],
 _focusableSelector:'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])',

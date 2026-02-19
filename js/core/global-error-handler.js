@@ -1,5 +1,4 @@
 // グローバルエラーハンドラ（未キャッチのエラーとPromise rejectionを検知）
-var errorHandlerLogger=new SimpleLogger('errorHandler',LogLevel.DEBUG);
 
 window.onerror=function(message,source,lineno,colno,error){
 errorHandlerLogger.error('Uncaught error:',message,'at',source+':'+lineno+':'+colno);

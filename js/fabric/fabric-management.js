@@ -1,6 +1,5 @@
 var perfCounters={forcedAdjust:0,highlight:0,coords:0,updateTemp:0,objectAdded:0,objectRemoved:0};
 var skipForcedAdjust=false;
-var perfLogger=new SimpleLogger('perf',LogLevel.DEBUG);
 setInterval(function(){
 var c=perfCounters;
 if(c.forcedAdjust||c.highlight||c.coords||c.updateTemp||c.objectAdded||c.objectRemoved){
@@ -314,7 +313,6 @@ obj.set('fill','rgba(255,255,255,0.25)');
 });
 
 let lastCheckObject=null;
-var _dbgFabric=new SimpleLogger('DBG-fabric',LogLevel.DEBUG);
 canvas.on('mouse:down',function(e) {
 eventLogger.trace('18: mouse:down');
 if(canvas.isDrawingMode||isKnifeMode){

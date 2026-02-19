@@ -4,7 +4,6 @@ var providers={};
 var activeProviderId=null;
 var apiModeToProviderId={};
 var roleAssignments={};
-var registryLogger=new SimpleLogger('providerRegistry',LogLevel.DEBUG);
 function register(provider){
 providers[provider.id]=provider;
 registryLogger.debug('Registered provider: '+provider.id);

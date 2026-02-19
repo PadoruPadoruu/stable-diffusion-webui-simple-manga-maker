@@ -1,8 +1,7 @@
 // Role Assignment: Role×プロバイダーのマトリクスUI
 var roleAssignmentUI=(function(){
-var raLogger=new SimpleLogger('roleAssignUI',LogLevel.DEBUG);
 var PROVIDER_COLUMNS=[
-{id:'localComfyUI',label:'ComfyUI'},
+{id:'localComfyUI',label:'ComfyUI (Local)'},
 {id:'localSDWebUI',label:'SD WebUI (A1111/Forge)'},
 {id:'runpodComfyUI',label:'RunPod ComfyUI'},
 {id:'falai',label:'Fal.ai'}
@@ -13,7 +12,9 @@ var ROLE_ROWS=[
 {role:AI_ROLES.Inpaint,labelKey:'roleInpaint'},
 {role:AI_ROLES.Upscaler,labelKey:'roleUpscaler'},
 {role:AI_ROLES.RemoveBG,labelKey:'roleRemoveBG'},
-{role:AI_ROLES.I2I_Angle,labelKey:'roleAngle'}
+{role:AI_ROLES.I2I_Angle,labelKey:'roleAngle'},
+{role:AI_ROLES.Image2Prompt_CLIP,labelKey:'roleInterrogateCLIP'},
+{role:AI_ROLES.Image2Prompt_DEEPDOORU,labelKey:'roleInterrogateDEEPDOORU'}
 ];
 var tempAssignments={};
 function open(){
@@ -68,6 +69,7 @@ providerRegistry.setRoleAssignment(row.role,col.id);
 updateWorkflowType();
 updateLayerPanel();
 debouncedSettingsSave();
+apiHeartbeat();
 }
 });
 td.appendChild(radio);

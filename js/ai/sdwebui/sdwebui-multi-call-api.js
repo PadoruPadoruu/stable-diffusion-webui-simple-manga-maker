@@ -141,39 +141,29 @@ createToastError("Fetch Error","Failed to fetch modules.");
 }
 
 function sdwebuiApiHeartbeat() {
-const label=$('ExternalService_Heartbeat_Label');
 if(!sdWebUIUrls||!sdWebUIUrls.ping){
-return;
+return Promise.resolve(false);
 }
 
-fetch(sdWebUIUrls.ping,{
+return fetch(sdWebUIUrls.ping,{
 method: 'GET',
 headers: {'Accept': 'application/json'}
 })
-.then(response=>{
+.then(function(response){
 if (apiMode==apis.A1111) {
 if (response.ok) {
-label.innerHTML='SD WebUI or Forge ON';
-label.style.color='green';
-
 if(firstSDConnection){
 getDiffusionInformation();
 firstSDConnection=false;
 }
 return true;
-} else {
-label.innerHTML='SD WebUI or Forge OFF';
-label.style.color='red';
 }
 }
-})
-.catch(error=>{
-if (apiMode==apis.A1111){
-label.innerHTML='SD WebUI or Forge OFF';
-label.style.color='red';
-}
-});
 return false;
+})
+.catch(function(){
+return false;
+});
 }
 
 
