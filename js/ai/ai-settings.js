@@ -57,6 +57,7 @@ falaiModelI2I:'https://fal.ai/explore/search?categories=image-to-image',
 falaiModelUpscale:'https://fal.ai/explore/search?q=upscale&categories=image-to-image',
 falaiModelRembg:'https://fal.ai/explore/search?q=remove+background&categories=image-to-image'
 };
+var allowedFalaiSelectIds=['falaiModelT2I','falaiModelI2I','falaiModelUpscale','falaiModelRembg'];
 document.querySelectorAll('.falai-list-btn').forEach(function(btn){
 btn.addEventListener('click',function(event){
 event.stopPropagation();
@@ -68,6 +69,7 @@ document.querySelectorAll('.falai-model-btn').forEach(function(btn){
 btn.addEventListener('click',function(event){
 event.stopPropagation();
 var selectId=btn.getAttribute('data-select');
+if(allowedFalaiSelectIds.indexOf(selectId)===-1)return;
 var el=$(selectId);
 if(el&&el.value){
 window.open('https://fal.ai/models/'+el.value.split('/').map(encodeURIComponent).join('/'),'_blank');
@@ -80,7 +82,7 @@ var btn=document.querySelector('.falai-model-btn[data-select="'+selectId+'"]');
 if(!btn)return;
 btn.style.display=el&&el.value?'inline-block':'none';
 }
-['falaiModelT2I','falaiModelI2I','falaiModelUpscale','falaiModelRembg'].forEach(function(id){
+allowedFalaiSelectIds.forEach(function(id){
 $(id).addEventListener('change',function(){updateFalaiModelBtnVisibility(id);});
 updateFalaiModelBtnVisibility(id);
 });
