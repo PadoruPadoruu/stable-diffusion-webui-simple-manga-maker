@@ -1,19 +1,20 @@
 // Inpaintワークフロー連携
-var inpaintWorkflowLogger=new SimpleLogger('inpaintWorkflow',LogLevel.DEBUG);
 
 var InpaintWorkflow=(function(){
 
 async function generate(imageDataUrl,maskDataUrl,prompt,negativePrompt,denoise){
-if(!socket) comfyuiConnect();
+if(!comfyuiGetSocket()) comfyuiConnect();
 
-var selectedWorkflow=await comfyUIWorkflowRepository.getEnabledWorkflowByType("Inpaint");
+var repo=(_comfyUIExecProvider&&_comfyUIExecProvider.id==='runpodComfyUI')?comfyUIWorkflowRepo_runpod:comfyUIWorkflowRepo_local;
+var selectedWorkflow=await repo.getEnabledWorkflowByType("Inpaint");
 if(!selectedWorkflow){
 createToastError("Inpaint Error","No Inpaint workflow configured");
 return null;
 }
 
 var classTypeLists=getClassTypeOnlyByJson(selectedWorkflow);
-if(!checkWorkflowNodeVsComfyUI(classTypeLists)){
+var objInfoRepo=(_comfyUIExecProvider&&_comfyUIExecProvider.id==='runpodComfyUI')?comfyObjectInfoRepo_runpod:comfyObjectInfoRepo_local;
+if(!await checkWorkflowNodeVsComfyUI(classTypeLists,objInfoRepo)){
 return null;
 }
 
@@ -50,6 +51,10 @@ return null;
 inpaintWorkflowLogger.debug("Inpaint generation complete");
 return result;
 }catch(error){
+if(error.message==='Queue cancelled'||error.message==='Task cancelled'){
+inpaintWorkflowLogger.debug("Inpaint cancelled by user");
+return null;
+}
 inpaintWorkflowLogger.error("Inpaint generation error:",error);
 var help=getText("comfyUI_workflowErrorHelp");
 createToastError("Inpaint Error",[error.message,help],8000);

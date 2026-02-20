@@ -6,7 +6,7 @@
     width: 100vw;
     height: 100vh;
     background: rgba(0, 0, 0, 0.6);
-    z-index: 10000;
+    z-index: var(--z-modal);
     display: none;
     justify-content: center;
     align-items: center;
@@ -19,9 +19,9 @@
     height: 85vh;
     display: flex;
     flex-direction: column;
-    background: #1a1a1a;
+    background: var(--color-base);
     border-radius: var(--fjm-border-radius);
-    border: 1px solid #333;
+    border: 1px solid var(--color-secondary);
 }
 
 .dashboard-modal-close-btn {
@@ -30,7 +30,7 @@
     right: 10px;
     background: none;
     border: none;
-    color: #fff;
+    color: var(--color-text-primary);
     font-size: 20px;
     cursor: pointer;
     z-index: 3;
@@ -60,11 +60,11 @@
     margin-bottom: 20px;
     padding-bottom: 12px;
     padding-right: 36px;
-    border-bottom: 1px solid #333;
+    border-bottom: 1px solid var(--color-secondary);
     position: sticky;
     top: -16px;
     z-index: 2;
-    background: #1a1a1a;
+    background: var(--color-base);
     margin: -16px -16px 20px -16px;
     padding: 16px 52px 12px 16px;
 }
@@ -77,7 +77,7 @@
 
 .dashboard-clear-btn {
     background: #f44336;
-    color: #fff;
+    color: var(--color-text-primary);
     border: none;
     padding: 6px 12px;
     border-radius: var(--fjm-button-border-radius);
@@ -99,11 +99,11 @@
 }
 
 .summary-card {
-    background: #252525;
+    background: var(--color-base);
     border-radius: var(--fjm-border-radius);
     padding: 8px 10px;
     text-align: center;
-    border: 1px solid #333;
+    border: 1px solid var(--color-secondary);
 }
 
 .summary-value {
@@ -115,16 +115,16 @@
 
 .summary-label {
     font-size: 10px;
-    color: #888;
+    color: var(--slider-accent);
 }
 
 /* Dashboard Sections */
 .dashboard-section {
-    background: #252525;
+    background: var(--color-base);
     border-radius: var(--fjm-border-radius);
     padding: 16px;
     margin-bottom: 16px;
-    border: 1px solid #333;
+    border: 1px solid var(--color-secondary);
 }
 
 .section-header {
@@ -136,15 +136,15 @@
 
 .section-header h4 {
     margin: 0;
-    color: #fff;
+    color: var(--color-text-primary);
     font-size: 14px;
 }
 
 /* Mode Selector */
 .mode-selector {
-    background: #1a1a1a;
-    color: #fff;
-    border: 1px solid #444;
+    background: var(--color-base);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-tertiary);
     padding: 4px 8px;
     border-radius: var(--textarea-border-radius);
     font-size: 12px;
@@ -171,26 +171,26 @@
 .stats-table td {
     padding: 8px 12px;
     text-align: left;
-    border-bottom: 1px solid #333;
+    border-bottom: 1px solid var(--color-secondary);
 }
 
 .stats-table th {
-    color: #888;
+    color: var(--slider-accent);
     font-weight: normal;
     font-size: 10px;
 }
 
 .stats-table td {
-    color: #fff;
+    color: var(--color-text-primary);
 }
 
 .stats-table tbody tr:hover {
-    background: #2a2a2a;
+    background: var(--color-secondary);
 }
 
 /* Chart Container */
 .chart-container {
-    background: #1a1a1a;
+    background: var(--color-base);
     border-radius: var(--fjm-button-border-radius);
     padding: 8px;
 }
@@ -208,7 +208,7 @@
 
 .tag-item {
     padding: 8px 0;
-    border-bottom: 1px solid #333;
+    border-bottom: 1px solid var(--color-secondary);
 }
 
 .tag-item:last-child {
@@ -223,7 +223,7 @@
 }
 
 .tag-name {
-    color: #fff;
+    color: var(--color-text-primary);
     font-size: 13px;
     word-break: break-all;
 }
@@ -237,7 +237,7 @@
 }
 
 .tag-bar-container {
-    background: #333;
+    background: var(--color-secondary);
     height: 4px;
     border-radius: 2px;
     overflow: hidden;
@@ -251,7 +251,7 @@
 }
 
 .no-tags {
-    color: #666;
+    color: var(--slider-accent);
     text-align: center;
     padding: 20px;
     font-size: 13px;
@@ -283,7 +283,7 @@
 .heatmap-label {
     width: 40px;
     font-size: 10px;
-    color: #888;
+    color: var(--slider-accent);
     text-align: right;
     padding-right: 8px;
     flex-shrink: 0;
@@ -293,7 +293,7 @@
     width: 20px;
     height: 16px;
     font-size: 9px;
-    color: #666;
+    color: var(--slider-accent);
     text-align: center;
     flex-shrink: 0;
 }
@@ -321,7 +321,7 @@
 /* Small Clear Button */
 .dashboard-clear-btn-small {
     background: #f44336;
-    color: #fff;
+    color: var(--color-text-primary);
     border: none;
     padding: 4px 8px;
     border-radius: var(--fjm-button-border-radius);
@@ -337,7 +337,7 @@
 /* Download Button */
 .dashboard-download-btn {
     background: #00bcd4;
-    color: #1a1a1a;
+    color: var(--color-base);
     border: none;
     padding: 4px 8px;
     border-radius: var(--fjm-button-border-radius);
@@ -353,7 +353,7 @@
 
 /* Wordcloud */
 .wordcloud-container {
-    background: #1a1a1a;
+    background: var(--color-base);
     border-radius: var(--fjm-button-border-radius);
     padding: 8px;
     overflow: visible;
@@ -376,11 +376,11 @@
 .streak-card {
     flex: 1;
     min-width: 80px;
-    background: #1a1a1a;
+    background: var(--color-base);
     border-radius: var(--fjm-border-radius);
     padding: 12px;
     text-align: center;
-    border: 1px solid #333;
+    border: 1px solid var(--color-secondary);
 }
 
 .streak-icon {
@@ -396,7 +396,7 @@
 
 .streak-label {
     font-size: 10px;
-    color: #888;
+    color: var(--slider-accent);
     margin-top: 2px;
 }
 
@@ -422,7 +422,7 @@
 
 .calendar-month-label {
     font-size: 9px;
-    color: #888;
+    color: var(--slider-accent);
     text-align: left;
 }
 
@@ -442,7 +442,7 @@
     width: 24px;
     height: 11px;
     font-size: 9px;
-    color: #888;
+    color: var(--slider-accent);
     text-align: right;
     line-height: 11px;
 }
@@ -466,7 +466,7 @@
 }
 
 .calendar-cell:hover {
-    outline: 1px solid #fff;
+    outline: 1px solid var(--color-text-primary);
     outline-offset: -1px;
 }
 
@@ -482,7 +482,7 @@
     margin-top: 8px;
     justify-content: flex-end;
     font-size: 9px;
-    color: #888;
+    color: var(--slider-accent);
 }
 
 .calendar-legend-cell {
@@ -540,16 +540,16 @@
 }
 
 .goal-label {
-    color: #fff;
+    color: var(--color-text-primary);
     font-size: 12px;
     min-width: 80px;
 }
 
 .goal-input {
     width: 70px;
-    background: #1a1a1a;
-    color: #fff;
-    border: 1px solid #444;
+    background: var(--color-base);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-tertiary);
     padding: 4px 8px;
     border-radius: var(--textarea-border-radius);
     font-size: 12px;
@@ -565,7 +565,7 @@
 }
 
 .goal-progress-wrap {
-    background: #333;
+    background: var(--color-secondary);
     border-radius: 4px;
     height: 20px;
     overflow: hidden;
@@ -585,7 +585,7 @@
 
 .goal-progress-bar span {
     font-size: 10px;
-    color: #fff;
+    color: var(--color-text-primary);
     white-space: nowrap;
     text-shadow: 0 0 2px rgba(0,0,0,0.5);
 }
@@ -598,11 +598,11 @@
 }
 
 .badge-item {
-    background: #1a1a1a;
+    background: var(--color-base);
     border-radius: var(--fjm-border-radius);
     padding: 10px 6px;
     text-align: center;
-    border: 1px solid #333;
+    border: 1px solid var(--color-secondary);
     transition: transform 0.2s;
 }
 
@@ -622,12 +622,12 @@
 
 .badge-name {
     font-size: 10px;
-    color: #fff;
+    color: var(--color-text-primary);
     line-height: 1.2;
 }
 
 .badge-item.badge-locked .badge-name {
-    color: #666;
+    color: var(--slider-accent);
 }
 
 /* Export */
@@ -644,18 +644,18 @@
 
 .dashboard-container::-webkit-scrollbar-track,
 .top-tags-container::-webkit-scrollbar-track {
-    background: #1a1a1a;
+    background: var(--color-base);
 }
 
 .dashboard-container::-webkit-scrollbar-thumb,
 .top-tags-container::-webkit-scrollbar-thumb {
-    background: #444;
+    background: var(--color-tertiary);
     border-radius: 3px;
 }
 
 .dashboard-container::-webkit-scrollbar-thumb:hover,
 .top-tags-container::-webkit-scrollbar-thumb:hover {
-    background: #555;
+    background: var(--color-accent-hover);
 }
 
 /* Light theme */
@@ -692,7 +692,7 @@ body:not(.dark-mode) .summary-value {
 }
 
 body:not(.dark-mode) .summary-label {
-    color: #999;
+    color: #767676;
 }
 
 body:not(.dark-mode) .streak-card {
@@ -705,7 +705,7 @@ body:not(.dark-mode) .streak-value {
 }
 
 body:not(.dark-mode) .streak-label {
-    color: #999;
+    color: #767676;
 }
 
 body:not(.dark-mode) .chart-container {
@@ -719,7 +719,7 @@ body:not(.dark-mode) .mode-selector {
 }
 
 body:not(.dark-mode) .stats-table th {
-    color: #999;
+    color: #767676;
 }
 
 body:not(.dark-mode) .stats-table td {
@@ -748,7 +748,7 @@ body:not(.dark-mode) .tag-bar-container {
 }
 
 body:not(.dark-mode) .no-tags {
-    color: #999;
+    color: #767676;
 }
 
 body:not(.dark-mode) .goal-input {
@@ -775,7 +775,7 @@ body:not(.dark-mode) .badge-name {
 }
 
 body:not(.dark-mode) .badge-item.badge-locked .badge-name {
-    color: #999;
+    color: #767676;
 }
 
 body:not(.dark-mode) .wordcloud-container {
@@ -793,15 +793,15 @@ body:not(.dark-mode) .dashboard-modal-close-btn:hover {
 body:not(.dark-mode) .calendar-month-label,
 body:not(.dark-mode) .calendar-day-label,
 body:not(.dark-mode) .calendar-legend {
-    color: #999;
+    color: #767676;
 }
 
 body:not(.dark-mode) .heatmap-label {
-    color: #999;
+    color: #767676;
 }
 
 body:not(.dark-mode) .heatmap-hour {
-    color: #999;
+    color: #767676;
 }
 
 body:not(.dark-mode) .dashboard-container::-webkit-scrollbar-track,

@@ -78,8 +78,9 @@ return classTypes;
 }
 
 
-function checkWorkflowNodeVsComfyUI(workflowClassTypes){
-var setB=new Set(comfyObjectInfoList);
+async function checkWorkflowNodeVsComfyUI(workflowClassTypes,repo){
+var nodeNames=await repo.getNodeNames();
+var setB=new Set(nodeNames);
 var result=[];
 for(var i=0;i<workflowClassTypes.length;i++){
 var item=workflowClassTypes[i];
@@ -100,11 +101,8 @@ return true;
 }
 }
 
-function notExistsWorkflowNodeVsComfyUI(workflowClassType) {
-const setB=new Set(comfyObjectInfoList);
-if (!setB.has(workflowClassType)) {
-return true;
-}else{
-return false;
-}
+async function notExistsWorkflowNodeVsComfyUI(workflowClassType,repo){
+var nodeNames=await repo.getNodeNames();
+var setB=new Set(nodeNames);
+return!setB.has(workflowClassType);
 }

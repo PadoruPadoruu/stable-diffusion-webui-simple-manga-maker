@@ -435,19 +435,19 @@ function Edit() {
 var poly=canvas.getActiveObject();
 var editButton=$("edit");
 if (!poly) {
-createToast(getText("editModeNotPanel"),"");
+createToastError(getText("editModeNotPanel"),"");
 return;
 }
 if (!isPanel(poly)) {
-createToast(getText("editModeNotPanel"),"");
+createToastError(getText("editModeNotPanel"),"");
 return;
 }
 if (!(poly instanceof fabric.Polygon)) {
-createToast(getText("editModeNotPolygon"),"");
+createToastError(getText("editModeNotPolygon"),"");
 return;
 }
 if (!poly.points||poly.points.length<3) {
-createToast(getText("editModeNoPoints"),"");
+createToastError(getText("editModeNoPoints"),"");
 return;
 }
 poly.edit=!poly.edit;
@@ -539,7 +539,6 @@ var strokeColorValue=$("panelStrokeColor").value;
 var opacityValue=$("panelOpacity").value;
 const opacity=opacityValue/100;
 var fillValue=$("panelFillColor").value;
-var _dbgLogger=new SimpleLogger('DBG-panel',LogLevel.DEBUG);
 _dbgLogger.debug("[panelAllChange] inputs: sw="+strokeWidthValue+" stroke="+strokeColorValue+" fill="+fillValue+" opacity="+opacityValue);
 canvas.getObjects().forEach(function (obj) {
 if (isPanel(obj)) {
@@ -651,7 +650,7 @@ document.addEventListener('DOMContentLoaded',function() {
 $("view_layers_checkbox").addEventListener("change",function () {
 changeView("layer-panel",this.checked);
 });
-$("view_controles_checkbox").addEventListener("change",function () {
+$("view_controls_checkbox").addEventListener("change",function () {
 changeView("controls",this.checked);
 });
 $("view_prompt_checkbox").addEventListener("change",function () {

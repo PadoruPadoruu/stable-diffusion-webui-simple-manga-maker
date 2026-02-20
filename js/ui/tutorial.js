@@ -1,4 +1,3 @@
-var tutorialLogger=new SimpleLogger('tutorial',LogLevel.DEBUG);
 var TutorialManager={
 STORAGE_KEY:'manga_tutorial_state',
 LANG_STORAGE_KEY:'tutorial_lang_selected',

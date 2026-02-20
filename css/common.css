@@ -42,7 +42,7 @@ body {
  border: var(--color-window-border);
  box-shadow: var(--box-shadow-window);
  padding: 5px;
- z-index: 1000;
+ z-index: var(--z-floating-window);
  font-family: var(--font-family-window);
 }
 

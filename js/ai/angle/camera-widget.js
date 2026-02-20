@@ -1,5 +1,4 @@
 // 3Dカメラウィジェット（アングル選択用）
-var cameraWidgetLogger=new SimpleLogger('cameraWidget',LogLevel.DEBUG);
 
 class CameraWidget{
 constructor(canvasContainer,options){

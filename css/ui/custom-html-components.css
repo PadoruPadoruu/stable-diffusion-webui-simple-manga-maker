@@ -68,8 +68,15 @@ input[type="range"] {
   padding: 0;
   line-height: 1;
 }
-.slider-value-button:hover {
+.slider-value-button:hover,
+.slider-value-button:focus-visible {
   color: var(--component-text-color);
+  outline: 1px solid var(--slider-accent);
+  border-radius: 2px;
+}
+.jscolor-color-picker:focus-visible {
+  outline: 2px solid var(--slider-accent);
+  outline-offset: 1px;
 }
 
 

@@ -1,3 +1,4 @@
+// createToast(NieR風): success/info, createToastError(DbD風): error/warning
 function createToast(title,messages,time=4000) {
 uiLogger.debug("createToast",time);
 
@@ -51,9 +52,9 @@ const lineHeight=24;
 if (typeof messages==='string') {
 const messageLine=document.createElement('div');
 messageLine.className='sp-manga-line';
-messageLine.textContent=messages;
+messageLine.innerHTML=messages;
 messageContainer.appendChild(messageLine);
-toast.style.height=`${80 + lineHeight}px`;
+toast.style.height='auto';
 startProgressBar(toast,progressBarClass,time);
 } else if (Array.isArray(messages)) {
 let messageIndex=0;
@@ -78,9 +79,9 @@ showNextMessage();
 } else {
 const messageLine=document.createElement('div');
 messageLine.className='sp-manga-line';
-messageLine.textContent=messages;
+messageLine.innerHTML=messages;
 messageContainer.appendChild(messageLine);
-toast.style.height=`${80 + lineHeight}px`;
+toast.style.height='auto';
 startProgressBar(toast,progressBarClass,time);
 }
 
@@ -114,7 +115,7 @@ return true;
 }
 }
 let text=getText("nothingImage");
-createToast(text,"",2000);
+createToastError(text,"",2000);
 return false;
 }
 function checkPanelImage() {
@@ -125,6 +126,6 @@ return true;
 }
 }
 let text=getText("nothingPanel");
-createToast(text,"",2000);
+createToastError(text,"",2000);
 return false;
 }

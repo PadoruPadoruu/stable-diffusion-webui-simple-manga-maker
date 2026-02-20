@@ -1,7 +1,9 @@
 // Available api models
 const apis={
 A1111: "A1111",
-COMFYUI: "comfyui"
+COMFYUI: "comfyui",
+RUNPOD_COMFYUI: "runpodComfyUI",
+FAL_AI: "falai"
 };
 
 
@@ -24,7 +26,7 @@ var loadButton=$("projectLoad");
 
 saveButton.addEventListener("click",async function () {
 if (stateStack.length===0) {
-createToast("Save Error","Not Found.");
+createToastError("Save Error","Not Found.");
 return;
 }
 
@@ -192,7 +194,7 @@ else el.classList.remove('settings-highlight');
 
 var SETTINGS_SCHEMA={
 view_layers_checkbox:{id:'view_layers_checkbox',default:true,type:'checkbox'},
-view_controles_checkbox:{id:'view_controles_checkbox',default:true,type:'checkbox'},
+view_controls_checkbox:{id:'view_controls_checkbox',default:true,type:'checkbox'},
 knifePanelSpaceSize:{id:'knifePanelSpaceSize',default:'20'},
 canvasBgColor:{id:'bg-color',default:'#ffffff'},
 canvasDpi:{id:'outputDpi',default:'450'},
@@ -200,6 +202,13 @@ canvasGridLineSize:{id:'gridSizeInput',default:'10'},
 canvasMarginFromPanel:{id:'marginFromPanel',default:20},
 sdWebUIPageUrl:{id:'sdWebUIPageUrl',default:'http://127.0.0.1:7860'},
 comfyUIPageUrl:{id:'comfyUIPageUrl',default:'http://127.0.0.1:8188'},
+runpodComfyUIUrl:{id:'runpodComfyUIUrl',default:''},
+falaiApiKey:{id:'falaiApiKey',default:''},
+falaiModelT2I:{id:'falaiModelT2I',default:''},
+falaiModelI2I:{id:'falaiModelI2I',default:''},
+falaiModelUpscale:{id:'falaiModelUpscale',default:''},
+falaiModelRembg:{id:'falaiModelRembg',default:''},
+falaiConcurrency:{id:'falaiConcurrency',default:'1'},
 apiHeartbeatCheckbox:{id:'apiHeartbeatCheckbox',default:true,type:'checkbox'},
 autoSaveEnabled:{id:'autoSaveCheckbox',default:true,type:'checkbox'},
 autoSaveInterval:{id:'autoSaveInterval',default:'60'},
@@ -233,15 +242,15 @@ svg_icon_shadowColor:{id:'svg_icon_shadowColor',default:'rgba(255,255,255,1)'},
 svg_icon_shadowBlur:{id:'svg_icon_shadowBlur',default:'3'},
 svg_icon_shadowOffsetX:{id:'svg_icon_shadowOffsetX',default:'0'},
 svg_icon_shadowOffsetY:{id:'svg_icon_shadowOffsetY',default:'0'},
-InfomationFPS:{id:'InfomationFPS',default:true,type:'checkbox'},
-InfomationCoordinate:{id:'InfomationCoordinate',default:true,type:'checkbox'},
+InformationFPS:{id:'InformationFPS',default:true,type:'checkbox'},
+InformationCoordinate:{id:'InformationCoordinate',default:true,type:'checkbox'},
 AdetailerCheck:{id:'AdetailerCheck',default:false,type:'checkbox'},
 AdetilerModelsPrompt:{id:'AdetilerModelsPrompt',default:''},
 AdetilerModelsNegative:{id:'AdetilerModelsNegative',default:''},
 pageCount:{id:'pageCount',default:'18'},
 verticalRandomPanelCount:{id:'verticalRandomPanelCount',default:'2'},
-horizontalRandamPanelCount:{id:'horizontalRandamPanelCount',default:'3'},
-tiltRandam:{id:'tiltRandam',default:'6'},
+horizontalRandomPanelCount:{id:'horizontalRandomPanelCount',default:'3'},
+tiltRandom:{id:'tiltRandom',default:'6'},
 cutChangeRate:{id:'cutChangeRate',default:'10'},
 onePanelGenerateNumber:{id:'onePanelGenerateNumber',default:'1'},
 inpaintBrushSize:{id:'inpaint-brush-size',default:'30'},
@@ -307,8 +316,12 @@ if(v!==-1)this.value=Math.round(v/8)*8;
 });
 });
 var mode=data.externalAI||apis.COMFYUI;
-if(mode===apis.A1111)changeExternalAPI($('sdWebUIButton'));
-else changeExternalAPI($('comfyUIButton'));
+apiMode=mode;
+providerRegistry.syncFromApiMode(apiMode);
+if(data.roleAssignments){
+providerRegistry.loadRoleAssignments(data.roleAssignments);
+}
+updateWorkflowType();
 }
 
 function saveSettingsLocalStrage(silent){
@@ -324,12 +337,52 @@ Object.keys(BASEPROMPT_SCHEMA).forEach(function(key){
 var cfg=BASEPROMPT_SCHEMA[key];
 data[key]=basePrompt[cfg.key];
 });
+data.roleAssignments=providerRegistry.getAllRoleAssignments();
 localStorage.setItem('localSettingsData',JSON.stringify(data));
 }
 
 function resetAllSettings(){
-var msg=getText('settingsResetConfirm')||'All settings and cache will be deleted. Continue?';
-if(!confirm(msg))return;
+var items=[
+getText('settingsResetItem1')||'API connection settings (URLs, API keys)',
+getText('settingsResetItem2')||'AI image generation settings (prompts, models, etc.)',
+getText('settingsResetItem3')||'Drawing tool & canvas settings',
+getText('settingsResetItem4')||'Custom prompt sets',
+getText('settingsResetItem5')||'UI settings (language, theme, sidebar, etc.)',
+getText('settingsResetItem6')||'Tutorial progress'
+];
+var overlay=document.createElement('div');
+overlay.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);display:flex;justify-content:center;align-items:center;z-index:var(--z-modal)';
+var dialog=document.createElement('div');
+dialog.style.cssText='background:var(--color-base);color:var(--color-text-primary);border-radius:8px;padding:24px;max-width:420px;width:90%;box-shadow:0 4px 24px rgba(0,0,0,0.5)';
+var title=document.createElement('div');
+title.style.cssText='font-size:16px;font-weight:bold;margin-bottom:12px';
+title.textContent=getText('settingsResetConfirmTitle')||'The following data will be deleted:';
+dialog.appendChild(title);
+var list=document.createElement('ul');
+list.style.cssText='margin:0 0 16px 0;padding-left:20px;line-height:1.8';
+items.forEach(function(item){
+var li=document.createElement('li');
+li.textContent=item;
+list.appendChild(li);
+});
+dialog.appendChild(list);
+var btnRow=document.createElement('div');
+btnRow.style.cssText='display:flex;justify-content:flex-end;gap:8px';
+var cancelBtn=document.createElement('button');
+cancelBtn.textContent=getText('settingsResetCancel')||'Cancel';
+cancelBtn.style.cssText='padding:6px 16px;border:1px solid var(--color-text-secondary);border-radius:4px;background:var(--color-secondary);color:var(--color-text-primary);cursor:pointer';
+var okBtn=document.createElement('button');
+okBtn.textContent=getText('settingsResetOk')||'Reset';
+okBtn.style.cssText='padding:6px 16px;border:none;border-radius:4px;background:var(--color-accent);color:#fff;cursor:pointer';
+btnRow.appendChild(cancelBtn);
+btnRow.appendChild(okBtn);
+dialog.appendChild(btnRow);
+overlay.appendChild(dialog);
+document.body.appendChild(overlay);
+cancelBtn.addEventListener('click',function(){overlay.remove();});
+overlay.addEventListener('click',function(e){if(e.target===overlay)overlay.remove();});
+okBtn.addEventListener('click',function(){
+overlay.remove();
 localStorage.clear();
 sessionStorage.clear();
 if('caches' in window){
@@ -339,12 +392,13 @@ names.forEach(function(name){caches.delete(name);});
 }
 createToast('Settings Reset',['Clearing all data...','Reloading...'],1500);
 setTimeout(function(){location.reload();},1500);
+});
 }
 
 document.addEventListener('DOMContentLoaded',function() {
 loadSettingsLocalStrage();
 changeView("layer-panel",$('view_layers_checkbox').checked);
-changeView("controls",$('view_controles_checkbox').checked);
+changeView("controls",$('view_controls_checkbox').checked);
 if(DEBUG_FLAGS.settingsHighlight)toggleSettingsHighlight(true);
 AutoSaveManager.init();
 initSettingsAutoSave();

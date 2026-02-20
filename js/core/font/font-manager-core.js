@@ -262,7 +262,7 @@ let fmFontData = {
 
     for (const fontName of fontNames) {
         if (this.existsFont(fontName)) {
-            createToast(getText("alreadyRegisteredFont"), fontName);
+            createToastError(getText("alreadyRegisteredFont"), fontName);
             continue;
         }
         
@@ -287,7 +287,7 @@ let fmFontData = {
             } catch (error) {
                 fontLogger.error(`${variant}`, error);
                 if (variant === fontVariants[fontVariants.length - 1]) {
-                    createToast("Register font is error", error);
+                    createToastError("Register font is error", error);
                 }
             }
         }
@@ -315,7 +315,7 @@ let fmFontData = {
         const fontName = fontMatch[1].split(":")[0];
         
         if (this.existsFont(fontName)) {
-          createToast(getText("alreadyRegisteredFont"), fontName);
+          createToastError(getText("alreadyRegisteredFont"), fontName);
           continue;
         }
 
@@ -345,7 +345,7 @@ let fmFontData = {
 
   async registerFontFromBuffer(buffer, fontName) {
     if (this.existsFont(fontName)) {
-      createToast(getText("alreadyRegisteredFont"), fontName);
+      createToastError(getText("alreadyRegisteredFont"), fontName);
       return;
     }
 
@@ -375,6 +375,7 @@ let fmFontData = {
     FontSelectorManager.reloadAll();
   },
 
+  _fontManagerFocusTrap:null,
   openUserFontManager() {
     if (!$("fm-fontManagerModal")) {
       fmUserFontManager.createModal();
@@ -382,9 +383,16 @@ let fmFontData = {
     $("fm-modalOverlay").style.display = "block";
     $("fm-fontManagerModal").style.display = "block";
     fmUserFontManager.updateFontList();
+    var modal=$("fm-fontManagerModal");
+    if(modal){
+      this._fontManagerFocusTrap=FocusTrap.create(modal,()=>this.closeUserFontManager());
+      FocusTrap.activate(this._fontManagerFocusTrap);
+    }
   },
 
   closeUserFontManager() {
+    FocusTrap.deactivate(this._fontManagerFocusTrap);
+    this._fontManagerFocusTrap=null;
     $("fm-modalOverlay").style.display = "none";
     $("fm-fontManagerModal").style.display = "none";
   },

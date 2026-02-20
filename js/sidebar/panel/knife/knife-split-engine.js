@@ -16,7 +16,7 @@ var centerX=getCenterXByFabricObject(panel);
 var centerY=getCenterYByFabricObject(panel);
 
 var angle;
-var tiltRandom=$("tiltRandam").value;
+var tiltRandom=$("tiltRandom").value;
 tiltRandom=generateRandomInt(tiltRandom);
 var halfTilt=tiltRandom==0 ? 0 : tiltRandom/2;
 var cutChangeRate=$("cutChangeRate").value;

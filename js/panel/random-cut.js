@@ -8,7 +8,7 @@ return;
 }
 
 var vRandomCount=generateRandomInt($("verticalRandomPanelCount").value);
-var hRandomCount=generateRandomInt($("horizontalRandamPanelCount").value);
+var hRandomCount=generateRandomInt($("horizontalRandomPanelCount").value);
 
 // console.log("vRandomCount", vRandomCount);
 // console.log("hRandomCount", hRandomCount);
@@ -98,5 +98,5 @@ await btmSaveProjectFile();
 OP_hideLoading(loading);
 }
 }
-$on($("panelRandamCutButton"),"click",()=>rundomPanelCut());
+$on($("panelRandomCutButton"),"click",()=>rundomPanelCut());
 $on($("multiPageGenerate"),"click",()=>generateMultipage());

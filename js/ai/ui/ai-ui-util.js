@@ -6,12 +6,25 @@ const selectedValue=getSelectedValueByGroup("externalApiGroup");
 var helpTitle=getText("help_api_connect_settings");
 if (selectedValue==="sdWebUIButton") {
 apiMode=apis.A1111;
+providerRegistry.syncFromApiMode(apiMode);
 if(showToast)createToast("API CHANGE!","WebUI(A1111/Forge)",2000);
 $('apiSettingsUrlHelpe').innerHTML=`<a href="html/API_Help/sd-api-guide.html" target="_blank" class="es-btn-small" title="${helpTitle}">?</a>`;
 } else if (selectedValue==="comfyUIButton") {
 apiMode=apis.COMFYUI;
+providerRegistry.syncFromApiMode(apiMode);
 if(showToast)createToast("API CHANGE!","COMFYUI",2000);
 $('apiSettingsUrlHelpe').innerHTML=`<a href="html/API_Help/comfyui_settings.html" target="_blank" class="es-btn-small" title="${helpTitle}">?</a>`;
+} else if (selectedValue==="runpodComfyUIButton") {
+apiMode=apis.RUNPOD_COMFYUI;
+providerRegistry.syncFromApiMode(apiMode);
+if(showToast)createToast("API CHANGE!","RunPod ComfyUI",2000);
+$('apiSettingsUrlHelpe').innerHTML='';
+firstComfyConnection=true;
+} else if (selectedValue==="falaiButton") {
+apiMode=apis.FAL_AI;
+providerRegistry.syncFromApiMode(apiMode);
+if(showToast)createToast("API CHANGE!","Fal.ai",2000);
+$('apiSettingsUrlHelpe').innerHTML='';
 }
 
 updateWorkflowType();
@@ -29,83 +42,53 @@ if($("basePrompt_cfg_scale").value>3){
 $("basePrompt_cfg_scale").value=1.5;
 }
 }
+modelSettingsWindow.updateSdWebuiVisibility();
 }
 
 
 function changeWorkflowType(button) {
 changeSelected(button);
 updateWorkflowType();
+modelSettingsWindow.updateSdWebuiVisibility();
+}
+function isComfyUIMode(groupValue){
+return groupValue==="comfyUIButton"||groupValue==="runpodComfyUIButton";
+}
+function getExternalApiGroupFromRoles(){
+var t2i=providerRegistry.getRoleAssignment(AI_ROLES.Text2Image);
+var i2i=providerRegistry.getRoleAssignment(AI_ROLES.Image2Image);
+var primary=t2i&&t2i!=='default'?t2i:i2i;
+if(!primary||primary==='default')primary='localComfyUI';
+var map={
+localComfyUI:'comfyUIButton',
+localSDWebUI:'sdWebUIButton',
+runpodComfyUI:'runpodComfyUIButton',
+falai:'falaiButton'
+};
+return map[primary]||'comfyUIButton';
 }
 function updateWorkflowType() {
-const externalApiGroup=getSelectedValueByGroup("externalApiGroup");
-const generateModelGroup=getSelectedValueByGroup("generateModelGroup");
-const generateWorkflow=getSelectedValueByGroup("generateWorkflow");
+const externalApiGroup=getExternalApiGroupFromRoles();
 
-if (externalApiGroup==="comfyUIButton"){
-showById("comfyUIWorkflowId");
-hideById("manualSelectWorkflowId");
-hideById("manualSelectModelId");
-hideById("clipDropdownControle");
-hideById("vaeDropdownControle");
 showById("prompt-A");
-showById("negativeAreaId");
-hideById("prompt-B");
-hideById("prompt-C");
-hideById("prompt-D");
 showById("prompt-E");
 showById("prompt-F");
-hideById("prompt-G");
-hideById("prompt-H");
-hideById("prompt-I");
-hideById("prompt-J");
-hideById("prompt-K");
-hideById("checSD_WebUI_Announce");
-return;
-}else{
+
+if (externalApiGroup==="falaiButton"){
 hideById("comfyUIWorkflowId");
-showById("manualSelectWorkflowId");
-showById("manualSelectModelId");
-showById("prompt-A");
 showById("negativeAreaId");
-showById("prompt-B");
-showById("prompt-C");
-showById("prompt-D");
-showById("prompt-E");
-showById("prompt-F");
-showById("prompt-G");
-showById("prompt-H");
-showById("prompt-I");
-showById("prompt-J");
-showById("prompt-K");
-showById("checSD_WebUI_Announce");
+return;
 }
-
-if (generateModelGroup==="SD") {
-hideById("manualSelectWorkflowId");
+if (isComfyUIMode(externalApiGroup)){
+showById("comfyUIWorkflowId");
 showById("negativeAreaId");
-} else if (generateModelGroup==="Flux") {
-showById("manualSelectWorkflowId");
+return;
+}
+hideById("comfyUIWorkflowId");
+const generateModelGroup=getSelectedValueByGroup("generateModelGroup");
+if (generateModelGroup==="Flux") {
 hideById("negativeAreaId");
+} else {
+showById("negativeAreaId");
 }
-
-if (externalApiGroup==="comfyUIButton"){
-showById("manualSelectModelId");
-if(generateModelGroup==="Flux"&&generateWorkflow==="Diffution"){
-showById("clipDropdownControle");
-showById("vaeDropdownControle");
-return;
-}
-}else if(externalApiGroup==="sdWebUIButton"){
-showById("manualSelectModelId");
-hideById("manualSelectWorkflowId");
-showById("clipDropdownControle");
-hideById("vaeDropdownControle");
-hideById("manualSelectWorkflowId");
-return;
-}
-
-showById("manualSelectModelId");
-hideById("clipDropdownControle");
-hideById("vaeDropdownControle");
-return;
 }

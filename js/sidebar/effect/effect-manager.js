@@ -176,7 +176,7 @@ if (selectedObject) {
 effectLogger.debug("enhanceDarkImage","start");
 enhanceDarkImage();
 } else {
-createToast("Check image!")
+createToastError("Check image!")
 }
 }
 });
@@ -205,7 +205,7 @@ selectedObject.set({shadow: null});
 }
 canvas.renderAll();
 } else {
-createToast("Check image!")
+createToastError("Check image!")
 }
 }
 });

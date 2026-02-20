@@ -1,5 +1,4 @@
 // パフォーマンス統計のlocalforage永続化
-var dashboardPerfLogger=new SimpleLogger('dashboard-perf',LogLevel.DEBUG);
 var PerformanceStorage=(function(){
 var store=localforage.createInstance({
 name:'MangaEditor_Performance',

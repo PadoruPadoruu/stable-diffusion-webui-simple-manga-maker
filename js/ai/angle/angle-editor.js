@@ -1,5 +1,4 @@
 // アングル変更エディタ（モーダルオーバーレイ）
-var angleLogger=new SimpleLogger('angle',LogLevel.DEBUG);
 
 var AngleEditor=(function(){
 var isOpen=false;
@@ -70,7 +69,7 @@ createToastError("Angle",getText("angleNoPrompt")||"Please enter an angle prompt
 return;
 }
 close();
-var spinner=createSpinner(100000);
+var spinner=createSpinner(getGUID(layer),'ANG');
 AngleGenerate(layer,spinner,anglePrompt);
 }
 

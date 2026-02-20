@@ -105,9 +105,12 @@ if(args.length>1&&isValidMethodName(args[args.length-1])){
 methodName=args[args.length-1];
 messageArgs=args.slice(0,args.length-1);
 }
-const message=messageArgs.map(arg=>
-typeof arg==='object' ? JSON.stringify(arg) : String(arg)
-).join(' ');
+const message=messageArgs.map(arg=>{
+if(arg instanceof Error){
+return `${arg.name}: ${arg.message}`;
+}
+return typeof arg==='object' ? JSON.stringify(arg) : String(arg);
+}).join(' ');
 const formatted=formatMessage(levelName,message,methodName);
 if(withStack){
 const stackTrace=getFullStackTrace();
@@ -160,22 +163,43 @@ default:return 'unknown';
 };
 }
 
-const logger=SimpleLogger('main',LogLevel.INFO);
-const workflowLogger=SimpleLogger('workflow',LogLevel.INFO);
-const eventLogger=SimpleLogger('event',LogLevel.INFO);
-const comfyuiLogger=SimpleLogger('comfyui',LogLevel.INFO);
-const sdwebuiLogger=SimpleLogger('sdwebui',LogLevel.INFO);
-const dbLogger=SimpleLogger('db',LogLevel.INFO);
-const canvasLogger=SimpleLogger('canvas',LogLevel.INFO);
-const projectLogger=SimpleLogger('project',LogLevel.INFO);
-const layerLogger=SimpleLogger('layer',LogLevel.INFO);
-const fontLogger=SimpleLogger('font',LogLevel.INFO);
-const uiLogger=SimpleLogger('ui',LogLevel.INFO);
-const effectLogger=SimpleLogger('effect',LogLevel.INFO);
-const textLogger=SimpleLogger('text',LogLevel.INFO);
-const imageLogger=SimpleLogger('image',LogLevel.INFO);
-const panelLogger=SimpleLogger('panel',LogLevel.INFO);
-const compressionLogger=SimpleLogger('compression',LogLevel.INFO);
-const serviceLogger=SimpleLogger('service',LogLevel.INFO);
-const freehandBubbleLogger=SimpleLogger('freehandBubble',LogLevel.DEBUG);
-const autoSaveLogger=SimpleLogger('autoSave',LogLevel.INFO);
+const logger=SimpleLogger('main',LogLevel.WARN);
+const workflowLogger=SimpleLogger('workflow',LogLevel.WARN);
+const eventLogger=SimpleLogger('event',LogLevel.WARN);
+const comfyuiLogger=SimpleLogger('comfyui',LogLevel.DEBUG);
+const sdwebuiLogger=SimpleLogger('sdwebui',LogLevel.WARN);
+const dbLogger=SimpleLogger('db',LogLevel.WARN);
+const canvasLogger=SimpleLogger('canvas',LogLevel.WARN);
+const projectLogger=SimpleLogger('project',LogLevel.WARN);
+const layerLogger=SimpleLogger('layer',LogLevel.WARN);
+const fontLogger=SimpleLogger('font',LogLevel.WARN);
+const uiLogger=SimpleLogger('ui',LogLevel.WARN);
+const effectLogger=SimpleLogger('effect',LogLevel.WARN);
+const textLogger=SimpleLogger('text',LogLevel.WARN);
+const imageLogger=SimpleLogger('image',LogLevel.WARN);
+const panelLogger=SimpleLogger('panel',LogLevel.WARN);
+const compressionLogger=SimpleLogger('compression',LogLevel.WARN);
+const serviceLogger=SimpleLogger('service',LogLevel.WARN);
+const freehandBubbleLogger=SimpleLogger('freehandBubble',LogLevel.WARN);
+const autoSaveLogger=SimpleLogger('autoSave',LogLevel.WARN);
+const focusTrapLogger=SimpleLogger('focusTrap',LogLevel.WARN);
+const delegatorLogger=SimpleLogger('delegator',LogLevel.WARN);
+const tutorialLogger=SimpleLogger('tutorial',LogLevel.WARN);
+const perfLogger=SimpleLogger('perf',LogLevel.WARN);
+const _dbgFabric=SimpleLogger('DBG-fabric',LogLevel.WARN);
+const dashboardTagLogger=SimpleLogger('dashboard-tag',LogLevel.WARN);
+const dashboardPerfLogger=SimpleLogger('dashboard-perf',LogLevel.WARN);
+const dashboardLogger=SimpleLogger('dashboard',LogLevel.WARN);
+const usLogger=SimpleLogger('unifiedSettings',LogLevel.WARN);
+const msLogger=SimpleLogger('modelSettings',LogLevel.WARN);
+const raLogger=SimpleLogger('roleAssignUI',LogLevel.WARN);
+const spinnerLogger=SimpleLogger('spinner',LogLevel.WARN);
+const generationTaskLogger=SimpleLogger('generationTask',LogLevel.WARN);
+const errorHandlerLogger=SimpleLogger('errorHandler',LogLevel.WARN);
+const registryLogger=SimpleLogger('providerRegistry',LogLevel.WARN);
+const cameraWidgetLogger=SimpleLogger('cameraWidget',LogLevel.WARN);
+const angleLogger=SimpleLogger('angle',LogLevel.WARN);
+const inpaintLogger=SimpleLogger('inpaint',LogLevel.WARN);
+const inpaintMaskLogger=SimpleLogger('inpaintMask',LogLevel.WARN);
+const inpaintWorkflowLogger=SimpleLogger('inpaintWorkflow',LogLevel.WARN);
+const _dbgLogger=SimpleLogger('DBG-panel',LogLevel.WARN);

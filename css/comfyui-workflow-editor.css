@@ -1,8 +1,4 @@
-.comfui-sidebar-input {
-  margin-bottom: 0px;
- }
- 
- .comfui-sidebar-button {
+.comfui-sidebar-button {
   width: 100%;
   margin-top: 12px;
   padding: 6px 12px;
@@ -162,12 +158,6 @@
   overflow: hidden;
  }
  
- .tab-button:not(.active) .comfui-tab-download,
- .tab-button:not(.active) .comfui-tab-save,
- .tab-button:not(.active) .comfui-tab-close {
-  background: var(--background-color-B);
- }
- 
  .comfui-tab-download:hover,
  .comfui-tab-save:hover,
  .comfui-tab-close:hover {
@@ -197,11 +187,6 @@
   display: block;
  }
  
- #comfui-nodeList {
-  margin: 0 auto;
- }
- 
-
  .comfui-node-wrapper {
   width: 400px;
   margin-bottom: 8px;
@@ -269,7 +254,7 @@ margin-bottom: 8px;
 }
 .comfui-unverified-banner-desc {
 font-size: 12px;
-color: #d4d4d4;
+color: var(--color-text-secondary);
 line-height: 1.6;
 word-wrap: break-word;
 white-space: normal;

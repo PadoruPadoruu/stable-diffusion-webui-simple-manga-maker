@@ -1,10 +1,124 @@
 class ComfyUIWorkflowWindow {
-constructor() {
+constructor(options) {
+options=options||{};
 this.element=null;
 this.x=0;
 this.y=0;
+this.editorRef=options.editorRef||null;
+this.provider=options.provider||null;
 }
 
+buildContentHTML(){
+var addWorkflowLabel=getText("comfyUI_addWorkflow");
+var testGenerate=getText("comfyUI_testGenerate");
+var workflowHelp=getText("comfyUI_workflowHelp");
+return `
+<div class="comfui-container" style="width: 100%; height: 100%; background-color: var(--background-color-A); margin: 0; padding: 8px; border-radius: 0;">
+ <div class="comfui-sidebar">
+<div class="comfui-sidebar-header" style="cursor: default;">
+ <label class="comfui-file-input-button">
++ ${addWorkflowLabel}
+<input type="file" id="workflowFile" accept=".json,.txt" multiple>
+ </label>
+</div>
+<div class="comfui-tab-list" id="tabList"></div>
+ </div>
+
+ <div class="comfui-main-content">
+<div class="comfui-tab-content-container" id="tabContentContainer"></div>
+ </div>
+
+ <div class="comfui-right-sidebar">
+<div id="apiSettingsUrlHelpe">
+ <label class="comfui-connection-label">Connection:</label>
+</div>
+<button id="comfyUIFwGenerateButton" class="comfui-sidebar-button">${testGenerate}</button>
+<div id="generatedImageContainer" class="comfui-generated-image-container">
+ <div id="generatedImagePlaceholder" class="comfui-image-placeholder" style="display:flex;align-items:center;justify-content:center;height:150px;border:2px dashed rgba(255,215,0,0.3);border-radius:8px;color:#888;font-size:12px;text-align:center;padding:10px;">Test Generate to preview</div>
+ <img id="generatedImage" style="display:none;cursor:pointer;max-width:100%;border-radius:8px;" title="Click to enlarge">
+</div>
+
+<div>
+<label>
+${workflowHelp}
+</label>
+</div>
+ </div>
+</div>`;
+}
+
+setupImageEnlarge(){
+var generatedImage=this.element.querySelector("#generatedImage");
+generatedImage.addEventListener("click",function(){
+if(!generatedImage.src)return;
+var overlay=document.createElement("div");
+overlay.style.cssText="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);display:flex;align-items:center;justify-content:center;z-index:9999;cursor:pointer;";
+var img=document.createElement("img");
+img.src=generatedImage.src;
+img.style.cssText="max-width:95%;max-height:95%;object-fit:contain;";
+overlay.appendChild(img);
+overlay.addEventListener("click",function(){overlay.remove();});
+document.body.appendChild(overlay);
+});
+}
+
+setupTestGenerateListener(){
+var self=this;
+var comfyUIFwGenerateButton=this.element.querySelector("#comfyUIFwGenerateButton");
+var testGenerateText=getText("comfyUI_testGenerate");
+comfyUIFwGenerateButton.addEventListener("click",async function(){
+var editor=self.editorRef||comfyUIWorkflowEditor;
+if(!editor)return;
+var tabId=editor.activeTabId;
+if(!tabId)return;
+var tab=editor.tabs.get(tabId);
+if(!tab)return;
+comfyUIFwGenerateButton.disabled=true;
+comfyUIFwGenerateButton.innerHTML='<span class="spinner-border spinner-border-sm text-light"></span> <span class="comfyui-test-progress"></span>';
+var progressSpan=comfyUIFwGenerateButton.querySelector('.comfyui-test-progress');
+aiProgressState.onStepProgress=function(value,max){
+if(progressSpan&&max>0){
+progressSpan.textContent=value+'/'+max;
+}
+};
+try{
+async function doGenerate(){return await comfyui_put_queue_v2(tab.workflow);}
+var result;
+if(self.provider){
+result=await comfyUIExecWithProvider(self.provider,doGenerate);
+}else{
+result=await doGenerate();
+}
+if(result&&result.error){
+if(typeof ComfyUIGuide!=='undefined'){
+ComfyUIGuide.showGenerationErrorGuide(result.message);
+}
+}else if(result){
+var generatedImage=self.element.querySelector("#generatedImage");
+var placeholder=self.element.querySelector("#generatedImagePlaceholder");
+if(generatedImage){
+generatedImage.src=result;
+generatedImage.style.display="block";
+}
+if(placeholder){
+placeholder.style.display="none";
+}
+}
+}finally{
+aiProgressState.onStepProgress=null;
+comfyUIFwGenerateButton.disabled=false;
+comfyUIFwGenerateButton.textContent=testGenerateText;
+}
+});
+}
+
+initializeInContainer(container){
+if(this.element)return;
+this.element=container;
+container.innerHTML=this.buildContentHTML();
+this.setupImageEnlarge();
+this.setupTestGenerateListener();
+}
 
 initializeWindow() {
 if (this.element) return;
@@ -23,68 +137,18 @@ this.element.style.width="97vw";
 this.element.style.height="97vh";
 this.element.style.zIndex="1000";
 
-const addWorkflowLabel=getText("comfyUI_addWorkflow");
-const testGenerate=getText("comfyUI_testGenerate");
-const workflowHelp=getText("comfyUI_workflowHelp");
-
 this.element.innerHTML=`
-<button id="closeButton" style="position: absolute; right: -30px; top: 0; padding: 5px 10px; background: var(--background-color-B); border: 1px solid var(--color-border); color: var(--component-text-color); cursor: pointer; z-index: 1001; font-size: 16px; border-radius: 4px;">✕</button>
-<div class="comfui-container" style="width: 100%; height: 100%; background-color: var(--background-color-A); margin: 0; padding: 8px; border-radius: 0;">
- <div class="comfui-sidebar">
-<div class="comfui-sidebar-header" style="cursor: move;">
- <label class="comfui-file-input-button">
-+ ${addWorkflowLabel}
-<input type="file" id="workflowFile" accept=".json,.txt" multiple>
- </label>
-</div>
-<div class="comfui-tab-list" id="tabList"></div>
- </div>
-
- <div class="comfui-main-content">
-<div class="comfui-tab-content-container" id="tabContentContainer"></div>
- </div>
-
- <div class="comfui-right-sidebar">
-<div id="apiSettingsUrlHelpe">
- <label id="ExternalService_Heartbeat_Label_fw">Connection:</label>
-</div>
-<button id="comfyUIFwGenerateButton" class="comfui-sidebar-button">${testGenerate}</button>
-<div id="generatedImageContainer" class="comfui-generated-image-container">
- <div id="generatedImagePlaceholder" class="comfui-image-placeholder" style="display:flex;align-items:center;justify-content:center;height:150px;border:2px dashed rgba(255,215,0,0.3);border-radius:8px;color:#888;font-size:12px;text-align:center;padding:10px;">Test Generate to preview</div>
- <img id="generatedImage" style="display:none;cursor:pointer;max-width:100%;border-radius:8px;" title="Click to enlarge">
-</div>
-
-<div>
-<label>
-${workflowHelp}
-</label>
-</div>
- </div>
-</div>`;
+<button id="closeButton" style="position: absolute; right: -30px; top: 0; padding: 5px 10px; background: var(--background-color-B); border: 1px solid var(--color-border); color: var(--component-text-color); cursor: pointer; z-index: 1001; font-size: 16px; border-radius: 4px;">✕</button>`+this.buildContentHTML();
 
 document.body.appendChild(this.element);
 
-const closeButton=this.element.querySelector("#closeButton");
-closeButton.addEventListener("click",()=>this.hide());
+var self=this;
+var closeButton=this.element.querySelector("#closeButton");
+closeButton.addEventListener("click",function(){self.hide();});
 
-const generatedImage=this.element.querySelector("#generatedImage");
-generatedImage.addEventListener("click",()=>{
-if(!generatedImage.src)return;
-const overlay=document.createElement("div");
-overlay.style.cssText="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);display:flex;align-items:center;justify-content:center;z-index:9999;cursor:pointer;";
-const img=document.createElement("img");
-img.src=generatedImage.src;
-img.style.cssText="max-width:95%;max-height:95%;object-fit:contain;";
-overlay.appendChild(img);
-overlay.addEventListener("click",()=>overlay.remove());
-document.body.appendChild(overlay);
-});
-
+this.setupImageEnlarge();
 this.setupEventListeners();
 }
-
-
-
 
 setupEventListeners() {
 interact(this.element)
@@ -132,37 +196,7 @@ height: `${event.rect.height}px`,
 });
 });
 
-var comfyUIFwGenerateButton=this.element.querySelector("#comfyUIFwGenerateButton");
-var testGenerateText=getText("comfyUI_testGenerate");
-comfyUIFwGenerateButton.addEventListener("click",async function(){
-var tabId=comfyUIWorkflowEditor.activeTabId;
-if(!tabId)return;
-var tab=comfyUIWorkflowEditor.tabs.get(tabId);
-if(!tab)return;
-comfyUIFwGenerateButton.disabled=true;
-comfyUIFwGenerateButton.innerHTML='<span class="spinner-border spinner-border-sm text-light"></span>';
-try{
-var result=await comfyui_put_queue_v2(tab.workflow);
-if(result&&result.error){
-if(typeof ComfyUIGuide!=='undefined'){
-ComfyUIGuide.showGenerationErrorGuide(result.message);
-}
-}else if(result){
-var generatedImage=document.querySelector("#generatedImage");
-var placeholder=document.querySelector("#generatedImagePlaceholder");
-if(generatedImage){
-generatedImage.src=result;
-generatedImage.style.display="block";
-}
-if(placeholder){
-placeholder.style.display="none";
-}
-}
-}finally{
-comfyUIFwGenerateButton.disabled=false;
-comfyUIFwGenerateButton.textContent=testGenerateText;
-}
-});
+this.setupTestGenerateListener();
 }
 
 show() {
@@ -170,7 +204,6 @@ if (!this.element) {
 this.initializeWindow();
 }
 this.element.style.display="block";
-var self=this;
 setTimeout(function(){
 if(typeof ComfyUIGuide!=='undefined'){
 comfyui_apiHeartbeat_v2().then(function(isOnline){
@@ -188,18 +221,19 @@ this.element.style.display="none";
 }
 let comfyUIWorkflowWindow=null;
 
-document.addEventListener("DOMContentLoaded",()=>{
-const openButton=document.getElementById("openWorkflowButton");
-openButton.addEventListener("click",()=>{
-if (!comfyUIWorkflowWindow) {
+document.addEventListener("DOMContentLoaded",function(){
+var openButton=document.getElementById("openWorkflowButton");
+if(openButton){
+openButton.addEventListener("click",function(){
+if(!comfyUIWorkflowWindow){
 comfyUIWorkflowWindow=new ComfyUIWorkflowWindow();
 }
 comfyUIWorkflowWindow.show();
-
-if (!comfyUIWorkflowEditor) {
+if(!comfyUIWorkflowEditor){
 comfyUIWorkflowEditor=new ComfyUIWorkflowEditor();
 comfyUIWorkflowEditor.initialize();
 comfyui_monitorConnection_v2();
 }
 });
+}
 });

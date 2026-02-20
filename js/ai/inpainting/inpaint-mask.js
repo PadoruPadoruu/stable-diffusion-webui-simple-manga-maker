@@ -1,5 +1,4 @@
 // Inpaintマスク描画管理
-var inpaintMaskLogger=new SimpleLogger('inpaintMask',LogLevel.DEBUG);
 
 var InpaintMask=(function(){
 var maskCanvas=null;

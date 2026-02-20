@@ -1,8 +1,8 @@
 // ダッシュボードUIコンポーネント（モーダル表示）
-var dashboardLogger=new SimpleLogger('dashboard',LogLevel.DEBUG);
 var DashboardUI=(function(){
 var isInitialized=false;
 var isOpen=false;
+var dashboardFocusTrap=null;
 var generationTimeChart=null;
 var trendChart=null;
 var successRateChart=null;
@@ -96,11 +96,17 @@ isOpen=true;
 var modal=document.getElementById('dashboard-modal');
 if(modal) modal.style.display='flex';
 init();
+if(modal){
+dashboardFocusTrap=FocusTrap.create(modal,close);
+FocusTrap.activate(dashboardFocusTrap);
+}
 dashboardLogger.debug("Dashboard opened");
 }
 function close(){
 if(!isOpen) return;
 isOpen=false;
+FocusTrap.deactivate(dashboardFocusTrap);
+dashboardFocusTrap=null;
 var modal=document.getElementById('dashboard-modal');
 if(modal) modal.style.display='none';
 if(generationTimeChart){

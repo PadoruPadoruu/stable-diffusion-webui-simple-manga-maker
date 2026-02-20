@@ -37,6 +37,9 @@ width: var(--fjm-button-width);
 text-align: var(--fjm-button-text-align);
 white-space: var(--fjm-button-white-space);
 transition: background-color 0.12s ease, color 0.12s ease;
+display: flex;
+align-items: center;
+gap: 6px;
 }
 
 .fabricjs-object-menu button:hover {
@@ -47,6 +50,45 @@ color: var(--fjm-button-hover-color);
 .fabricjs-object-menu button:active {
 background-color: var(--fjm-button-active-bg-color);
 color: var(--fjm-button-hover-color);
+}
+
+.fabricjs-object-menu .menu-btn-icon {
+font-size: 15px;
+line-height: 1;
+flex-shrink: 0;
+width: 15px;
+overflow: hidden;
+}
+
+.fabricjs-object-menu .menu-ai-action {
+background-color: rgba(106,58,180,0.18);
+}
+
+.fabricjs-object-menu .menu-ai-action:hover {
+background-color: rgba(106,58,180,0.35);
+}
+
+.fabricjs-object-menu .menu-ai-action .menu-btn-icon {
+color: #b388ff;
+}
+
+.fabricjs-object-menu .menu-destructive {
+color: #ff6b6b;
+}
+
+.fabricjs-object-menu .menu-destructive:hover {
+background-color: rgba(255,80,80,0.2);
+color: #ff4444;
+}
+
+.fabricjs-object-menu .menu-destructive .menu-btn-icon {
+color: #ff6b6b;
+}
+
+.menu-separator {
+height: 1px;
+background-color: var(--fjm-separator-color);
+margin: 4px 0;
 }
 
 .menu-group {
@@ -81,4 +123,31 @@ color: var(--fjm-button-color);
 opacity: 0.7;
 text-transform: uppercase;
 letter-spacing: 0.5px;
+}
+
+.menu-submenu-wrap {
+grid-column: 1 / -1;
+}
+
+.menu-submenu-toggle {
+justify-content: flex-start;
+}
+
+.menu-submenu-arrow {
+font-size: 16px;
+margin-left: auto;
+opacity: 0.6;
+}
+
+.menu-submenu-content {
+padding-left: 8px;
+}
+
+.menu-submenu-content button {
+font-size: 10px;
+padding: 3px 8px;
+}
+
+.menu-submenu-content .menu-btn-icon {
+font-size: 13px;
 }

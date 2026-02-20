@@ -23,6 +23,21 @@ this.buttonElement=null;
 }
 
 
+getProviderContext(){
+var provider=this.editor&&this.editor.provider;
+if(provider){
+var addr=provider.getEndpointUrl();
+if(addr)addr=addr.replace(/\/+$/,'');
+var headers={};
+if(provider.needsApiKey&&provider.needsApiKey()){
+var key=provider.getApiKey();
+if(key)headers={Authorization:'Bearer '+key};
+}
+return{serverAddress:addr,authHeaders:headers};
+}
+return{serverAddress:null,authHeaders:null};
+}
+
 markNodeAsUnsaved(nodeId) {
 this.unsavedNodes.add(nodeId);
 const nodeElement=this.contentElement.querySelector(`[data-node-id="${nodeId}"]`).closest('.comfui-node-wrapper');
@@ -41,7 +56,7 @@ const enabled=this.enabled===true;
 
 button.innerHTML=`
 <label class="comfui-custom-radio">
-<input type="radio" name="enabled-${currentType}" data-type="${currentType}" class="comfui-tab-enabled-radio" ${
+<input type="radio" name="enabled-${this.editor.providerKey}-${currentType}" data-type="${currentType}" class="comfui-tab-enabled-radio" ${
 enabled ? "checked" : ""
 }>
 <span class="comfui-custom-radio-label"></span>
@@ -70,7 +85,7 @@ const radioBtn=button.querySelector(".comfui-tab-enabled-radio");
 radioBtn.addEventListener("click",async (e)=>{
 e.stopPropagation();
 
-document
+this.editor.containerEl
 .querySelectorAll(
 `.comfui-tab-enabled-radio[data-type="${currentType}"]`
 )
@@ -120,7 +135,7 @@ async saveWorkflow() {
 comfyuiLogger.debug("saveWorkflow() start");
 const cleanWorkflow={...this.workflow};
 
-await comfyUIWorkflowRepository
+await this.editor.workflowRepo
 .saveWorkflow(
 this.type||"T2I",
 this.id,
@@ -355,7 +370,8 @@ if (previewContainer) {
 const previewImage=previewContainer.querySelector("img");
 if (previewImage) {
 try {
-const imageUrl=await comfyui_view_image_v2(selectedValue);
+var ctx=this.getProviderContext();
+const imageUrl=await comfyui_view_image_v2(selectedValue,"input",ctx.serverAddress,ctx.authHeaders);
 if (imageUrl) {
 previewImage.src=imageUrl;
 previewContainer.classList.remove("hidden");
@@ -399,7 +415,9 @@ class_type
 })
 .sort((a,b)=>b.inputCount-a.inputCount);
 
-const hasUnverifiedNodes=nodes.some(({class_type})=>notExistsWorkflowNodeVsComfyUI(class_type));
+var objInfoRepo=this.editor?this.editor.objectInfoRepo:comfyObjectInfoRepo;
+var knownNodeNames=new Set(await objInfoRepo.getNodeNames());
+const hasUnverifiedNodes=nodes.some(({class_type})=>!knownNodeNames.has(class_type));
 const bannerContainer=this.contentElement.querySelector(".comfui-unverified-banner-container");
 if(bannerContainer){
 if(hasUnverifiedNodes){
@@ -415,7 +433,7 @@ nodeElement.className="comfui-node-wrapper";
 
 const nodeTitle=node._meta?.title||node.class_type;
 let nodeTypeDisplay='';
-if(notExistsWorkflowNodeVsComfyUI(class_type)){
+if(!knownNodeNames.has(class_type)){
 nodeTypeDisplay=`<div class="comfui-node-title comfui-node-title-warning">${id}: ${nodeTitle}</div>`+this.createMissingInput();
 }else{
 nodeTypeDisplay=`<div class="comfui-node-title comfui-node-title-normal">${id}: ${nodeTitle}</div>`;
@@ -470,7 +488,8 @@ if (previewContainer) {
 const previewImage=previewContainer.querySelector("img");
 if (previewImage) {
 comfyuiLogger.debug("selectedValue",selectedValue);
-const imageUrl=await comfyui_view_image_v2(selectedValue);
+var ctx=this.getProviderContext();
+const imageUrl=await comfyui_view_image_v2(selectedValue,"input",ctx.serverAddress,ctx.authHeaders);
 if (imageUrl) {
 previewImage.src=imageUrl;
 previewContainer.classList.remove("hidden");
@@ -534,7 +553,8 @@ const previewTargetId=e.target.dataset.previewTarget;
 
 if (this.workflow[nodeId]&&inputName) {
 try {
-const uploadResult=await comfyui_uploadImage_v2(file);
+var ctx=this.getProviderContext();
+const uploadResult=await comfyui_uploadImage_v2(file,null,true,ctx.serverAddress,ctx.authHeaders);
 if (uploadResult.success) {
 this.workflow[nodeId].inputs[inputName]=uploadResult.name;
 this.markNodeAsUnsaved(nodeId);

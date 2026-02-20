@@ -141,44 +141,35 @@ createToastError("Fetch Error","Failed to fetch modules.");
 }
 
 function sdwebuiApiHeartbeat() {
-const label=$('ExternalService_Heartbeat_Label');
 if(!sdWebUIUrls||!sdWebUIUrls.ping){
-return;
+return Promise.resolve(false);
 }
 
-fetch(sdWebUIUrls.ping,{
+return fetch(sdWebUIUrls.ping,{
 method: 'GET',
 headers: {'Accept': 'application/json'}
 })
-.then(response=>{
+.then(function(response){
 if (apiMode==apis.A1111) {
 if (response.ok) {
-label.innerHTML='SD WebUI or Forge ON';
-label.style.color='green';
-
 if(firstSDConnection){
-getDiffusionInfomation();
+getDiffusionInformation();
 firstSDConnection=false;
 }
 return true;
-} else {
-label.innerHTML='SD WebUI or Forge OFF';
-label.style.color='red';
 }
 }
-})
-.catch(error=>{
-if (apiMode==apis.A1111){
-label.innerHTML='SD WebUI or Forge OFF';
-label.style.color='red';
-}
-});
 return false;
+})
+.catch(function(){
+return false;
+});
 }
 
 
 async function sdwebuiInterrogate(layer,model,spinnerId) {
-sdQueue.add(async ()=>{
+var p=sdQueue.add(async ()=>{
+setCurrentAiTask(spinnerId);
 let base64Image=imageObject2Base64Image(layer);
 const requestBody={
 image: base64Image,
@@ -200,8 +191,9 @@ return null;
 
 const result=await response.json();
 return result;
-})
-.then(async (result)=>{
+});
+updateAiTaskCancelInfo(spinnerId,{queueName:'sd',queueItemId:p._queueItemId});
+p.then(async (result)=>{
 if (result) {
 createToast("Interrogate Success. "+model,result.caption);
 if (layer.text2img_prompt) {

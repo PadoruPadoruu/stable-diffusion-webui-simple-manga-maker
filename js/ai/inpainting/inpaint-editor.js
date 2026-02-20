@@ -1,5 +1,4 @@
 // Inpaintエディタ（モーダルオーバーレイ）
-var inpaintLogger=new SimpleLogger('inpaint',LogLevel.DEBUG);
 
 var InpaintEditor=(function(){
 var isOpen=false;
@@ -104,8 +103,10 @@ var denoise=parseFloat(document.getElementById('inpaint-denoise').value);
 var imageDataUrl=originalImageDataUrl;
 var layer=targetLayer;
 close();
-var spinner=createSpinner(canvasMenuIndex);
+var spinner=createSpinner(getGUID(layer),'IP');
 var spinnerId=spinner.id;
+setCurrentAiTask(spinnerId);
+updateAiTaskCancelInfo(spinnerId,{queueName:'comfyui'});
 var startTime=Date.now();
 InpaintWorkflow.generate(imageDataUrl,maskDataUrl,prompt,negative,denoise)
 .then(function(result){
@@ -134,6 +135,10 @@ replaceImageObject(layer,newImg,'I2I');
 inpaintLogger.debug("Inpaint result applied");
 })
 .catch(function(error){
+if(error.message==='Queue cancelled'||error.message==='Task cancelled'){
+inpaintLogger.debug("Inpaint cancelled by user");
+return;
+}
 DashboardUI.recordFailure('Inpaint');
 var help=getText("comfyUI_workflowErrorHelp");
 createToastError("Inpaint Error",[error.message,help],8000);

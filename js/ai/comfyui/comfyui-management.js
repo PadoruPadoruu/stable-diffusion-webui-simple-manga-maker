@@ -1,6 +1,54 @@
+var _comfyUIExecProvider=null;
+
+async function comfyUIExecWithProvider(provider,fn){
+_comfyUIExecProvider=provider;
+try{
+return await fn();
+}finally{
+_comfyUIExecProvider=null;
+}
+}
+
+function getComfyUIServerAddress(){
+var provider=_comfyUIExecProvider||providerRegistry.getActive();
+if(provider&&provider.getEndpointUrl()){
+return provider.getEndpointUrl().replace(/\/+$/,'');
+}
+return $('comfyUIPageUrl').value.replace(/\/+$/,'');
+}
+
+function getComfyUIAuthHeaders(){
+var provider=_comfyUIExecProvider||providerRegistry.getActive();
+if(provider&&provider.needsApiKey()){
+var apiKey=provider.getApiKey();
+if(apiKey){
+return{Authorization:'Bearer '+apiKey};
+}
+}
+return{};
+}
+
+function getComfyUIProviderTag(){
+var provider=_comfyUIExecProvider||providerRegistry.getActive();
+if(provider){
+return provider.name||provider.id;
+}
+return 'ComfyUI';
+}
+
+function comfyuiFetch(url,options){
+options=options||{};
+var authHeaders=getComfyUIAuthHeaders();
+if(Object.keys(authHeaders).length>0){
+options.headers=Object.assign({},options.headers||{},authHeaders);
+}
+var tag=getComfyUIProviderTag();
+return fetch(url,options);
+}
+
 class ComfyUIEndpoints {
 #getUrlParts() {
-const serverAddress=$('comfyUIPageUrl').value;
+const serverAddress=getComfyUIServerAddress();
 const url=new URL(serverAddress);
 return {
 protocol: url.protocol.replace(':',''),
@@ -38,7 +86,9 @@ history: '/history/',
 view: '/view',
 uploadImage: '/upload/image',
 objectInfo: '/object_info/',
-objectInfoOnly: '/object_info'
+objectInfoOnly: '/object_info',
+queue: '/queue',
+interrupt: '/interrupt'
 };
 return endpoints[key]||'';
 }
@@ -47,36 +97,72 @@ return endpoints[key]||'';
 
 let reader=new FileReader();
 
-var socket=null;
+var comfyuiSockets=new Map();
 const comfyUIuuid=crypto.randomUUID();
 var selectedWorkflow=null;
 var processingPrompt=false;
 var workflowFileLoad="";
 
+function getComfyUISocketKey(){
+var provider=_comfyUIExecProvider||providerRegistry.getActive();
+return provider?provider.id:'local';
+}
+
+function comfyuiGetSocket(){
+return comfyuiSockets.get(getComfyUISocketKey())||null;
+}
+
 function comfyuiConnect() {
+var key=getComfyUISocketKey();
 try {
-socket=new WebSocket(comfyUIUrls.ws+'?clientId='+comfyUIuuid);
-socket.addEventListener("open",(event)=>{
-comfyuiLogger.info("ComfyUIへの接続に成功しました。");
+var wsUrl=comfyUIUrls.ws+'?clientId='+comfyUIuuid;
+var authHeaders=getComfyUIAuthHeaders();
+if(authHeaders.Authorization){
+wsUrl+='&token='+encodeURIComponent(authHeaders.Authorization.replace('Bearer ',''));
+}
+var ws=new WebSocket(wsUrl);
+comfyuiSockets.set(key,ws);
+ws.addEventListener("open",(event)=>{
+var tag=getComfyUIProviderTag();
+comfyuiLogger.info('['+tag+'] WebSocket接続成功');
 });
-socket.addEventListener("close",(event)=>{
-socket=null;
+ws.addEventListener("close",(event)=>{
+comfyuiSockets.delete(key);
 });
-socket.addEventListener("error",(event)=>{
-socket=null;
+ws.addEventListener("error",(event)=>{
+comfyuiSockets.delete(key);
 });
 return;
 } catch (error) {
-socket=null;
+comfyuiSockets.delete(key);
+}
+}
+
+async function comfyuiCancelPrompt(promptId){
+try{
+await comfyuiFetch(comfyUIUrls.interrupt,{
+method:"POST",
+headers:{"Content-Type":"application/json"}
+});
+await comfyuiFetch(comfyUIUrls.queue,{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({delete:[promptId]})
+});
+var tag=getComfyUIProviderTag();
+comfyuiLogger.info('['+tag+'] Cancelled prompt: '+promptId);
+}catch(error){
+var tag=getComfyUIProviderTag();
+comfyuiLogger.error('['+tag+'] Cancel prompt error:',error);
 }
 }
 
 async function comfyuiApiHeartbeat() {
-const label=$("ExternalService_Heartbeat_Label");
 const labelfw=$("ExternalService_Heartbeat_Label_fw");
 
 try {
-const response=await fetch(comfyUIUrls.settings,{
+var providerName=providerRegistry.getActive()?providerRegistry.getActive().name:'ComfyUI';
+const response=await comfyuiFetch(comfyUIUrls.settings,{
 method: "GET",
 headers: {
 "Content-Type": "application/json",
@@ -85,37 +171,25 @@ accept: "application/json",
 });
 
 if (response.ok) {
-if (label) {
-label.innerHTML="ComufyUI ON";
-label.style.color="green";
-}
 if (labelfw) {
-labelfw.innerHTML="ComufyUI ON";
+labelfw.innerHTML=providerName+" ON";
 labelfw.style.color="green";
 }
 
 if (firstComfyConnection) {
-getDiffusionInfomation();
+getDiffusionInformation();
 firstComfyConnection=false;
 }
 return true;
 } else {
-if (label) {
-label.innerHTML="ComufyUI OFF";
-label.style.color="red";
-}
 if (labelfw) {
-labelfw.innerHTML="ComufyUI OFF";
+labelfw.innerHTML=providerName+" OFF";
 labelfw.style.color="red";
 }
 }
 } catch (error) {
-if (label) {
-label.innerHTML="ComufyUI OFF";
-label.style.color="red";
-}
 if (labelfw) {
-labelfw.innerHTML="ComufyUI OFF";
+labelfw.innerHTML=providerName+" OFF";
 labelfw.style.color="red";
 }
 }
@@ -124,7 +198,9 @@ return false;
 
 async function comfyuiHandleProcessQueue(layer,spinnerId,Type='T2I',extraData) {
 var startTime=Date.now();
-if (!socket) comfyuiConnect();
+var serverAddress=getComfyUIServerAddress();
+var authHeaders=getComfyUIAuthHeaders();
+if (!comfyuiGetSocket()) comfyuiConnect();
 var requestData=baseRequestData(layer);
 if (basePrompt.text2img_model!=""){
 requestData["model"]=basePrompt.text2img_model;
@@ -133,26 +209,30 @@ if(extraData){
 Object.assign(requestData,extraData);
 }
 
+var repo=(_comfyUIExecProvider&&_comfyUIExecProvider.id==='runpodComfyUI')
+? comfyUIWorkflowRepo_runpod
+: comfyUIWorkflowRepo_local;
+
 if (Type=='T2I') {
-selectedWorkflow=await comfyUIWorkflowRepository.getEnabledWorkflowByType("T2I");
+selectedWorkflow=await repo.getEnabledWorkflowByType("T2I");
 } else if(Type=='I2I') {
-selectedWorkflow=await comfyUIWorkflowRepository.getEnabledWorkflowByType("I2I");
+selectedWorkflow=await repo.getEnabledWorkflowByType("I2I");
 } else if(Type=='Rembg') {
-selectedWorkflow=await comfyUIWorkflowRepository.getEnabledWorkflowByType("REMBG");
+selectedWorkflow=await repo.getEnabledWorkflowByType("REMBG");
 } else if(Type=='Upscaler') {
-selectedWorkflow=await comfyUIWorkflowRepository.getEnabledWorkflowByType("Upscaler");
+selectedWorkflow=await repo.getEnabledWorkflowByType("Upscaler");
 } else if(Type=='Inpaint') {
-selectedWorkflow=await comfyUIWorkflowRepository.getEnabledWorkflowByType("Inpaint");
+selectedWorkflow=await repo.getEnabledWorkflowByType("Inpaint");
 } else if(Type=='I2I_Angle') {
-selectedWorkflow=await comfyUIWorkflowRepository.getEnabledWorkflowByType("I2I_Angle");
+selectedWorkflow=await repo.getEnabledWorkflowByType("I2I_Angle");
 } else{
 removeSpinner(spinnerId);
 return;
 }
 
 var classTypeLists=getClassTypeOnlyByJson(selectedWorkflow);
-if(checkWorkflowNodeVsComfyUI(classTypeLists)){
-}else{
+var objInfoRepo=(_comfyUIExecProvider&&_comfyUIExecProvider.id==='runpodComfyUI')?comfyObjectInfoRepo_runpod:comfyObjectInfoRepo_local;
+if(!await checkWorkflowNodeVsComfyUI(classTypeLists,objInfoRepo)){
 removeSpinner(spinnerId);
 return;
 }
@@ -160,16 +240,16 @@ return;
 
 if (Type=='I2I'||Type=='Rembg'||Type=='Upscaler'||Type=='I2I_Angle') {
 var uploadFilename=generateFilename();
-await comfyuiUploadImage(layer,uploadFilename);
+await comfyuiUploadImage(layer,uploadFilename,true,serverAddress,authHeaders);
 requestData["uploadFileName"]=uploadFilename;
 }
 if (Type=='Inpaint') {
 var inpaintImageFilename=generateFilename();
-await comfyuiUploadImage(layer,inpaintImageFilename);
+await comfyuiUploadImage(layer,inpaintImageFilename,true,serverAddress,authHeaders);
 requestData["uploadFileName"]=inpaintImageFilename;
 if (requestData["inpaintMaskDataUrl"]) {
 var maskFilename="mask_"+generateFilename();
-await comfyuiUploadBase64Image(requestData["inpaintMaskDataUrl"],maskFilename);
+await comfyuiUploadBase64Image(requestData["inpaintMaskDataUrl"],maskFilename,true,serverAddress,authHeaders);
 requestData["maskFileName"]=maskFilename;
 }
 }
@@ -197,8 +277,15 @@ centerY:center.centerY,
 targetLayerGuid:targetLayerGuid
 });
 
-return comfyuiQueue.add(async ()=>{
-const result=await comfyui_put_queue_v2(workflow);
+var providerCtx={
+tag:getComfyUIProviderTag(),
+serverAddress:serverAddress,
+authHeaders:authHeaders,
+objectInfoRepo:(_comfyUIExecProvider&&_comfyUIExecProvider.id==='runpodComfyUI')?comfyObjectInfoRepo_runpod:comfyObjectInfoRepo_local
+};
+var p=comfyuiQueue.add(async ()=>{
+setCurrentAiTask(spinnerId);
+const result=await comfyui_put_queue_v2(workflow,providerCtx);
 if (!result||result.error) return result;
 return new Promise((resolve,reject)=>{
 fabric.Image.fromURL(result,(img)=>{
@@ -206,7 +293,9 @@ if (img) resolve(img);
 else reject(new Error("Failed to create fabric.Image"));
 });
 });
-})
+});
+updateAiTaskCancelInfo(spinnerId,{queueName:'comfyui',queueItemId:p._queueItemId});
+return p
 .then(async (result)=>{
 if (result&&result.error) {
 createToastError("Generation Error",result.message);
@@ -240,6 +329,10 @@ throw new Error("Unexpected error: No result returned from comfyui_put_queue_v2"
 })
 .catch((error)=>{
 removeGenerationTask(canvasGuid);
+if(error.message==='Queue cancelled'||error.message==='Task cancelled'){
+comfyuiLogger.debug("Generation cancelled by user");
+return;
+}
 DashboardUI.recordFailure(Type);
 let help=getText("comfyUI_workflowErrorHelp");
 createToastError("Generation Error",[error.message,help],8000);
@@ -250,7 +343,7 @@ removeSpinner(spinnerId);
 });
 }
 
-async function comfyuiUploadImage(layer,fileName="i2i_temp.png",overwrite=true) {
+async function comfyuiUploadImage(layer,fileName="i2i_temp.png",overwrite=true,serverAddress,authHeaders) {
 const base64Image=imageObject2Base64ImageEffectKeep(layer);
 if (!base64Image||!base64Image.startsWith("data:image/")) {
 throw new Error("Invalid base64 image data");
@@ -269,17 +362,20 @@ formData.append("image",blob,fileName);
 formData.append("overwrite",overwrite.toString());
 
 try {
-const response=await fetch(comfyUIUrls.uploadImage,{
-method: "POST",
-body: formData,
-});
+if(!serverAddress)serverAddress=getComfyUIServerAddress();
+if(!authHeaders)authHeaders=getComfyUIAuthHeaders();
+var uploadUrl=serverAddress+'/upload/image';
+var opts={method:"POST",body:formData};
+if(authHeaders&&Object.keys(authHeaders).length>0){
+opts.headers=Object.assign({},authHeaders);
+}
+var response=await fetch(uploadUrl,opts);
 
 if (!response.ok) {
 throw new Error(`HTTP error! status: ${response.status}`);
 }
 
 const result=await response.json();
-// console.log("Upload successful:", result);
 return result;
 } catch (error) {
 comfyuiLogger.error("Error uploading image:",error);
@@ -288,7 +384,7 @@ throw error;
 }
 
 
-async function comfyuiUploadBase64Image(base64DataUrl,fileName="mask_temp.png",overwrite=true) {
+async function comfyuiUploadBase64Image(base64DataUrl,fileName="mask_temp.png",overwrite=true,serverAddress,authHeaders) {
 if (!base64DataUrl||!base64DataUrl.startsWith("data:image/")) {
 throw new Error("Invalid base64 image data");
 }
@@ -303,10 +399,14 @@ const formData=new FormData();
 formData.append("image",blob,fileName);
 formData.append("overwrite",overwrite.toString());
 try {
-const response=await fetch(comfyUIUrls.uploadImage,{
-method:"POST",
-body:formData,
-});
+if(!serverAddress)serverAddress=getComfyUIServerAddress();
+if(!authHeaders)authHeaders=getComfyUIAuthHeaders();
+var uploadUrl=serverAddress+'/upload/image';
+var opts={method:"POST",body:formData};
+if(authHeaders&&Object.keys(authHeaders).length>0){
+opts.headers=Object.assign({},authHeaders);
+}
+var response=await fetch(uploadUrl,opts);
 if (!response.ok) {
 throw new Error(`HTTP error! status: ${response.status}`);
 }
@@ -397,7 +497,7 @@ comfyuiLogger.error("comfyuiVaeLoader: Fetch error",error);
 
 async function comfyuiFetchObjectInfo(nodeName) {
 try {
-const response=await fetch(comfyUIUrls.objectInfo+nodeName);
+const response=await comfyuiFetch(comfyUIUrls.objectInfo+nodeName);
 if (!response.ok) {
 throw new Error(`HTTP error! status: ${response.status}`);
 }
@@ -409,21 +509,3 @@ comfyuiLogger.error("Comfyui_Fetch: Fetch error",nodeName);
 }
 }
 
-var comfyObjectInfoList;
-async function comfyuiFetchObjectInfoOnly() {
-try {
-const response=await fetch(comfyUIUrls.objectInfoOnly);
-if (!response.ok) {
-throw new Error(`HTTP error! status: ${response.status}`);
-}
-const data=await response.json();
-
-const nodeNames=Object.keys(data);
-// console.log("Node names:", nodeNames);
-comfyObjectInfoList=nodeNames;
-return nodeNames;
-} catch (error) {
-comfyuiLogger.error("comfyuiFetchObjectInfoOnly: Fetch error:",error);
-return [];
-}
-}

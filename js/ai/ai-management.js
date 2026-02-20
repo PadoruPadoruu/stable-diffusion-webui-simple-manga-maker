@@ -1,8 +1,25 @@
+// AI機能の中央ルーター: プロバイダーレジストリ経由でディスパッチ
 const sdQueue=new TaskQueue(1);
 const comfyuiQueue=new TaskQueue(1);
+const falaiQueue=new TaskQueue(1);
 
 var firstSDConnection=true;
 var firstComfyConnection=true;
+
+document.addEventListener('DOMContentLoaded',function(){
+var falConc=$('falaiConcurrency');
+if(falConc&&parseInt(falConc.value)>1){
+falaiQueue.setConcurrency(parseInt(falConc.value));
+}
+});
+
+$('falaiConcurrency').addEventListener('change',function(){
+var val=parseInt(this.value)||1;
+if(val<1)val=1;
+if(val>10)val=10;
+this.value=val;
+falaiQueue.setConcurrency(val);
+});
 
 $('sdWebUIPageUrlDefaultUrl').addEventListener('click',(event)=>{
 event.stopPropagation();
@@ -29,87 +46,106 @@ const comfyuiQueueStatus=comfyuiQueue.getStatus();
 if(comfyuiQueueStatus.total>0){
 return true;
 }
+const falQueueStatus=falaiQueue.getStatus();
+if(falQueueStatus.total>0){
+return true;
+}
 return false;
 }
 
 function clearAllQueues() {
 const sdCleared=sdQueue.clearQueue();
 const comfyCleared=comfyuiQueue.clearQueue();
-logger.info(`All queues cleared: SD=${sdCleared}, ComfyUI=${comfyCleared}`);
-return sdCleared+comfyCleared;
+const falCleared=falaiQueue.clearQueue();
+logger.info(`All queues cleared: SD=${sdCleared}, ComfyUI=${comfyCleared}, Fal=${falCleared}`);
+return sdCleared+comfyCleared+falCleared;
 }
 
 
 async function T2I(layer,spinner){
-if (apiMode==apis.A1111) {
-sdwebuiT2IProcessQueue(layer,spinner.id);
-}else if (apiMode==apis.COMFYUI){
-return comfyuiHandleProcessQueue(layer,spinner.id);
+var provider=providerRegistry.getProviderForRole(AI_ROLES.Text2Image);
+if(provider){
+return provider.executeT2I(layer,spinner.id);
 }
 }
 function I2I(layer,spinner){
-if (apiMode==apis.A1111) {
-sdwebuiI2IProcessQueue(layer,spinner.id);
-}else if (apiMode==apis.COMFYUI){
-comfyuiHandleProcessQueue(layer,spinner.id,'I2I');
+var provider=providerRegistry.getProviderForRole(AI_ROLES.Image2Image);
+if(provider){
+return provider.executeI2I(layer,spinner.id);
 }
 }
 
 async function aiRembg(layer,spinner){
-if (apiMode==apis.A1111) {
-sdwebuiRembgProcessQueue(layer,spinner.id);
-}else if (apiMode==apis.COMFYUI){
-return comfyuiHandleProcessQueue(layer,spinner.id,'Rembg');
+var provider=providerRegistry.getProviderForRole(AI_ROLES.RemoveBG);
+if(provider){
+return provider.executeRembg(layer,spinner.id);
 }
 }
 
 async function aiUpscale(layer,spinner){
-if (apiMode==apis.A1111) {
-//TODO
-}else if (apiMode==apis.COMFYUI){
-return comfyuiHandleProcessQueue(layer,spinner.id,'Upscaler');
+var provider=providerRegistry.getProviderForRole(AI_ROLES.Upscaler);
+if(provider){
+return provider.executeUpscale(layer,spinner.id);
 }
 }
 
 function canUseInpaint(){
-return apiMode==apis.COMFYUI&&hasRole(AI_ROLES.Inpaint);
+var provider=providerRegistry.getProviderForRole(AI_ROLES.Inpaint);
+return provider!==null&&provider.canUseInpaint();
 }
 
 function canUseAngle(){
-return apiMode==apis.COMFYUI&&hasRole(AI_ROLES.I2I_Angle);
+var provider=providerRegistry.getProviderForRole(AI_ROLES.I2I_Angle);
+return provider!==null&&provider.canUseAngle();
 }
 
 function AngleGenerate(layer,spinner,anglePrompt){
-if(apiMode==apis.COMFYUI){
-comfyuiHandleProcessQueue(layer,spinner.id,'I2I_Angle',{anglePrompt:anglePrompt});
+var provider=providerRegistry.getProviderForRole(AI_ROLES.I2I_Angle);
+if(provider){
+return provider.executeAngle(layer,spinner.id,anglePrompt);
 }
 }
 
 
-function getDiffusionInfomation() {
-if (apiMode==apis.A1111) {
-fetchSDOptions().then(()=>{
-fetchSdModels();
-fetchSdSampler();
-fetchSdUpscaler();
-fetchSdAdModels();
-fetchSdModules();
-}).catch((error)=>{
-logger.error('getDiffusionInfomation:',error);
+function getDiffusionInformation() {
+var provider=providerRegistry.getActive();
+if(provider){
+provider.fetchDiffusionInformation();
+}
+}
+
+
+function getInUseProviders(){
+var assignments=providerRegistry.getAllRoleAssignments();
+var ids={};
+Object.keys(assignments).forEach(function(role){
+var pid=assignments[role];
+if(pid&&pid!=='default')ids[pid]=true;
 });
-
-}else if(apiMode==apis.COMFYUI){
-comfyuiFetchModels();
-comfyuiFetchSampler();
-comfyuiFetchUpscaler();
-comfyuiVaeLoader();
-comfyuiClipModels();
-comfyuiFetchObjectInfoOnly();
-}
+var activeId=providerRegistry.getActiveId();
+if(activeId)ids[activeId]=true;
+return Object.keys(ids).map(function(id){
+return providerRegistry.get(id);
+}).filter(Boolean);
 }
 
+function renderProviderStatusChips(results){
+var container=$('ExternalService_Heartbeat_Container');
+if(!container)return;
+container.innerHTML='';
+results.forEach(function(r){
+var chip=document.createElement('span');
+chip.className='provider-status-chip';
+var dot=document.createElement('span');
+dot.className='provider-status-dot '+(r.online?'on':'off');
+var text=document.createTextNode(r.name);
+chip.appendChild(dot);
+chip.appendChild(text);
+container.appendChild(chip);
+});
+}
 
-function apiHeartbeat(){
+async function apiHeartbeat(){
 
 logger.trace("apiHeartbeat");
 
@@ -119,15 +155,23 @@ if (pingCheck.checked) {
 return;
 }
 
-if (apiMode==apis.A1111) {
-sdwebuiApiHeartbeat();
-} else if(apiMode==apis.COMFYUI) {
-comfyuiApiHeartbeat();
+var providers=getInUseProviders();
+var results=[];
+for(var i=0;i<providers.length;i++){
+var p=providers[i];
+var online=false;
+try{
+online=await p.heartbeat();
+}catch(e){
+online=false;
 }
+results.push({id:p.id,name:p.name,online:!!online});
+}
+renderProviderStatusChips(results);
 
-const label=$('ExternalService_Heartbeat_Label');
-let announce=$('checSD_WebUI_Announce');
-if(label.style.color==='green') {
+var announce=$('checSD_WebUI_Announce');
+var anyOnline=results.some(function(r){return r.online;});
+if(anyOnline){
 announce.style.display='none';
 }
 }
