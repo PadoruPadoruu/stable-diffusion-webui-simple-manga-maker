@@ -515,6 +515,7 @@ switch (action) {
 case 'clearAllClipPaths':
 logger.trace("INFO",`Clearing all ClipPaths for shape "${activeObject.name}"`);
 activeObject.clipPath=undefined;
+activeObject.perPixelTargetFind=false;
 break;
 case 'clearTopClipPath':
 logger.trace("INFO",`Starting top edge ClipPath clearing process for shape "${activeObject.name}"`);

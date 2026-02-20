@@ -172,7 +172,7 @@ updateTextControls(event.selected[0]);
 function moveSettings(img,poly) {
 eventLogger.trace('moveSettings');
 eventLogger.traceWithStack('moveSettings');
-
+img.perPixelTargetFind=true;
 updateClipPath(img,poly);
 
 function updateOnModification() {
@@ -204,6 +204,7 @@ delete this.removeClipPathListeners;
 };
 
 img.removeSettings=function() {
+this.perPixelTargetFind=false;
 removeGUID(this.relatedPoly,this);
 if(this.removeClipPathListeners){
 this.removeClipPathListeners();
