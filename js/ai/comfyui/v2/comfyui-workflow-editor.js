@@ -2,8 +2,8 @@ class ComfyUIWorkflowEditor {
 constructor(options) {
 options=options||{};
 this.providerKey=options.providerKey||'local';
-this.workflowRepo=options.workflowRepo||comfyUIWorkflowRepository;
-this.objectInfoRepo=options.objectInfoRepo||objectInfoRepository;
+this.workflowRepo=options.workflowRepo||comfyUIWorkflowRepo_local;
+this.objectInfoRepo=options.objectInfoRepo||comfyObjectInfoRepo;
 this.provider=options.provider||null;
 this.containerEl=options.containerEl||document;
 this.tabs=new Map();
@@ -22,7 +22,7 @@ throw new Error(`ObjectInfo取得失敗: ステータス ${response.status}`);
 
 self.nodeTypes=await response.json();
 await self.objectInfoRepo.saveObjectInfo(self.nodeTypes);
-comfyuiLogger.debug("updateObjectInfoAndWorkflows --------------",);
+comfyuiLogger.debug("updateObjectInfoAndWorkflows",Object.keys(self.nodeTypes).length,"nodes");
 
 self.tabs.forEach((tab)=>{
 tab.renderNodes();
@@ -119,6 +119,7 @@ this.updateObjectInfoAndWorkflows();
 
 async addDefaultWorkflows() {
 for (const workflow of comfyuiDefaultWorkflows) {
+if (this.isDefaultWorkflowDeleted(workflow.name)) continue;
 const exists=await this.workflowRepo.existsByName(workflow.name);
 if (!exists) {
 const id=`workflow-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
@@ -131,6 +132,33 @@ workflow.workflow,
 workflow.enabled
 );
 }
+}
+}
+
+getDeletedDefaultsKey() {
+return `deletedDefaultWorkflows_${this.providerKey}`;
+}
+
+isDefaultWorkflowDeleted(name) {
+try {
+const deleted=JSON.parse(localStorage.getItem(this.getDeletedDefaultsKey())||'[]');
+return deleted.includes(name);
+} catch {
+return false;
+}
+}
+
+markDefaultWorkflowDeleted(name) {
+const isDefault=comfyuiDefaultWorkflows.some(w=>w.name===name);
+if (!isDefault) return;
+try {
+const deleted=JSON.parse(localStorage.getItem(this.getDeletedDefaultsKey())||'[]');
+if (!deleted.includes(name)) {
+deleted.push(name);
+localStorage.setItem(this.getDeletedDefaultsKey(),JSON.stringify(deleted));
+}
+} catch {
+// ignore
 }
 }
 
@@ -176,6 +204,9 @@ this.tabs.set(tab.id,tab);
 this.activateTab(tab.id);
 tab.renderNodes();
 this.renderTabs();
+if (!id) {
+await tab.saveWorkflow();
+}
 } catch (error) {
 comfyuiLogger.error("タブ作成エラー:",error);
 }
@@ -239,6 +270,7 @@ return;
 
 try {
 if (tabId) {
+this.markDefaultWorkflowDeleted(tab.file.name);
 const result=await this.workflowRepo.deleteWorkflow(tabId);
 if (!result) {
 comfyuiLogger.error(`Workflow delete is fail. ${tabId}`);
@@ -269,8 +301,8 @@ return this.nodeTypes?.[className]||null;
 
 let comfyUIWorkflowEditor;
 document.addEventListener("DOMContentLoaded",async ()=>{
-var localEditor=new ComfyUIWorkflowEditor({providerKey:'local',workflowRepo:comfyUIWorkflowRepo_local,objectInfoRepo:objectInfoRepo_local});
+var localEditor=new ComfyUIWorkflowEditor({providerKey:'local',workflowRepo:comfyUIWorkflowRepo_local,objectInfoRepo:comfyObjectInfoRepo_local});
 await localEditor.addDefaultWorkflows();
-var runpodEditor=new ComfyUIWorkflowEditor({providerKey:'runpod',workflowRepo:comfyUIWorkflowRepo_runpod,objectInfoRepo:objectInfoRepo_runpod});
+var runpodEditor=new ComfyUIWorkflowEditor({providerKey:'runpod',workflowRepo:comfyUIWorkflowRepo_runpod,objectInfoRepo:comfyObjectInfoRepo_runpod});
 await runpodEditor.addDefaultWorkflows();
 });

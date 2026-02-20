@@ -50,7 +50,6 @@ comfyuiFetchSampler();
 comfyuiFetchUpscaler();
 comfyuiVaeLoader();
 comfyuiClipModels();
-comfyuiFetchObjectInfoOnly();
 });
 }
 }

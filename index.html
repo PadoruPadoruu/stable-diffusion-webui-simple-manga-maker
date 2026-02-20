@@ -1788,21 +1788,22 @@ function getElementClasses(element) {
 <h2 data-i18n="usWindowTitle">&#9881; 生成AI設定</h2>
 <button class="us-close" onclick="unifiedSettingsWindow.close()">&times;</button>
 </div>
-<div class="us-tabs">
-<button class="us-tab active" onclick="unifiedSettingsWindow.switchTab(0)" data-i18n="usTabAI">使用サービス</button>
-</div>
 <div class="us-body">
 <div class="us-tab-content active" id="usTabAI">
 <div class="us-split">
 <div class="us-left">
-<div class="us-panel-title" data-i18n="usServiceTitle">使用サービス</div>
+<div style="display:flex;align-items:center;gap:8px;">
+<div class="us-panel-title" data-i18n="usServiceTitle" style="padding-bottom:0;">使用サービス</div>
+<button class="role-assign-trigger" onclick="modelSettingsWindow.open()" data-i18n="modelSettingsButton"></button>
+</div>
+<div style="height:8px;"></div>
 <table class="role-matrix">
 <thead>
 <tr>
 <th></th>
 <th>ComfyUI</th>
-<th>SD WebUI<br>(A1111/Forge)</th>
 <th>RunPod<br>ComfyUI</th>
+<th>SD WebUI<br>(A1111/Forge)</th>
 <th>Fal.ai</th>
 </tr>
 </thead>
@@ -1835,16 +1836,16 @@ function getElementClasses(element) {
 <td><button id="comfyUIPageUrlDefaultUrl" class="us-btn-s" data-i18n="usBtnReset">初期値</button><a href="html/API_Help/comfyui_settings.html" target="_blank" class="us-btn-s">?</a></td>
 </tr>
 <tr>
-<td>SD WebUI<br>(A1111/Forge)</td>
-<td class="us-field-label">URL</td>
-<td><input type="text" id="sdWebUIPageUrl" value="http://127.0.0.1:7860" placeholder="URL"></td>
-<td><button id="sdWebUIPageUrlDefaultUrl" class="us-btn-s" data-i18n="usBtnReset">初期値</button><a href="html/API_Help/sd-api-guide.html" target="_blank" class="us-btn-s">?</a></td>
-</tr>
-<tr>
 <td>RunPod<br>ComfyUI</td>
 <td class="us-field-label">URL</td>
 <td><input type="text" id="runpodComfyUIUrl" value="" placeholder="https://{pod-id}-8188.proxy.runpod.net"></td>
 <td><button id="runpodComfyUIUrlClear" class="us-btn-s" data-i18n="usBtnReset">初期値</button><a href="https://console.runpod.io" target="_blank" class="us-link-btn" data-i18n="usDashboard">Web ↗</a></td>
+</tr>
+<tr>
+<td>SD WebUI<br>(A1111/Forge)</td>
+<td class="us-field-label">URL</td>
+<td><input type="text" id="sdWebUIPageUrl" value="http://127.0.0.1:7860" placeholder="URL"></td>
+<td><button id="sdWebUIPageUrlDefaultUrl" class="us-btn-s" data-i18n="usBtnReset">初期値</button><a href="html/API_Help/sd-api-guide.html" target="_blank" class="us-btn-s">?</a></td>
 </tr>
 <tr>
 <td rowspan="6">Fal.ai</td>

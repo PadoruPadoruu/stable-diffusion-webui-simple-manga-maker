@@ -376,7 +376,7 @@ const resources = {
 "roleInpaint":"Inpaint",
 "roleUpscaler":"高解像度化",
 "roleRemoveBG":"背景削除",
-"roleAngle":"Image → Image Angle",
+"roleAngle":"Image → Image<br>Angle",
 "roleInterrogateCLIP":"CLIP",
 "roleInterrogateDEEPDOORU":"DEEPDOORU"
 },
@@ -391,7 +391,7 @@ const resources = {
 "roleInpaint":"Inpaint",
 "roleUpscaler":"Upscale",
 "roleRemoveBG":"Remove BG",
-"roleAngle":"Image → Image Angle",
+"roleAngle":"Image → Image<br>Angle",
 "roleInterrogateCLIP":"CLIP",
 "roleInterrogateDEEPDOORU":"DEEPDOORU"
 },
@@ -406,7 +406,7 @@ const resources = {
 "roleInpaint":"Inpaint",
 "roleUpscaler":"고해상도화",
 "roleRemoveBG":"배경 제거",
-"roleAngle":"Image → Image Angle",
+"roleAngle":"Image → Image<br>Angle",
 "roleInterrogateCLIP":"CLIP",
 "roleInterrogateDEEPDOORU":"DEEPDOORU"
 },
@@ -421,7 +421,7 @@ const resources = {
 "roleInpaint":"Inpaint",
 "roleUpscaler":"Agrandir",
 "roleRemoveBG":"Suppr. fond",
-"roleAngle":"Image → Image Angle",
+"roleAngle":"Image → Image<br>Angle",
 "roleInterrogateCLIP":"CLIP",
 "roleInterrogateDEEPDOORU":"DEEPDOORU"
 },
@@ -436,7 +436,7 @@ const resources = {
 "roleInpaint":"Inpaint",
 "roleUpscaler":"高分辨率化",
 "roleRemoveBG":"删除背景",
-"roleAngle":"Image → Image Angle",
+"roleAngle":"Image → Image<br>Angle",
 "roleInterrogateCLIP":"CLIP",
 "roleInterrogateDEEPDOORU":"DEEPDOORU"
 },
@@ -451,7 +451,7 @@ const resources = {
 "roleInpaint":"Inpaint",
 "roleUpscaler":"Увеличить",
 "roleRemoveBG":"Удалить фон",
-"roleAngle":"Image → Image Angle",
+"roleAngle":"Image → Image<br>Angle",
 "roleInterrogateCLIP":"CLIP",
 "roleInterrogateDEEPDOORU":"DEEPDOORU"
 },
@@ -466,7 +466,7 @@ const resources = {
 "roleInpaint":"Inpaint",
 "roleUpscaler":"Ampliar",
 "roleRemoveBG":"Eliminar fondo",
-"roleAngle":"Image → Image Angle",
+"roleAngle":"Image → Image<br>Angle",
 "roleInterrogateCLIP":"CLIP",
 "roleInterrogateDEEPDOORU":"DEEPDOORU"
 },
@@ -481,7 +481,7 @@ const resources = {
 "roleInpaint":"Inpaint",
 "roleUpscaler":"Hochskalieren",
 "roleRemoveBG":"Hintergrund entf.",
-"roleAngle":"Image → Image Angle",
+"roleAngle":"Image → Image<br>Angle",
 "roleInterrogateCLIP":"CLIP",
 "roleInterrogateDEEPDOORU":"DEEPDOORU"
 }

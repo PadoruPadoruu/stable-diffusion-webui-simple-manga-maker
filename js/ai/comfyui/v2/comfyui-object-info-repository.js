@@ -1,4 +1,4 @@
-var objectInfoRepositoryProto={
+var comfyObjectInfoRepoProto={
 async saveObjectInfo(objectInfo) {
 if (!objectInfo||Object.keys(objectInfo).length===0) {
 comfyuiLogger.error("有効なObjectInfoが指定されていません");
@@ -27,6 +27,11 @@ return null;
 }
 },
 
+async getNodeNames() {
+var data=await this.getObjectInfo();
+return data ? Object.keys(data) : [];
+},
+
 async getLastUpdated() {
 try {
 const result=await this.store.getItem("latestObjectInfo");
@@ -38,8 +43,8 @@ return null;
 },
 };
 
-function createObjectInfoRepository(providerKey) {
-var repo=Object.create(objectInfoRepositoryProto);
+function createComfyObjectInfoRepo(providerKey) {
+var repo=Object.create(comfyObjectInfoRepoProto);
 repo.store=localforage.createInstance({
 name: "objectInfoStorage_"+providerKey,
 storeName: "comfyObjectInfo",
@@ -47,6 +52,6 @@ storeName: "comfyObjectInfo",
 return repo;
 }
 
-var objectInfoRepo_local=createObjectInfoRepository('local');
-var objectInfoRepo_runpod=createObjectInfoRepository('runpod');
-var objectInfoRepository=objectInfoRepo_local;
+var comfyObjectInfoRepo_local=createComfyObjectInfoRepo('local');
+var comfyObjectInfoRepo_runpod=createComfyObjectInfoRepo('runpod');
+var comfyObjectInfoRepo=comfyObjectInfoRepo_local;

@@ -5,14 +5,16 @@ var InpaintWorkflow=(function(){
 async function generate(imageDataUrl,maskDataUrl,prompt,negativePrompt,denoise){
 if(!comfyuiGetSocket()) comfyuiConnect();
 
-var selectedWorkflow=await comfyUIWorkflowRepository.getEnabledWorkflowByType("Inpaint");
+var repo=(_comfyUIExecProvider&&_comfyUIExecProvider.id==='runpodComfyUI')?comfyUIWorkflowRepo_runpod:comfyUIWorkflowRepo_local;
+var selectedWorkflow=await repo.getEnabledWorkflowByType("Inpaint");
 if(!selectedWorkflow){
 createToastError("Inpaint Error","No Inpaint workflow configured");
 return null;
 }
 
 var classTypeLists=getClassTypeOnlyByJson(selectedWorkflow);
-if(!checkWorkflowNodeVsComfyUI(classTypeLists)){
+var objInfoRepo=(_comfyUIExecProvider&&_comfyUIExecProvider.id==='runpodComfyUI')?comfyObjectInfoRepo_runpod:comfyObjectInfoRepo_local;
+if(!await checkWorkflowNodeVsComfyUI(classTypeLists,objInfoRepo)){
 return null;
 }
 

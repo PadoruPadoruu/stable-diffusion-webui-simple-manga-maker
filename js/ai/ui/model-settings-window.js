@@ -51,7 +51,7 @@ localWindow.initializeInContainer(container);
 localEditor=new ComfyUIWorkflowEditor({
 providerKey:'local',
 workflowRepo:comfyUIWorkflowRepo_local,
-objectInfoRepo:objectInfoRepo_local,
+objectInfoRepo:comfyObjectInfoRepo_local,
 provider:localProvider,
 containerEl:container
 });
@@ -77,7 +77,7 @@ runpodWindow.initializeInContainer(container);
 runpodEditor=new ComfyUIWorkflowEditor({
 providerKey:'runpod',
 workflowRepo:comfyUIWorkflowRepo_runpod,
-objectInfoRepo:objectInfoRepo_runpod,
+objectInfoRepo:comfyObjectInfoRepo_runpod,
 provider:runpodProvider,
 containerEl:container
 });

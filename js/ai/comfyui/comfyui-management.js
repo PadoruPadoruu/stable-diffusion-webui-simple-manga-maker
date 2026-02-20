@@ -43,7 +43,6 @@ if(Object.keys(authHeaders).length>0){
 options.headers=Object.assign({},options.headers||{},authHeaders);
 }
 var tag=getComfyUIProviderTag();
-comfyuiLogger.debug('['+tag+'] fetch: '+url);
 return fetch(url,options);
 }
 
@@ -199,6 +198,8 @@ return false;
 
 async function comfyuiHandleProcessQueue(layer,spinnerId,Type='T2I',extraData) {
 var startTime=Date.now();
+var serverAddress=getComfyUIServerAddress();
+var authHeaders=getComfyUIAuthHeaders();
 if (!comfyuiGetSocket()) comfyuiConnect();
 var requestData=baseRequestData(layer);
 if (basePrompt.text2img_model!=""){
@@ -230,8 +231,8 @@ return;
 }
 
 var classTypeLists=getClassTypeOnlyByJson(selectedWorkflow);
-if(checkWorkflowNodeVsComfyUI(classTypeLists)){
-}else{
+var objInfoRepo=(_comfyUIExecProvider&&_comfyUIExecProvider.id==='runpodComfyUI')?comfyObjectInfoRepo_runpod:comfyObjectInfoRepo_local;
+if(!await checkWorkflowNodeVsComfyUI(classTypeLists,objInfoRepo)){
 removeSpinner(spinnerId);
 return;
 }
@@ -239,16 +240,16 @@ return;
 
 if (Type=='I2I'||Type=='Rembg'||Type=='Upscaler'||Type=='I2I_Angle') {
 var uploadFilename=generateFilename();
-await comfyuiUploadImage(layer,uploadFilename);
+await comfyuiUploadImage(layer,uploadFilename,true,serverAddress,authHeaders);
 requestData["uploadFileName"]=uploadFilename;
 }
 if (Type=='Inpaint') {
 var inpaintImageFilename=generateFilename();
-await comfyuiUploadImage(layer,inpaintImageFilename);
+await comfyuiUploadImage(layer,inpaintImageFilename,true,serverAddress,authHeaders);
 requestData["uploadFileName"]=inpaintImageFilename;
 if (requestData["inpaintMaskDataUrl"]) {
 var maskFilename="mask_"+generateFilename();
-await comfyuiUploadBase64Image(requestData["inpaintMaskDataUrl"],maskFilename);
+await comfyuiUploadBase64Image(requestData["inpaintMaskDataUrl"],maskFilename,true,serverAddress,authHeaders);
 requestData["maskFileName"]=maskFilename;
 }
 }
@@ -276,9 +277,15 @@ centerY:center.centerY,
 targetLayerGuid:targetLayerGuid
 });
 
+var providerCtx={
+tag:getComfyUIProviderTag(),
+serverAddress:serverAddress,
+authHeaders:authHeaders,
+objectInfoRepo:(_comfyUIExecProvider&&_comfyUIExecProvider.id==='runpodComfyUI')?comfyObjectInfoRepo_runpod:comfyObjectInfoRepo_local
+};
 var p=comfyuiQueue.add(async ()=>{
 setCurrentAiTask(spinnerId);
-const result=await comfyui_put_queue_v2(workflow);
+const result=await comfyui_put_queue_v2(workflow,providerCtx);
 if (!result||result.error) return result;
 return new Promise((resolve,reject)=>{
 fabric.Image.fromURL(result,(img)=>{
@@ -336,7 +343,7 @@ removeSpinner(spinnerId);
 });
 }
 
-async function comfyuiUploadImage(layer,fileName="i2i_temp.png",overwrite=true) {
+async function comfyuiUploadImage(layer,fileName="i2i_temp.png",overwrite=true,serverAddress,authHeaders) {
 const base64Image=imageObject2Base64ImageEffectKeep(layer);
 if (!base64Image||!base64Image.startsWith("data:image/")) {
 throw new Error("Invalid base64 image data");
@@ -355,17 +362,20 @@ formData.append("image",blob,fileName);
 formData.append("overwrite",overwrite.toString());
 
 try {
-const response=await comfyuiFetch(comfyUIUrls.uploadImage,{
-method: "POST",
-body: formData,
-});
+if(!serverAddress)serverAddress=getComfyUIServerAddress();
+if(!authHeaders)authHeaders=getComfyUIAuthHeaders();
+var uploadUrl=serverAddress+'/upload/image';
+var opts={method:"POST",body:formData};
+if(authHeaders&&Object.keys(authHeaders).length>0){
+opts.headers=Object.assign({},authHeaders);
+}
+var response=await fetch(uploadUrl,opts);
 
 if (!response.ok) {
 throw new Error(`HTTP error! status: ${response.status}`);
 }
 
 const result=await response.json();
-// console.log("Upload successful:", result);
 return result;
 } catch (error) {
 comfyuiLogger.error("Error uploading image:",error);
@@ -374,7 +384,7 @@ throw error;
 }
 
 
-async function comfyuiUploadBase64Image(base64DataUrl,fileName="mask_temp.png",overwrite=true) {
+async function comfyuiUploadBase64Image(base64DataUrl,fileName="mask_temp.png",overwrite=true,serverAddress,authHeaders) {
 if (!base64DataUrl||!base64DataUrl.startsWith("data:image/")) {
 throw new Error("Invalid base64 image data");
 }
@@ -389,10 +399,14 @@ const formData=new FormData();
 formData.append("image",blob,fileName);
 formData.append("overwrite",overwrite.toString());
 try {
-const response=await comfyuiFetch(comfyUIUrls.uploadImage,{
-method:"POST",
-body:formData,
-});
+if(!serverAddress)serverAddress=getComfyUIServerAddress();
+if(!authHeaders)authHeaders=getComfyUIAuthHeaders();
+var uploadUrl=serverAddress+'/upload/image';
+var opts={method:"POST",body:formData};
+if(authHeaders&&Object.keys(authHeaders).length>0){
+opts.headers=Object.assign({},authHeaders);
+}
+var response=await fetch(uploadUrl,opts);
 if (!response.ok) {
 throw new Error(`HTTP error! status: ${response.status}`);
 }
@@ -495,21 +509,3 @@ comfyuiLogger.error("Comfyui_Fetch: Fetch error",nodeName);
 }
 }
 
-var comfyObjectInfoList;
-async function comfyuiFetchObjectInfoOnly() {
-try {
-const response=await comfyuiFetch(comfyUIUrls.objectInfoOnly);
-if (!response.ok) {
-throw new Error(`HTTP error! status: ${response.status}`);
-}
-const data=await response.json();
-
-const nodeNames=Object.keys(data);
-// console.log("Node names:", nodeNames);
-comfyObjectInfoList=nodeNames;
-return nodeNames;
-} catch (error) {
-comfyuiLogger.error("comfyuiFetchObjectInfoOnly: Fetch error:",error);
-return [];
-}
-}

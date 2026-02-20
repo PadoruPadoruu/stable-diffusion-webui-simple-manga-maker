@@ -77,7 +77,7 @@ const milliseconds=String(now.getMilliseconds()).padStart(3,"0");
 return `${year}${month}${day}-${hours}${minutes}${seconds}-${milliseconds}.${extension}`;
 }
 
-async function comfyui_uploadImage_v2(file,fileName=null,overwrite=true) {
+async function comfyui_uploadImage_v2(file,fileName=null,overwrite=true,serverAddress,authHeaders) {
 if (!file) {
 throw new Error("ファイルが指定されていません");
 }
@@ -90,10 +90,14 @@ const formData=new FormData();
 formData.append("image",file,fileName);
 formData.append("overwrite",overwrite.toString());
 
-const response=await comfyuiFetch(comfyUIUrls.uploadImage,{
-method: "POST",
-body: formData,
-});
+if(!serverAddress)serverAddress=getComfyUIServerAddress();
+if(!authHeaders)authHeaders=getComfyUIAuthHeaders();
+var uploadUrl=serverAddress+'/upload/image';
+var opts={method:"POST",body:formData};
+if(authHeaders&&Object.keys(authHeaders).length>0){
+opts.headers=Object.assign({},authHeaders);
+}
+const response=await fetch(uploadUrl,opts);
 
 if (!response.ok) {
 throw new Error(`アップロードエラー: ${response.status}`);
@@ -145,15 +149,20 @@ comfyuiLogger.error('['+getComfyUIProviderTag()+'] ファイルアップロー�
 
 //type=input output temp
 //subfolder: <subfolder>
-async function comfyui_view_image_v2(filename,type="input") {
+async function comfyui_view_image_v2(filename,type="input",serverAddress,authHeaders) {
 try {
-const baseUrl=getComfyUIServerAddress();
+if(!serverAddress)serverAddress=getComfyUIServerAddress();
+if(!authHeaders)authHeaders=getComfyUIAuthHeaders();
 const params=new URLSearchParams({
 filename: filename,
 type: type,
 });
 
-const response=await comfyuiFetch(`${baseUrl}/view?${params.toString()}`);
+var fetchOptions={};
+if(authHeaders&&Object.keys(authHeaders).length>0){
+fetchOptions.headers=authHeaders;
+}
+const response=await fetch(`${serverAddress}/view?${params.toString()}`,fetchOptions);
 if (!response.ok) {
 throw new Error(`HTTPエラー! ステータス: ${response.status}`);
 }
@@ -166,8 +175,8 @@ return null;
 }
 }
 
-async function comfyui_fixWorkflowTypes_v2(workflow) {
-const objectInfo=await objectInfoRepository.getObjectInfo();
+async function comfyui_fixWorkflowTypes_v2(workflow,objInfoRepo) {
+const objectInfo=await (objInfoRepo||comfyObjectInfoRepo).getObjectInfo();
 if (!objectInfo) {
 comfyuiLogger.warn('['+getComfyUIProviderTag()+'] ObjectInfo not available, skipping type fix');
 return workflow;
@@ -203,15 +212,18 @@ node.inputs[inputName]=false;
 return fixed;
 }
 
-async function comfyui_put_queue_v2(workflow) {
+async function comfyui_put_queue_v2(workflow,providerCtx) {
 const builder=new ComfyUIWorkflowBuilder(workflow);
 builder.replaceDatePlaceholders();
-const fixedWorkflow=await comfyui_fixWorkflowTypes_v2(builder.build());
-var tag=getComfyUIProviderTag();
+var objInfoRepo=(providerCtx&&providerCtx.objectInfoRepo)||((_comfyUIExecProvider&&_comfyUIExecProvider.id==='runpodComfyUI')?comfyObjectInfoRepo_runpod:comfyObjectInfoRepo_local);
+const fixedWorkflow=await comfyui_fixWorkflowTypes_v2(builder.build(),objInfoRepo);
+var tag=(providerCtx&&providerCtx.tag)||getComfyUIProviderTag();
+var serverAddress=(providerCtx&&providerCtx.serverAddress)||getComfyUIServerAddress();
+var authHeaders=(providerCtx&&providerCtx.authHeaders)||getComfyUIAuthHeaders();
 comfyuiLogger.info('['+tag+'] プロンプト送信開始');
-logger.trace("comfyui_put_queue_v2 fixedWorkflow",fixedWorkflow);
+comfyuiLogger.trace("comfyui_put_queue_v2 fixedWorkflow",fixedWorkflow);
 
-var response=await comfyui_queue_prompt_v2(fixedWorkflow);
+var response=await comfyui_queue_prompt_v2(fixedWorkflow,serverAddress,authHeaders);
 if (!response) return null;
 processingPrompt=true;
 var promptId=response.prompt_id;
@@ -219,51 +231,82 @@ aiProgressState.currentPromptId=promptId;
 if(aiProgressState.currentTaskId){
 updateAiTaskCancelInfo(aiProgressState.currentTaskId,{promptId:promptId});
 }
-await comfyui_track_prompt_progress_v2(promptId);
+var outputData=await comfyui_track_prompt_progress_v2(promptId);
 
-response=await comfyui_get_history_v2(promptId);
-if (!response)
-return {
-error: true,
-message: "Unknown error",
-details: "Please check ComfyUI console.",
-};
-
-if (comfyui_isError_v2(response)) {
+if(!outputData||!outputData.images||!outputData.images["0"]){
+comfyuiLogger.debug('['+tag+'] WebSocket outputData不足、history APIフォールバック');
+var historyUrl=serverAddress+'/history/';
+var maxRetries=10;
+var retryDelay=500;
+for(var retryCount=0;retryCount<maxRetries;retryCount++){
+try{
+var historyFetchOpts={method:"GET",headers:Object.assign({accept:"application/json"},authHeaders)};
+var historyResp=await fetch(historyUrl+promptId,historyFetchOpts);
+response=await historyResp.json();
+}catch(e){
+comfyuiLogger.debug('['+tag+'] history API取得失敗:',e.message);
+response=null;
+}
+if(response&&response[promptId]){
+if(comfyui_isError_v2(response)){
 const errorMessage=comfyui_getErrorMessage_v2(response);
 return {
 error: true,
 message: errorMessage.exception_message||"Unknown error",
 details: errorMessage,
 };
-} else {
-var imageData=
-response[promptId]["outputs"][
-Object.keys(response[promptId]["outputs"])[0]
-].images["0"];
-var img=await comfyui_get_image_v2(imageData);
-
-return new Promise((resolve)=>{
-resolve(img);
-});
+}
+var outputs=response[promptId]["outputs"];
+if(outputs&&Object.keys(outputs).length>0){
+outputData=outputs[Object.keys(outputs)[0]];
+break;
+}
+}
+comfyuiLogger.debug('['+tag+'] history APIリトライ '+(retryCount+1)+'/'+maxRetries);
+await new Promise(function(resolve){setTimeout(resolve,retryDelay);});
+}
+if(!outputData||!outputData.images||!outputData.images["0"]){
+return {
+error: true,
+message: "Unknown error",
+details: "Please check ComfyUI console.",
+};
 }
 }
 
-async function comfyui_get_image_v2(imageDataToReceive) {
+comfyuiLogger.debug('['+tag+'] outputData:',JSON.stringify(outputData));
+var imageData=outputData.images["0"];
+comfyuiLogger.debug('['+tag+'] imageData:',JSON.stringify(imageData));
+var img=await comfyui_get_image_v2(imageData,serverAddress,authHeaders);
+return img;
+}
+
+async function comfyui_get_image_v2(imageDataToReceive,serverAddress,authHeaders) {
 var tag=getComfyUIProviderTag();
+var viewUrl=serverAddress+'/view';
+var fetchOptions={};
+if(authHeaders&&Object.keys(authHeaders).length>0){
+fetchOptions.headers=authHeaders;
+}
+var maxRetries=5;
+var retryDelay=1000;
+for(var retryCount=0;retryCount<=maxRetries;retryCount++){
 try {
 const params=new URLSearchParams({
 filename: imageDataToReceive.filename,
 subfolder: imageDataToReceive.subfolder,
 type: imageDataToReceive.type,
 });
-const response=await comfyuiFetch(comfyUIUrls.view+"?"+params.toString());
-comfyuiLogger.debug('['+tag+'] 画像データ取得:',
-imageDataToReceive.filename,
-imageDataToReceive.subfolder,
-imageDataToReceive.type,);
+var url=viewUrl+"?"+params.toString();
+const response=await fetch(url,fetchOptions);
+comfyuiLogger.debug('['+tag+'] 画像データ取得:',url);
 
 if (!response.ok) {
+if(response.status===404&&retryCount<maxRetries){
+comfyuiLogger.debug('['+tag+'] 画像未準備、リトライ '+(retryCount+1)+'/'+maxRetries);
+await new Promise(function(resolve){setTimeout(resolve,retryDelay);});
+continue;
+}
 throw new Error(`HTTPエラー! ステータス: ${response.status}`);
 }
 
@@ -273,9 +316,17 @@ comfyuiLogger.debug('['+tag+'] 画像ソース:',imageSrc);
 
 return imageSrc;
 } catch (error) {
+if(retryCount<maxRetries&&error.message&&error.message.includes('404')){
+comfyuiLogger.debug('['+tag+'] 画像取得リトライ '+(retryCount+1)+'/'+maxRetries);
+await new Promise(function(resolve){setTimeout(resolve,retryDelay);});
+continue;
+}
 comfyuiLogger.error('['+tag+'] 画像取得エラー:',error);
 return null;
 }
+}
+comfyuiLogger.error('['+tag+'] 画像取得失敗: リトライ上限到達');
+return null;
 }
 
 function comfyui_getErrorMessage_v2(response) {
@@ -317,16 +368,17 @@ comfyuiLogger.debug("comfyui_getErrorMessage_v2 returning null");
 return null;
 }
 
-async function comfyui_queue_prompt_v2(prompt) {
+async function comfyui_queue_prompt_v2(prompt,serverAddress,authHeaders) {
 var tag=getComfyUIProviderTag();
+if(!serverAddress)serverAddress=getComfyUIServerAddress();
+if(!authHeaders)authHeaders=getComfyUIAuthHeaders();
 try {
 const p={prompt: prompt,client_id: comfyUIuuid};
-const response=await comfyuiFetch(comfyUIUrls.prompt,{
+var promptUrl=serverAddress+'/prompt';
+var fetchHeaders=Object.assign({"Content-Type":"application/json",accept:"application/json"},authHeaders);
+const response=await fetch(promptUrl,{
 method: "POST",
-headers: {
-"Content-Type": "application/json",
-accept: "application/json",
-},
+headers: fetchHeaders,
 body: JSON.stringify(p),
 });
 
@@ -385,6 +437,7 @@ return null;
 async function comfyui_track_prompt_progress_v2(promptId) {
 if (!comfyuiGetSocket()) comfyuiConnect();
 var ws=comfyuiGetSocket();
+var outputData=null;
 
 return new Promise((resolve,reject)=>{
 ws.onmessage=(event)=>{
@@ -400,6 +453,13 @@ updateAiStepProgress(value,max,promptId);
 }
 }
 if(
+message.type==="executed"&&
+message.data&&
+message.data.prompt_id===promptId
+){
+outputData=message.data.output;
+}
+if(
 message.type==="executing"&&
 message.data.node===null&&
 message.data.prompt_id===promptId
@@ -407,7 +467,7 @@ message.data.prompt_id===promptId
 if(typeof resetAiStepProgress==='function'){
 resetAiStepProgress();
 }
-resolve("Stop message received with matching promptId");
+resolve(outputData);
 }
 }
 };

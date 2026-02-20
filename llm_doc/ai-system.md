@@ -55,13 +55,26 @@ Promise-based並行実行。プロバイダ別にキューが分かれる。
 ## タスクライフサイクル（generation-task-manager.js）
 → `layer-structure.md`のAIタスク進捗管理セクション参照
 
+## ComfyUI プロバイダ切り替え（comfyui-management.js）
+`_comfyUIExecProvider` グローバル変数でリクエスト単位のプロバイダを制御する。
+```javascript
+async function comfyUIExecWithProvider(provider, fn){
+  _comfyUIExecProvider = provider;
+  try { return await fn(); }
+  finally { _comfyUIExecProvider = null; }
+}
+```
+- `getComfyUIServerAddress()` / `getComfyUIAuthHeaders()` / `getComfyUIProviderTag()` はすべて `_comfyUIExecProvider || providerRegistry.getActive()` を参照
+- `comfyUIUrls` は Proxy で、プロパティアクセスのたびに `getComfyUIServerAddress()` を呼ぶ動的URL
+- **注意**: `fn()` 内で長時間の await（WebSocket待機等）を行うと、その間に別の非同期タスク（ワークフローエディタ更新等）が `comfyUIExecWithProvider` を呼び `_comfyUIExecProvider` を上書きする。await 後に `comfyUIUrls.*` や `comfyuiFetch()` を使うと別プロバイダのURLに接続してしまう
+- **対処**: 関数冒頭で `getComfyUIServerAddress()` / `getComfyUIAuthHeaders()` をローカル変数にキャプチャし、await後はそのローカル変数を使って直接 `fetch()` する
+
 ## ComfyUI v2ワークフロー
 - `comfyui-workflow-repository.js` でワークフロー保存/読み込み（ファクトリパターン）
   - `createWorkflowRepository(providerKey)` でプロバイダー別インスタンス生成
   - `comfyUIWorkflowRepo_local` / `comfyUIWorkflowRepo_runpod`
-  - `comfyUIWorkflowRepository` は `comfyUIWorkflowRepo_local` のエイリアス
 - `comfyui-object-info-repository.js` でノード情報キャッシュ（同様のファクトリパターン）
-  - `objectInfoRepo_local` / `objectInfoRepo_runpod`
+  - `comfyObjectInfoRepo_local` / `comfyObjectInfoRepo_runpod`
 - `comfyui-workflow-editor.js` でビジュアルエディタ（オプションで providerKey, workflowRepo, objectInfoRepo, provider, containerEl を受け取る）
 - デフォルトワークフロー: t2i, inpaint, angle, upscale, rembg
 

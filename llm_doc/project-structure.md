@@ -17,7 +17,7 @@ manga-editor-desu/
 │   │   ├── effect/     エフェクト（c2bw, c2c）
 │   │   └── panel/      コマ割り（panel-manager, knife/）
 │   ├── ai/             AI生成系（→ ai-system.md参照）
-│   ├── db/             永続化（settings-repository, user-font-repository）
+│   ├── db/             永続化（user-font-repository）
 │   ├── dashboard/      ダッシュボード（統計、プロンプト頻度）
 │   ├── svg/            SVGテンプレート（コマ割り、吹き出し）
 │   ├── canvas-manager.js    キャンバスリサイズ・ズーム

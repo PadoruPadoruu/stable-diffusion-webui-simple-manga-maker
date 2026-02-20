@@ -17,7 +17,7 @@
 | 6 | 履歴 | 一時オブジェクトにsetNotSave/excludeFromLayerPanelを設定したか | 0 |
 | 7 | UI | 固定幅(px)ではなくフレキシブルレイアウトにしているか | 0 |
 | 8 | UI | 既存の表示・表記と統一されているか | 0 |
-| 9 | fallback | エラー時にfallback値で動作を続行していないか（fallback禁止） | 0 |
+| 9 | fallback | エラー時にfallback値で動作を続行していないか（fallback禁止） | 1 |
 | 10 | file:// | file://プロトコルで動作するか（fetch等HTTP前提APIを使っていないか） | 0 |
 | 11 | ログ | console.logではなくSimpleLoggerを使っているか。デバッグ時もlogger.trace等を使いログレベル変更で対応する | 1 |
 | 12 | 命名 | 変数名がcamelCaseか、APIレスポンスのキーを変換していないか | 0 |
@@ -28,3 +28,5 @@
 | 17 | 性能 | forループ等でオブジェクトのプロパティを連続変更する際、毎回canvas.renderAll()を呼んでいないか。都度呼ぶとオブジェクト数×ループ回数分の再描画が走りUIがフリーズする。ループ外で最後に1回だけ呼ぶ | 1 |
 | 18 | ログ | Errorオブジェクトを文字列化する際にJSON.stringifyを使っていないか。Errorのmessage/name/stackは非列挙プロパティのためJSON.stringifyでは`{}`になる。`instanceof Error`で判定し`error.name + error.message`等で展開する | 1 |
 | 19 | ログ | 各ファイルで`new SimpleLogger()`していないか。ロガーは`js/core/logger.js`に集約定義し、各ファイルではグローバル変数として参照する | 1 |
+| 20 | 非同期 | `_comfyUIExecProvider`等のグローバル変数に依存するURL/認証情報を、長時間のawait（WebSocket待機等）をまたいで使っていないか。非同期処理中に別タスクがグローバル変数を上書きし、別プロバイダのURLに接続してしまう。関数冒頭でサーバーアドレス・認証情報をローカル変数にキャプチャして使う | 2 |
+| 21 | fallback | グローバル変数が未設定のときデフォルト値（`'local'`等）にフォールバックしていないか。`_comfyUIExecProvider`がnullのときキーを`'local'`にする、`comfyObjectInfoListMap.get(key)\|\|comfyObjectInfoListMap.get('local')`のように別キーにフォールバックする等はすべて暗黙のfallback。awaitなしで呼ばれたasync関数ではグローバル変数が既にクリアされているため、呼び出し元で値を事前キャプチャして引数で渡す | 1 |

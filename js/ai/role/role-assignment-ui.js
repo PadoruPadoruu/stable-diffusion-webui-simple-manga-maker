@@ -2,8 +2,8 @@
 var roleAssignmentUI=(function(){
 var PROVIDER_COLUMNS=[
 {id:'localComfyUI',label:'ComfyUI (Local)'},
-{id:'localSDWebUI',label:'SD WebUI (A1111/Forge)'},
 {id:'runpodComfyUI',label:'RunPod ComfyUI'},
+{id:'localSDWebUI',label:'SD WebUI (A1111/Forge)'},
 {id:'falai',label:'Fal.ai'}
 ];
 var ROLE_ROWS=[
@@ -42,7 +42,7 @@ ROLE_ROWS.forEach(function(row){
 var tr=document.createElement('tr');
 var tdLabel=document.createElement('td');
 tdLabel.setAttribute('data-i18n',row.labelKey);
-tdLabel.textContent=i18next.t(row.labelKey);
+tdLabel.innerHTML=i18next.t(row.labelKey);
 tr.appendChild(tdLabel);
 PROVIDER_COLUMNS.forEach(function(col){
 var td=document.createElement('td');

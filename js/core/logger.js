@@ -166,7 +166,7 @@ default:return 'unknown';
 const logger=SimpleLogger('main',LogLevel.WARN);
 const workflowLogger=SimpleLogger('workflow',LogLevel.WARN);
 const eventLogger=SimpleLogger('event',LogLevel.WARN);
-const comfyuiLogger=SimpleLogger('comfyui',LogLevel.WARN);
+const comfyuiLogger=SimpleLogger('comfyui',LogLevel.DEBUG);
 const sdwebuiLogger=SimpleLogger('sdwebui',LogLevel.WARN);
 const dbLogger=SimpleLogger('db',LogLevel.WARN);
 const canvasLogger=SimpleLogger('canvas',LogLevel.WARN);

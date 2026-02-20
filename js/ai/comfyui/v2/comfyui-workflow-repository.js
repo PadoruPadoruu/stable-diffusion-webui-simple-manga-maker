@@ -176,7 +176,6 @@ return repo;
 
 var comfyUIWorkflowRepo_local=createWorkflowRepository('local');
 var comfyUIWorkflowRepo_runpod=createWorkflowRepository('runpod');
-var comfyUIWorkflowRepository=comfyUIWorkflowRepo_local;
 
 (function migrateWorkflowStorage() {
 if (localStorage.getItem('workflowMigrated_v1')) return;
@@ -192,6 +191,9 @@ return;
 oldStore.iterate(function(value,key) {
 comfyUIWorkflowRepo_local.store.setItem(key,value);
 }).then(function() {
+oldStore.clear().then(function() {
+comfyuiLogger.info("Old workflow storage cleared after migration");
+});
 localStorage.setItem('workflowMigrated_v1','true');
 comfyuiLogger.info("Workflow storage migration completed");
 });
